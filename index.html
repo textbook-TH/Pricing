@@ -58,7 +58,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 
-                <!-- Brand Logo & Title -->
+                <!-- Brand Logo & Title (ข้อ 4: นำ วศ.สจล. ออกแล้ว) -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('public')">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-kmitl-orangeDark to-kmitl-orange flex items-center justify-center text-white font-bold text-xl shadow-md">
                         <i class="fa-solid fa-book-open"></i>
@@ -66,33 +66,25 @@
                     <div>
                         <div class="flex items-center space-x-2">
                             <span class="font-kanit text-lg font-bold text-slate-900 tracking-tight">KMITL Textbooks</span>
-                            <span class="bg-orange-100 text-kmitl-orange text-xs px-2 py-0.5 rounded-full font-semibold">วศ.สจล.</span>
                         </div>
                         <p class="text-xs text-slate-500 hidden sm:block">ระบบคำนวณราคาและบริหารจัดการตำราเรียน</p>
                     </div>
                 </div>
 
-                <!-- Navigation Tabs / Admin Info -->
+                <!-- Navigation Tabs / Capsule Controller (ข้อ 5 & ข้อ 6: ซ่อนอีเมล และรวมปุ่มในแคปซูลเดียวกันพร้อมสลับสี) -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-slate-100 p-1 rounded-lg flex items-center space-x-1 border border-slate-200 text-sm font-medium">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 bg-white text-slate-800 shadow-sm font-semibold">
+                    <div class="bg-slate-100 p-1 rounded-xl flex items-center space-x-1 border border-slate-200 text-xs sm:text-sm font-medium shadow-inner">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 bg-white text-kmitl-orange shadow-sm font-bold border border-slate-200/60">
                             <i class="fa-solid fa-globe text-xs"></i>
                             <span>หน้าหลัก</span>
                         </button>
-                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900">
+                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50">
                             <i class="fa-solid fa-user-shield text-xs"></i>
                             <span>สำหรับเจ้าหน้าที่</span>
                         </button>
-                    </div>
-
-                    <div id="userInfoSection" class="hidden items-center space-x-2 pl-2 border-l border-slate-200">
-                        <div class="text-right hidden md:block">
-                            <p id="userEmailText" class="text-xs font-semibold text-slate-700 truncate max-w-[140px]"></p>
-                            <span class="inline-block w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            <span class="text-[10px] text-emerald-600 font-medium">เจ้าหน้าที่ผู้ดูแล</span>
-                        </div>
-                        <button onclick="handleLogout()" title="ออกจากระบบ" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition">
-                            <i class="fa-solid fa-right-from-bracket"></i>
+                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 flex items-center space-x-1">
+                            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                            <span class="hidden md:inline text-xs font-semibold">ออกจากระบบ</span>
                         </button>
                     </div>
                 </div>
@@ -107,38 +99,43 @@
         <!-- PUBLIC VIEW SECTION -->
         <section id="publicView" class="space-y-6">
             
-            <!-- Banner / Header -->
+            <!-- Banner / Header (ข้อ 1, 2, 3: ปรับเปลี่ยนชื่อข้อความ นำป้ายราคากลางออก) -->
             <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-kmitl-slate rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10 pointer-events-none">
                     <i class="fa-solid fa-book-bookmark text-[220px]"></i>
                 </div>
                 <div class="relative z-10 max-w-2xl space-y-2">
-                    <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs text-orange-300 font-medium border border-white/10">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <span>ฐานข้อมูลตำราและราคากลางจำหน่าย</span>
-                    </div>
-                    <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">ค้นหารายการตำราเรียนวิศวกรรมศาสตร์</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการ</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">
-                        ตรวจสอบสถานะจัดพิมพ์ รายละเอียดตำราเรียน และราคาจริงจำหน่ายสำหรับนักศึกษา สมาชิก และบุคคลภายนอก สจล.
+                        ตรวจสอบสถานะจัดพิมพ์ และราคาจำหน่าย
                     </p>
                 </div>
 
-                <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/5">
-                        <span class="block text-2xl font-bold font-kanit text-orange-400" id="statTotal">0</span>
-                        <span class="text-xs text-slate-400">ตำราในระบบ</span>
+                <!-- ข้อ 7: ปรับให้แสดงผล 6 รายการสถานะให้อยู่ในแถวเดียวกันในหน้าจอขนาดใหญ่ -->
+                <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center">
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                        <span class="block text-xl font-bold font-kanit text-orange-400" id="statTotal">0</span>
+                        <span class="text-[11px] text-slate-300">ตำราในระบบ</span>
                     </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/5">
-                        <span class="block text-2xl font-bold font-kanit text-emerald-400" id="statApproved">0</span>
-                        <span class="text-xs text-slate-400">อนุมัติเรียบร้อย</span>
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                        <span class="block text-xl font-bold font-kanit text-slate-300" id="statDraft">0</span>
+                        <span class="text-[11px] text-slate-300">ร่าง</span>
                     </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/5">
-                        <span class="block text-2xl font-bold font-kanit text-blue-400" id="statPrinting">0</span>
-                        <span class="text-xs text-slate-400">อยู่ระหว่างพิมพ์</span>
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                        <span class="block text-xl font-bold font-kanit text-amber-400" id="statPending">0</span>
+                        <span class="text-[11px] text-slate-300">รออนุมัติ</span>
                     </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/5">
-                        <span class="block text-2xl font-bold font-kanit text-purple-400" id="statCompleted">0</span>
-                        <span class="text-xs text-slate-400">จัดพิมพ์เสร็จสิ้น</span>
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                        <span class="block text-xl font-bold font-kanit text-emerald-400" id="statApproved">0</span>
+                        <span class="text-[11px] text-slate-300">อนุมัติแล้ว</span>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                        <span class="block text-xl font-bold font-kanit text-blue-400" id="statPrinting">0</span>
+                        <span class="text-[11px] text-slate-300">อยู่ระหว่างจัดพิมพ์</span>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                        <span class="block text-xl font-bold font-kanit text-purple-400" id="statCompleted">0</span>
+                        <span class="text-[11px] text-slate-300">จัดพิมพ์เสร็จสิ้น</span>
                     </div>
                 </div>
             </div>
@@ -390,7 +387,7 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (Admin Form - Image 01 Enhanced) -->
+    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (ห้ามแก้ไขช่องกรอกและวิธีการคำนวณ 100%) -->
     <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
             
@@ -537,7 +534,7 @@
                         </div>
                     </div>
 
-                    <!-- NEW ADDITION: actual_student_price & actual_public_price -->
+                    <!-- actual_student_price & actual_public_price -->
                     <div class="pt-3 border-t border-orange-200/80 bg-orange-50/60 -mx-4 -mb-4 p-4 rounded-b-xl space-y-2">
                         <div class="flex items-center space-x-1.5 text-xs font-bold text-kmitl-orange">
                             <i class="fa-solid fa-tag"></i>
@@ -653,24 +650,22 @@
         }
 
         function updateUserUI(isLoggedIn) {
-            const userInfoSection = document.getElementById('userInfoSection');
-            const userEmailText = document.getElementById('userEmailText');
             const adminLoginCard = document.getElementById('adminLoginCard');
             const adminDashboard = document.getElementById('adminDashboard');
+            const btnLogoutCapsule = document.getElementById('btnLogoutCapsule');
 
             if (isLoggedIn && currentUser) {
-                userInfoSection.classList.remove('hidden');
-                userInfoSection.classList.add('flex');
-                userEmailText.innerText = currentUser.email;
-
                 adminLoginCard.classList.add('hidden');
                 adminDashboard.classList.remove('hidden');
+                if (btnLogoutCapsule) {
+                    btnLogoutCapsule.classList.remove('hidden');
+                }
             } else {
-                userInfoSection.classList.add('hidden');
-                userInfoSection.classList.remove('flex');
-
                 adminLoginCard.classList.remove('hidden');
                 adminDashboard.classList.add('hidden');
+                if (btnLogoutCapsule) {
+                    btnLogoutCapsule.classList.add('hidden');
+                }
             }
         }
 
@@ -685,14 +680,16 @@
                 publicView.classList.remove('hidden');
                 adminView.classList.add('hidden');
 
-                btnTabPublic.className = 'px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 bg-white text-slate-800 shadow-sm font-semibold';
-                btnTabAdmin.className = 'px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900';
+                // สลับสีและพื้นหลังของปุ่มในแคปซูล
+                btnTabPublic.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 bg-white text-kmitl-orange shadow-sm font-bold border border-slate-200/60';
+                btnTabAdmin.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50';
             } else {
                 publicView.classList.add('hidden');
                 adminView.classList.remove('hidden');
 
-                btnTabAdmin.className = 'px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 bg-white text-slate-800 shadow-sm font-semibold';
-                btnTabPublic.className = 'px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900';
+                // สลับสีและพื้นหลังของปุ่มในแคปซูล
+                btnTabAdmin.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 bg-white text-kmitl-orange shadow-sm font-bold border border-slate-200/60';
+                btnTabPublic.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50';
             }
         }
 
@@ -726,7 +723,10 @@
         }
 
         function updateStats(data) {
+            // คำนวณยอดรวมและแยกรายสถานะทั้ง 6 หัวข้อ
             document.getElementById('statTotal').innerText = data.length;
+            document.getElementById('statDraft').innerText = data.filter(b => b.status === 'ร่าง').length;
+            document.getElementById('statPending').innerText = data.filter(b => b.status === 'รออนุมัติ').length;
             document.getElementById('statApproved').innerText = data.filter(b => b.status === 'อนุมัติแล้ว').length;
             document.getElementById('statPrinting').innerText = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
             document.getElementById('statCompleted').innerText = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
@@ -767,7 +767,6 @@
 
                 const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
                 
-                // Determine display price (actual_student_price -> student_price_rounded fallback)
                 const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
                                       ? book.actual_student_price 
                                       : book.student_price_rounded;

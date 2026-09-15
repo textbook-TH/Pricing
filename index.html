@@ -44,6 +44,11 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
     </style>
 </head>
 <body class="h-full flex flex-col text-slate-800 bg-slate-50">
@@ -145,14 +150,12 @@
 
             <!-- Toolbar: Search & Filter -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                <!-- Search Box -->
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="publicSearchInput" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, ภาควิชา..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
-                <!-- Status Filter Dropdown -->
                 <div class="flex items-center space-x-2 w-full md:w-auto">
                     <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
                     <select id="publicStatusFilter" onchange="filterPublicData()" class="w-full md:w-48 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
@@ -182,18 +185,16 @@
                             </tr>
                         </thead>
                         <tbody id="publicTableBody" class="divide-y divide-slate-100">
-                            <!-- Rows will be injected dynamically via JS -->
+                            <!-- Rows loaded dynamically -->
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Loading State -->
                 <div id="publicLoading" class="p-12 text-center text-slate-400">
                     <i class="fa-solid fa-circle-notch fa-spin text-3xl text-kmitl-orange mb-3"></i>
                     <p class="text-sm font-medium">กำลังโหลดข้อมูลตำราเรียน...</p>
                 </div>
 
-                <!-- Empty State -->
                 <div id="publicEmpty" class="hidden p-12 text-center text-slate-400">
                     <i class="fa-solid fa-book-open-reader text-4xl text-slate-300 mb-3"></i>
                     <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลรายการตำราเรียน</p>
@@ -208,7 +209,7 @@
         <!-- ========================================== -->
         <section id="adminView" class="hidden space-y-6">
 
-            <!-- LOGIN CARD (Displayed if user is NOT logged in) -->
+            <!-- LOGIN CARD -->
             <div id="adminLoginCard" class="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-8 space-y-6">
                 <div class="text-center space-y-2">
                     <div class="w-14 h-14 bg-orange-100 text-kmitl-orange rounded-2xl mx-auto flex items-center justify-center text-2xl shadow-inner">
@@ -249,12 +250,11 @@
                 </div>
             </div>
 
-            <!-- ADMIN DASHBOARD CONTENT (Displayed if Logged In) -->
+            <!-- ADMIN DASHBOARD CONTENT -->
             <div id="adminDashboard" class="hidden space-y-6">
 
                 <!-- Admin Action Bar -->
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                    <!-- Left: Search & Filter -->
                     <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <div class="relative w-full sm:w-64">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
@@ -272,7 +272,6 @@
                         </select>
                     </div>
 
-                    <!-- Right: Add New Button -->
                     <button onclick="openFormModal()" class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-sm hover:shadow-lg hover:brightness-105 transition flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-plus"></i>
                         <span>เพิ่มรายการตำราเรียน</span>
@@ -301,7 +300,6 @@
                         </table>
                     </div>
 
-                    <!-- Loading / Empty -->
                     <div id="adminLoading" class="p-12 text-center text-slate-400">
                         <i class="fa-solid fa-circle-notch fa-spin text-3xl text-kmitl-orange mb-3"></i>
                         <p class="text-sm font-medium">กำลังโหลดข้อมูลเจ้าหน้าที่...</p>
@@ -323,7 +321,6 @@
     <!-- ========================================== -->
     <div id="modalPublicDetail" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn">
-            <!-- Modal Header -->
             <div class="bg-slate-900 text-white p-5 flex justify-between items-start">
                 <div class="space-y-1 pr-4">
                     <span id="detailStatusBadge" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
@@ -334,10 +331,7 @@
                 </button>
             </div>
 
-            <!-- Modal Body -->
             <div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto custom-scrollbar">
-                
-                <!-- General Info Grid -->
                 <div class="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
                     <div>
                         <span class="text-slate-400 block mb-0.5">ผู้แต่ง / อาจารย์:</span>
@@ -365,7 +359,6 @@
                     </div>
                 </div>
 
-                <!-- Prices Highlight Section -->
                 <div class="border border-orange-100 bg-orange-50/50 rounded-xl p-4 space-y-3">
                     <h4 class="text-xs font-bold font-kanit text-kmitl-orange uppercase tracking-wider flex items-center">
                         <i class="fa-solid fa-tags mr-1.5"></i>ราคาจำหน่ายสุทธิ
@@ -383,12 +376,10 @@
                     </div>
                 </div>
 
-                <!-- Remarks if any -->
                 <div id="detailRemarksContainer" class="hidden text-xs text-slate-500 bg-slate-50 p-3 rounded-lg">
                     <span class="font-semibold block text-slate-700">หมายเหตุ:</span>
                     <span id="detailRemarks"></span>
                 </div>
-
             </div>
 
             <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
@@ -423,12 +414,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อหนังสือ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formTitle" required placeholder="เช่น การวิเคราะห์วงจรไฟฟ้า"
+                        <input type="text" id="formTitle" required placeholder="เช่น หลักการและการคำนวณพื้นฐานทางวิศวกรรมเคมี"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่งทางวิชาการ</label>
-                        <input type="text" id="formAcademicTitle" placeholder="เช่น ผศ.ดร. / รศ."
+                        <input type="text" id="formAcademicTitle" placeholder="เช่น รศ. / ผศ.ดร."
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -437,12 +428,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล ผู้แต่ง <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formAuthor" required placeholder="เช่น สมชาย ใจดี"
+                        <input type="text" id="formAuthor" required placeholder="เช่น ศิริพันธ์ุ มุธาธัญลักษณ์"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ภาควิชา <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formDepartment" required placeholder="เช่น วิศวกรรมไฟฟ้า"
+                        <input type="text" id="formDepartment" required placeholder="เช่น เคมี / วิศวกรรมเคมี"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -451,17 +442,17 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ (ประเมิน)</label>
-                        <input type="text" id="formBookCode" placeholder="BK-6701"
+                        <input type="text" id="formBookCode" placeholder="Text-021"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัส วศ.สจล.</label>
-                        <input type="text" id="formKmitlCode" placeholder="ENG-101"
+                        <input type="text" id="formKmitlCode" placeholder="306"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">เลข ISBN</label>
-                        <input type="text" id="formIsbn" placeholder="978-616-..."
+                        <input type="text" id="formIsbn" placeholder="978-616-338-199-6"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
@@ -480,12 +471,12 @@
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">พิมพ์ครั้งที่</label>
-                        <input type="number" id="formEdition" min="1" value="1"
+                        <input type="number" id="formEdition" min="1" value="3"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนหน้า</label>
-                        <input type="number" id="formPages" min="1" value="100"
+                        <input type="number" id="formPages" min="1" value="339"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
@@ -495,13 +486,13 @@
                     </div>
                 </div>
 
-                <!-- Calculation Section Box -->
+                <!-- Calculation Section Box (AUTO-CALCULATOR WITH CORRECT FORMULA) -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                         <span class="text-xs font-bold font-kanit text-slate-800 flex items-center">
-                            <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ (ตามเกณฑ์ วศ.สจล.)
+                            <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ (Auto-Calculator)
                         </span>
-                        <span class="text-[10px] text-slate-400">สูตรคำนวณราคาหนังสือ คณะวิศวกรรมศาสตร์</span>
+                        <span class="text-[10px] text-slate-400">คำนวณ VAT 7% และปัดเศษราคาขายตามมาตรฐานคณะ</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -530,22 +521,12 @@
                         </div>
                     </div>
 
-                    <!-- Formula Explanation -->
-                    <div class="text-[11px] text-slate-500 bg-white p-2.5 rounded-lg border border-slate-200 space-y-1">
-                        <div class="font-semibold text-slate-700"><i class="fa-solid fa-circle-info text-kmitl-orange mr-1"></i>เกณฑ์การคิดราคา คณะวิศวกรรมศาสตร์:</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 text-[10px] text-slate-600">
-                            <div>• ราคาส่งคณะ = ต้นทุนรวมVAT/เล่ม × 1.35 (ปัดขึ้น 10)</div>
-                            <div>• ราคานักศึกษา = ราคาส่งคณะ × 1.20</div>
-                            <div>• ราคาปกบุคคลนอก = (ราคาส่งคณะ × 1.5) + 40%</div>
-                        </div>
-                    </div>
-
-                    <!-- Computed Sale Prices -->
+                    <!-- Computed Sale Prices based on exact faculty markup logic -->
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-xs">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">ราคาส่งคณะ (บาท)</label>
                             <input type="number" step="0.01" id="formWholesaleFaculty" required
-                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-slate-50">
+                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-white">
                         </div>
                         <div>
                             <label class="block font-medium text-emerald-700 mb-1">ราคาขายนักศึกษา (บาท)</label>
@@ -560,14 +541,12 @@
                     </div>
                 </div>
 
-                <!-- Remarks -->
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">หมายเหตุเพิ่มเติม</label>
                     <textarea id="formRemarks" rows="2" placeholder="ระบุรายละเอียดเพิ่มเติม (ถ้ามี)"
                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange"></textarea>
                 </div>
 
-                <!-- Submit buttons -->
                 <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
                     <button type="button" onclick="closeModal('modalAdminForm')" class="px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-200 transition">
                         ยกเลิก
@@ -580,9 +559,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- POPUP MODAL 3: ยืนยันการลบ (Delete Confirm) -->
-    <!-- ========================================== -->
+    <!-- POPUP MODAL 3: Delete Confirmation -->
     <div id="modalDeleteConfirm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-slate-100 animate-fadeIn">
             <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full mx-auto flex items-center justify-center text-xl">
@@ -610,26 +587,22 @@
     <!-- JAVASCRIPT APPLICATION LOGIC -->
     <!-- ========================================== -->
     <script>
-        // 1. Supabase Initialization
         const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
         const ALLOWED_ADMINS = ['textbook@kmitl.ac.th', 'suchada.da@kmitl.ac.th'];
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Global State
         let allBooks = [];
-        let currentTab = 'public'; // 'public' or 'admin'
+        let currentTab = 'public';
         let currentUser = null;
         let deleteTargetId = null;
 
-        // 2. Window Load Listener
         window.onload = async function() {
             await checkAuthSession();
             await loadTextbooksData();
         };
 
-        // Check session state
         async function checkAuthSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) {
@@ -648,7 +621,6 @@
             }
         }
 
-        // Update Nav UI based on Login
         function updateUserUI(isLoggedIn) {
             const userInfoSection = document.getElementById('userInfoSection');
             const userEmailText = document.getElementById('userEmailText');
@@ -671,7 +643,6 @@
             }
         }
 
-        // Switch View Tabs (Public <-> Admin)
         function switchTab(tab) {
             currentTab = tab;
             const publicView = document.getElementById('publicView');
@@ -694,7 +665,6 @@
             }
         }
 
-        // Fetch Data from Supabase
         async function loadTextbooksData() {
             try {
                 document.getElementById('publicLoading').classList.remove('hidden');
@@ -724,7 +694,6 @@
             }
         }
 
-        // Update Header Stats
         function updateStats(data) {
             document.getElementById('statTotal').innerText = data.length;
             document.getElementById('statApproved').innerText = data.filter(b => b.status === 'อนุมัติแล้ว').length;
@@ -732,7 +701,6 @@
             document.getElementById('statCompleted').innerText = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
         }
 
-        // Helper: Badge Style mapping
         function getStatusBadge(status) {
             switch (status) {
                 case 'ร่าง':
@@ -750,7 +718,6 @@
             }
         }
 
-        // Render Public Table
         function renderPublicTable(books) {
             const tbody = document.getElementById('publicTableBody');
             const emptyState = document.getElementById('publicEmpty');
@@ -790,7 +757,6 @@
             });
         }
 
-        // Render Admin Table (with Edit & Delete icons)
         function renderAdminTable(books) {
             const tbody = document.getElementById('adminTableBody');
             const emptyState = document.getElementById('adminEmpty');
@@ -837,7 +803,6 @@
             });
         }
 
-        // Filter Public Table
         function filterPublicData() {
             const search = document.getElementById('publicSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('publicStatusFilter').value;
@@ -856,7 +821,6 @@
             renderPublicTable(filtered);
         }
 
-        // Filter Admin Table
         function filterAdminData() {
             const search = document.getElementById('adminSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('adminStatusFilter').value;
@@ -875,7 +839,6 @@
             renderAdminTable(filtered);
         }
 
-        // Public Popup Modal Details
         function openPublicDetailModal(book) {
             document.getElementById('detailTitle').innerText = book.title;
             document.getElementById('detailStatusBadge').innerHTML = getStatusBadge(book.status);
@@ -888,11 +851,9 @@
             document.getElementById('detailIsbn').innerText = book.isbn || '-';
             document.getElementById('detailKmitlCode').innerText = book.kmitl_code || '-';
 
-            // Prices
             document.getElementById('detailStudentPrice').innerText = book.student_price_rounded ? `${Number(book.student_price_rounded).toLocaleString()} บาท` : '-';
             document.getElementById('detailExternalPrice').innerText = book.external_cover_rounded ? `${Number(book.external_cover_rounded).toLocaleString()} บาท` : '-';
 
-            // Remarks
             const remarksContainer = document.getElementById('detailRemarksContainer');
             if (book.remarks) {
                 document.getElementById('detailRemarks').innerText = book.remarks;
@@ -908,52 +869,35 @@
         }
 
         /**
-         * CALCULATE PRICING ACCORDING TO KMITL FACULTY OF ENGINEERING SPREADSHEET (ภาพ 02):
+         * UPDATED CALCULATION ENGINE (สอดคล้องกับเอกสารมาตรฐาน ภาพ 02 100%)
          * 
-         * 1. ต้นทุนรวม (ก่อน VAT) = จำนวนพิมพ์ * ต้นทุนต่อหน่วย
-         * 2. VAT 7% = ต้นทุนรวม * 0.07
-         * 3. ยอดรวมทั้งสิ้น (รวม VAT) = ต้นทุนรวม + VAT 7%
-         * 4. ต้นทุนรวม VAT ต่อเล่ม = ยอดรวมทั้งสิ้น / จำนวนพิมพ์
-         * 
-         * 5. ราคาส่ง (จากคณะ) = (ต้นทุนรวม VAT ต่อเล่ม * 1.35) -> ปัดเศษขึ้น (CEIL) เป็นจำนวนเต็มสิบ
-         * 6. ราคาขาย (นักศึกษา/สมาชิก) = ราคาส่งคณะ(ปัดเศษแล้ว) * 1.20
-         * 7. ราคาส่งบุคคลภายนอก = ราคาส่งคณะ(ปัดเศษแล้ว) * 1.50
-         * 8. ราคาปก (สำหรับบุคคลภายนอก) = ราคาส่งบุคคลภายนอก * 1.40  (หรือ ราคาส่งคณะ * 1.5 * 1.4)
+         * 1. ต้นทุนรวม VAT = (จำนวนเล่ม * ต้นทุนต่อหน่วยก่อน VAT) * 1.07
+         * 2. ต้นทุนต่อเล่มรวม VAT = ต้นทุนรวม VAT / จำนวนเล่ม  (เช่น 18,190 / 100 = 181.90)
+         * 3. ราคาส่งคณะ = (ต้นทุนรวม VAT * 1.35) ปัดเศษขึ้นหลัก 5 บาท (181.90 * 1.35 = 245.565 -> ปัดเป็น 250)
+         * 4. ราคาขายนักศึกษา = ราคาส่งคณะ * 1.20 (250 * 1.20 = 300)
+         * 5. ราคาปกบุคคลภายนอก = (ราคาส่งคณะ * 1.50) * 1.40 ปัดเศษขึ้นหลัก 5 บาท ((250 * 1.5) * 1.4 = 525)
          */
         function calculatePricing() {
             const printQuantity = parseFloat(document.getElementById('formPrintQuantity').value) || 0;
             const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
 
-            if (printQuantity <= 0 || unitCost <= 0) {
-                document.getElementById('formProductionCost').value = '0.00';
-                document.getElementById('formVatAmount').value = '0.00';
-                document.getElementById('formTotalCostWithVat').value = '0.00';
-                document.getElementById('formWholesaleFaculty').value = '0';
-                document.getElementById('formStudentPrice').value = '0';
-                document.getElementById('formExternalCover').value = '0';
-                return;
-            }
-
-            // 1-3. Basic Production Cost & VAT
             const productionCost = printQuantity * unitCost;
             const vatAmount = productionCost * 0.07;
             const totalCostWithVat = productionCost + vatAmount;
 
-            // 4. Unit Cost including VAT
-            const unitCostWithVat = totalCostWithVat / printQuantity; // e.g. 18,190 / 100 = 181.90
+            // ต้นทุนต่อเล่ม รวม VAT 7%
+            const unitCostWithVat = printQuantity > 0 ? (totalCostWithVat / printQuantity) : 0;
 
-            // 5. ราคาส่งคณะ = ต้นทุนรวม VAT ต่อเล่ม * 1.35 -> ปัดเศษขึ้นหลักสิบ
-            const rawWholesaleFaculty = unitCostWithVat * 1.35; // e.g. 181.90 * 1.35 = 245.565
-            const wholesaleFaculty = Math.ceil(rawWholesaleFaculty / 10) * 10; // e.g. 250.00
+            // 1. ราคาส่งคณะ: ต้นทุนต่อเล่มรวม VAT * 1.35 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
+            const wholesaleFaculty = unitCostWithVat > 0 ? Math.ceil((unitCostWithVat * 1.35) / 5) * 5 : 0;
 
-            // 6. ราคาขายนักศึกษา / สมาชิก = ราคาส่งคณะ * 1.20
-            const studentPrice = Math.ceil((wholesaleFaculty * 1.20) / 5) * 5; // e.g. 250 * 1.20 = 300.00
+            // 2. ราคาขายนักศึกษา/สมาชิก: คิด Markup 20% จากราคาส่งคณะ
+            const studentPrice = wholesaleFaculty > 0 ? Math.ceil((wholesaleFaculty * 1.20) / 5) * 5 : 0;
 
-            // 7-8. ราคาปกบุคคลภายนอก = (ราคาส่งคณะ * 1.50) * 1.40
-            const externalWholesale = wholesaleFaculty * 1.50; // e.g. 250 * 1.50 = 375.00
-            const externalCover = Math.ceil((externalWholesale * 1.40) / 5) * 5; // e.g. 375 * 1.40 = 525.00
+            // 3. ราคาปกบุคคลภายนอก: (ราคาส่งคณะ * 1.50) * 1.40 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
+            const externalWholesale = wholesaleFaculty * 1.50;
+            const externalCover = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
 
-            // Set inputs
             document.getElementById('formProductionCost').value = productionCost.toFixed(2);
             document.getElementById('formVatAmount').value = vatAmount.toFixed(2);
             document.getElementById('formTotalCostWithVat').value = totalCostWithVat.toFixed(2);
@@ -963,7 +907,6 @@
             document.getElementById('formExternalCover').value = externalCover;
         }
 
-        // Open Form Modal (Add or Edit)
         function openFormModal(book = null) {
             const form = document.getElementById('textbookForm');
             form.reset();
@@ -981,8 +924,8 @@
                 document.getElementById('formStatus').value = book.status || 'ร่าง';
                 document.getElementById('formEdition').value = book.edition || 1;
                 document.getElementById('formPages').value = book.pages || 0;
-                document.getElementById('formPrintQuantity').value = book.print_quantity || 100;
-                document.getElementById('formUnitCost').value = book.unit_cost || 170;
+                document.getElementById('formPrintQuantity').value = book.print_quantity || 0;
+                document.getElementById('formUnitCost').value = book.unit_cost || 0;
                 document.getElementById('formRemarks').value = book.remarks || '';
 
                 calculatePricing();
@@ -992,6 +935,7 @@
             } else {
                 document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
                 document.getElementById('formBookId').value = '';
+                // Default test values corresponding to standard example
                 document.getElementById('formPrintQuantity').value = 100;
                 document.getElementById('formUnitCost').value = 170;
                 calculatePricing();
@@ -1000,7 +944,6 @@
             openModal('modalAdminForm');
         }
 
-        // Save Form Handler (Insert / Update)
         async function handleFormSubmit(e) {
             e.preventDefault();
 
@@ -1063,7 +1006,6 @@
             }
         }
 
-        // Delete Confirmation
         function confirmDelete(id, title) {
             deleteTargetId = id;
             document.getElementById('deleteTargetTitle').innerText = `คุณต้องการลบ "${title}" ใช่หรือไม่?`;
@@ -1071,7 +1013,6 @@
             openModal('modalDeleteConfirm');
         }
 
-        // Execute Delete
         async function executeDelete() {
             if (!deleteTargetId || !currentUser) return;
 
@@ -1096,7 +1037,6 @@
             }
         }
 
-        // Handle Login
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -1126,7 +1066,6 @@
             }
         }
 
-        // Handle Logout
         async function handleLogout() {
             await supabaseClient.auth.signOut();
             currentUser = null;
@@ -1134,7 +1073,6 @@
             showToast('ออกจากระบบเรียบร้อย', 'info');
         }
 
-        // Modal Controls
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
         }
@@ -1142,7 +1080,6 @@
             document.getElementById(id).classList.add('hidden');
         }
 
-        // Notification Toast Generator
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -1173,7 +1110,6 @@
             }, 3500);
         }
 
-        // Helper: Escape HTML
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)

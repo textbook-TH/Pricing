@@ -74,7 +74,6 @@
 
                 <!-- Navigation Tabs / Admin Info -->
                 <div class="flex items-center space-x-3">
-                    <!-- Public / Admin View Toggles -->
                     <div class="bg-slate-100 p-1 rounded-lg flex items-center space-x-1 border border-slate-200 text-sm font-medium">
                         <button id="btnTabPublic" onclick="switchTab('public')" class="px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 bg-white text-slate-800 shadow-sm font-semibold">
                             <i class="fa-solid fa-globe text-xs"></i>
@@ -86,7 +85,6 @@
                         </button>
                     </div>
 
-                    <!-- User Logged In Badge & Logout Button -->
                     <div id="userInfoSection" class="hidden items-center space-x-2 pl-2 border-l border-slate-200">
                         <div class="text-right hidden md:block">
                             <p id="userEmailText" class="text-xs font-semibold text-slate-700 truncate max-w-[140px]"></p>
@@ -106,9 +104,7 @@
     <!-- Main Content Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- ========================================== -->
-        <!-- PUBLIC VIEW SECTION (หน้าหลัก - บุคคลทั่วไป) -->
-        <!-- ========================================== -->
+        <!-- PUBLIC VIEW SECTION -->
         <section id="publicView" class="space-y-6">
             
             <!-- Banner / Header -->
@@ -123,11 +119,10 @@
                     </div>
                     <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">ค้นหารายการตำราเรียนวิศวกรรมศาสตร์</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">
-                        ตรวจสอบสถานะจัดพิมพ์ รายละเอียดตำราเรียน และราคาจำหน่ายสำหรับนักศึกษา สมาชิก และบุคคลภายนอก สจล.
+                        ตรวจสอบสถานะจัดพิมพ์ รายละเอียดตำราเรียน และราคาจริงจำหน่ายสำหรับนักศึกษา สมาชิก และบุคคลภายนอก สจล.
                     </p>
                 </div>
 
-                <!-- Quick Stats Badge -->
                 <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                     <div class="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/5">
                         <span class="block text-2xl font-bold font-kanit text-orange-400" id="statTotal">0</span>
@@ -180,12 +175,13 @@
                                 <th scope="col" class="py-3.5 px-4 min-w-[220px]">ชื่อหนังสือ / ตำราเรียน</th>
                                 <th scope="col" class="py-3.5 px-4">ตำแหน่งทางวิชาการ - ผู้แต่ง</th>
                                 <th scope="col" class="py-3.5 px-4">ภาควิชา</th>
-                                <th scope="col" class="py-3.5 px-4 text-center">วันที่สร้างรายการ</th>
+                                <th scope="col" class="py-3.5 px-4 text-center">ราคาจริงนักศึกษา</th>
+                                <th scope="col" class="py-3.5 px-4 text-center">ราคาจริงบุคคลภายนอก</th>
                                 <th scope="col" class="py-3.5 px-4 text-center">รายละเอียด</th>
                             </tr>
                         </thead>
                         <tbody id="publicTableBody" class="divide-y divide-slate-100">
-                            <!-- Rows loaded dynamically -->
+                            <!-- Dynamic Content -->
                         </tbody>
                     </table>
                 </div>
@@ -204,9 +200,7 @@
 
         </section>
 
-        <!-- ========================================== -->
-        <!-- ADMIN VIEW SECTION (หน้าเจ้าหน้าที่) -->
-        <!-- ========================================== -->
+        <!-- ADMIN VIEW SECTION -->
         <section id="adminView" class="hidden space-y-6">
 
             <!-- LOGIN CARD -->
@@ -289,8 +283,8 @@
                                     <th scope="col" class="py-3.5 px-4 min-w-[200px]">ชื่อหนังสือ / ตำราเรียน</th>
                                     <th scope="col" class="py-3.5 px-4">ผู้แต่ง & ตำแหน่ง</th>
                                     <th scope="col" class="py-3.5 px-4">ภาควิชา</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center">พิมพ์ (เล่ม)</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center">วันที่สร้าง</th>
+                                    <th scope="col" class="py-3.5 px-4 text-center">ราคาจริงนักศึกษา</th>
+                                    <th scope="col" class="py-3.5 px-4 text-center">ราคาจริงบุคคลนอก</th>
                                     <th scope="col" class="py-3.5 px-4 text-center w-28">จัดการ</th>
                                 </tr>
                             </thead>
@@ -316,9 +310,7 @@
 
     </main>
 
-    <!-- ========================================== -->
-    <!-- POPUP MODAL 1: รายละเอียดตำราเรียน (Public) -->
-    <!-- ========================================== -->
+    <!-- POPUP MODAL 1: รายละเอียดตำราเรียน (Public Detail) -->
     <div id="modalPublicDetail" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn">
             <div class="bg-slate-900 text-white p-5 flex justify-between items-start">
@@ -359,24 +351,31 @@
                     </div>
                 </div>
 
-                <div class="border border-orange-100 bg-orange-50/50 rounded-xl p-4 space-y-3">
+                <!-- Price Box featuring actual prices -->
+                <div class="border border-orange-200 bg-gradient-to-br from-orange-50/70 to-amber-50/40 rounded-xl p-4 space-y-3 shadow-sm">
                     <h4 class="text-xs font-bold font-kanit text-kmitl-orange uppercase tracking-wider flex items-center">
-                        <i class="fa-solid fa-tags mr-1.5"></i>ราคาจำหน่ายสุทธิ
+                        <i class="fa-solid fa-tags mr-1.5"></i>ราคาจำหน่ายจริง (Actual Selling Prices)
                     </h4>
                     
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-white p-3 rounded-lg border border-orange-100 shadow-sm text-center">
-                            <span class="text-[11px] text-slate-500 block font-medium">นักศึกษา / สมาชิก</span>
-                            <span id="detailStudentPrice" class="text-xl font-bold font-kanit text-emerald-600"></span>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm text-center">
+                            <span class="text-[11px] text-emerald-700 block font-semibold flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-graduation-cap"></i> ราคาจริงนักศึกษา
+                            </span>
+                            <span id="detailActualStudentPrice" class="text-2xl font-bold font-kanit text-emerald-600"></span>
+                            <span id="detailCalcStudentPrice" class="text-[10px] text-slate-400 block mt-0.5"></span>
                         </div>
-                        <div class="bg-white p-3 rounded-lg border border-orange-100 shadow-sm text-center">
-                            <span class="text-[11px] text-slate-500 block font-medium">ราคาปก (บุคคลภายนอก)</span>
-                            <span id="detailExternalPrice" class="text-xl font-bold font-kanit text-slate-900"></span>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm text-center">
+                            <span class="text-[11px] text-slate-600 block font-semibold flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-users"></i> ราคาจริงบุคคลภายนอก
+                            </span>
+                            <span id="detailActualPublicPrice" class="text-2xl font-bold font-kanit text-slate-900"></span>
+                            <span id="detailCalcPublicPrice" class="text-[10px] text-slate-400 block mt-0.5"></span>
                         </div>
                     </div>
                 </div>
 
-                <div id="detailRemarksContainer" class="hidden text-xs text-slate-500 bg-slate-50 p-3 rounded-lg">
+                <div id="detailRemarksContainer" class="hidden text-xs text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200">
                     <span class="font-semibold block text-slate-700">หมายเหตุ:</span>
                     <span id="detailRemarks"></span>
                 </div>
@@ -391,35 +390,33 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (Admin) -->
-    <!-- ========================================== -->
+    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (Admin Form - Image 01 Enhanced) -->
     <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
             
-            <div class="bg-gradient-to-r from-slate-900 to-kmitl-slate text-white p-5 flex justify-between items-center">
+            <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-pen-to-square text-orange-400"></i>
-                    <h3 id="formModalTitle" class="text-lg font-bold font-kanit">เพิ่มรายการตำราเรียน</h3>
+                    <h3 id="formModalTitle" class="text-lg font-bold font-kanit">เพิ่มรายการตำราเรียนใหม่</h3>
                 </div>
                 <button onclick="closeModal('modalAdminForm')" class="text-slate-400 hover:text-white text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="textbookForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+            <form id="textbookForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scrollbar">
                 <input type="hidden" id="formBookId">
 
                 <!-- Row 1: Title & Academic Title -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อหนังสือ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formTitle" required placeholder="เช่น หลักการและการคำนวณพื้นฐานทางวิศวกรรมเคมี"
+                        <input type="text" id="formTitle" required placeholder="หลักการและการคำนวณพื้นฐานทางวิศวกรรมเคมี"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่งทางวิชาการ</label>
-                        <input type="text" id="formAcademicTitle" placeholder="เช่น รศ. / ผศ.ดร."
+                        <input type="text" id="formAcademicTitle" placeholder="รศ."
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -428,12 +425,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล ผู้แต่ง <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formAuthor" required placeholder="เช่น ศิริพันธ์ุ มุธาธัญลักษณ์"
+                        <input type="text" id="formAuthor" required placeholder="ศิริพันธ์ุ มุธาธัญลักษณ์"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ภาควิชา <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formDepartment" required placeholder="เช่น เคมี / วิศวกรรมเคมี"
+                        <input type="text" id="formDepartment" required placeholder="เคมี"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -486,13 +483,13 @@
                     </div>
                 </div>
 
-                <!-- Calculation Section Box (AUTO-CALCULATOR WITH CORRECT FORMULA) -->
+                <!-- Calculation Section Box (AUTO-CALCULATOR WITH ACTUAL PRICES INTEGRATION) -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                         <span class="text-xs font-bold font-kanit text-slate-800 flex items-center">
                             <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ (Auto-Calculator)
                         </span>
-                        <span class="text-[10px] text-slate-400">คำนวณ VAT 7% และปัดเศษราคาขายตามมาตรฐานคณะ</span>
+                        <span class="text-[10px] text-slate-400">คำนวณ VAT 7% และปัดเศษราคาขาย</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -504,7 +501,7 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">ต้นทุนรวม (ก่อน VAT)</label>
                             <input type="number" step="0.01" id="formProductionCost" readonly
-                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600">
+                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600 font-mono">
                         </div>
                     </div>
 
@@ -512,31 +509,63 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">VAT 7% (บาท)</label>
                             <input type="number" step="0.01" id="formVatAmount" readonly
-                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600">
+                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600 font-mono">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">ยอดรวมทั้งสิ้น (รวม VAT)</label>
                             <input type="number" step="0.01" id="formTotalCostWithVat" readonly
-                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm font-bold text-slate-800">
+                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm font-bold text-slate-800 font-mono">
                         </div>
                     </div>
 
-                    <!-- Computed Sale Prices based on exact faculty markup logic -->
+                    <!-- Computed Standard Prices -->
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-xs">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">ราคาส่งคณะ (บาท)</label>
-                            <input type="number" step="0.01" id="formWholesaleFaculty" required
-                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-white">
+                            <input type="number" step="0.01" id="formWholesaleFaculty" readonly
+                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-slate-100">
                         </div>
                         <div>
-                            <label class="block font-medium text-emerald-700 mb-1">ราคาขายนักศึกษา (บาท)</label>
-                            <input type="number" step="0.01" id="formStudentPrice" required
-                                   class="w-full px-2.5 py-1.5 border border-emerald-300 rounded-lg font-bold text-emerald-600 bg-emerald-50">
+                            <label class="block font-medium text-emerald-700 mb-1">ราคาขายนักศึกษา (คำนวณ)</label>
+                            <input type="number" step="0.01" id="formStudentPrice" readonly
+                                   class="w-full px-2.5 py-1.5 border border-emerald-200 rounded-lg font-bold text-emerald-700 bg-emerald-50/50">
                         </div>
                         <div>
-                            <label class="block font-medium text-slate-800 mb-1">ราคาปกบุคคลนอก (บาท)</label>
-                            <input type="number" step="0.01" id="formExternalCover" required
-                                   class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg font-bold text-slate-900 bg-white">
+                            <label class="block font-medium text-slate-800 mb-1">ราคาปกบุคคลนอก (คำนวณ)</label>
+                            <input type="number" step="0.01" id="formExternalCover" readonly
+                                   class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg font-bold text-slate-900 bg-slate-100">
+                        </div>
+                    </div>
+
+                    <!-- NEW ADDITION: actual_student_price & actual_public_price -->
+                    <div class="pt-3 border-t border-orange-200/80 bg-orange-50/60 -mx-4 -mb-4 p-4 rounded-b-xl space-y-2">
+                        <div class="flex items-center space-x-1.5 text-xs font-bold text-kmitl-orange">
+                            <i class="fa-solid fa-tag"></i>
+                            <span>ราคาจริงที่กำหนดจำหน่าย (Actual Prices)</span>
+                            <span class="text-[10px] text-slate-500 font-normal leading-none">(สามารถปรับเปลี่ยนได้ตามที่อนุมัติขายจริง)</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-emerald-800 mb-1">
+                                    ราคาจริงสำหรับนักศึกษา (actual_student_price) <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="number" step="0.01" id="formActualStudentPrice" required min="0" placeholder="เช่น 210.00"
+                                           class="w-full px-3 py-2 border-2 border-emerald-400 bg-white rounded-lg text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-emerald-600">บาท</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-800 mb-1">
+                                    ราคาจริงสำหรับบุคคลภายนอก (actual_public_price) <span class="text-rose-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="number" step="0.01" id="formActualPublicPrice" required min="0" placeholder="เช่น 240.00"
+                                           class="w-full px-3 py-2 border-2 border-slate-400 bg-white rounded-lg text-sm font-bold text-slate-900 focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-600">บาท</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -584,7 +613,7 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
     <!-- ========================================== -->
-    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <!-- JAVASCRIPT APPLICATION LOGIC & SUPABASE    -->
     <!-- ========================================== -->
     <script>
         const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
@@ -597,10 +626,12 @@
         let currentTab = 'public';
         let currentUser = null;
         let deleteTargetId = null;
+        let isManualActualPriceEdit = false;
 
         window.onload = async function() {
             await checkAuthSession();
             await loadTextbooksData();
+            setupActualPriceManualListeners();
         };
 
         async function checkAuthSession() {
@@ -734,8 +765,15 @@
                 tr.className = 'hover:bg-slate-50/80 transition cursor-pointer border-b border-slate-100';
                 tr.onclick = () => openPublicDetailModal(book);
 
-                const createdDate = book.created_at ? new Date(book.created_at).toLocaleDateString('th-TH', { year: '2-digit', month: 'short', day: 'numeric' }) : '-';
                 const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
+                
+                // Determine display price (actual_student_price -> student_price_rounded fallback)
+                const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
+                                      ? book.actual_student_price 
+                                      : book.student_price_rounded;
+                const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
+                                     ? book.actual_public_price 
+                                     : book.external_cover_rounded;
 
                 tr.innerHTML = `
                     <td class="py-3.5 px-4 text-center font-mono text-xs font-semibold text-slate-400">#${books.length - index}</td>
@@ -746,7 +784,12 @@
                     </td>
                     <td class="py-3.5 px-4 font-medium text-slate-700">${escapeHtml(academicPrefix + book.author)}</td>
                     <td class="py-3.5 px-4 text-slate-600">${escapeHtml(book.department)}</td>
-                    <td class="py-3.5 px-4 text-center text-xs text-slate-500">${createdDate}</td>
+                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-base">
+                        ${actualStudent ? `${Number(actualStudent).toLocaleString()} ฿` : '-'}
+                    </td>
+                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-slate-900 text-base">
+                        ${actualPublic ? `${Number(actualPublic).toLocaleString()} ฿` : '-'}
+                    </td>
                     <td class="py-3.5 px-4 text-center">
                         <button class="w-8 h-8 bg-slate-100 hover:bg-orange-100 text-slate-500 hover:text-kmitl-orange rounded-lg transition inline-flex items-center justify-center">
                             <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -772,8 +815,14 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
 
-                const createdDate = book.created_at ? new Date(book.created_at).toLocaleDateString('th-TH', { year: '2-digit', month: 'short', day: 'numeric' }) : '-';
                 const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
+                
+                const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
+                                      ? book.actual_student_price 
+                                      : book.student_price_rounded;
+                const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
+                                     ? book.actual_public_price 
+                                     : book.external_cover_rounded;
 
                 tr.innerHTML = `
                     <td class="py-3.5 px-4 text-center font-mono text-xs font-semibold text-slate-400">#${books.length - index}</td>
@@ -784,8 +833,12 @@
                     </td>
                     <td class="py-3.5 px-4 font-medium text-slate-700 text-xs">${escapeHtml(academicPrefix + book.author)}</td>
                     <td class="py-3.5 px-4 text-xs text-slate-600">${escapeHtml(book.department)}</td>
-                    <td class="py-3.5 px-4 text-center text-xs font-semibold text-slate-700">${book.print_quantity?.toLocaleString() || 0}</td>
-                    <td class="py-3.5 px-4 text-center text-xs text-slate-400">${createdDate}</td>
+                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-sm">
+                        ${actualStudent ? `${Number(actualStudent).toLocaleString()} ฿` : '-'}
+                    </td>
+                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-slate-900 text-sm">
+                        ${actualPublic ? `${Number(actualPublic).toLocaleString()} ฿` : '-'}
+                    </td>
                     <td class="py-3.5 px-4 text-center">
                         <div class="flex items-center justify-center space-x-1">
                             <button onclick='openFormModal(${JSON.stringify(book).replace(/'/g, "&apos;")})' title="แก้ไข" 
@@ -851,8 +904,18 @@
             document.getElementById('detailIsbn').innerText = book.isbn || '-';
             document.getElementById('detailKmitlCode').innerText = book.kmitl_code || '-';
 
-            document.getElementById('detailStudentPrice').innerText = book.student_price_rounded ? `${Number(book.student_price_rounded).toLocaleString()} บาท` : '-';
-            document.getElementById('detailExternalPrice').innerText = book.external_cover_rounded ? `${Number(book.external_cover_rounded).toLocaleString()} บาท` : '-';
+            const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
+                                  ? book.actual_student_price 
+                                  : book.student_price_rounded;
+            const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
+                                 ? book.actual_public_price 
+                                 : book.external_cover_rounded;
+
+            document.getElementById('detailActualStudentPrice').innerText = actualStudent ? `${Number(actualStudent).toLocaleString()} บาท` : '-';
+            document.getElementById('detailActualPublicPrice').innerText = actualPublic ? `${Number(actualPublic).toLocaleString()} บาท` : '-';
+
+            document.getElementById('detailCalcStudentPrice').innerText = book.student_price_rounded ? `(ราคาคำนวณ: ${Number(book.student_price_rounded).toLocaleString()} บาท)` : '';
+            document.getElementById('detailCalcPublicPrice').innerText = book.external_cover_rounded ? `(ราคาคำนวณ: ${Number(book.external_cover_rounded).toLocaleString()} บาท)` : '';
 
             const remarksContainer = document.getElementById('detailRemarksContainer');
             if (book.remarks) {
@@ -868,15 +931,6 @@
             openModal('modalPublicDetail');
         }
 
-        /**
-         * UPDATED CALCULATION ENGINE (สอดคล้องกับเอกสารมาตรฐาน ภาพ 02 100%)
-         * 
-         * 1. ต้นทุนรวม VAT = (จำนวนเล่ม * ต้นทุนต่อหน่วยก่อน VAT) * 1.07
-         * 2. ต้นทุนต่อเล่มรวม VAT = ต้นทุนรวม VAT / จำนวนเล่ม  (เช่น 18,190 / 100 = 181.90)
-         * 3. ราคาส่งคณะ = (ต้นทุนรวม VAT * 1.35) ปัดเศษขึ้นหลัก 5 บาท (181.90 * 1.35 = 245.565 -> ปัดเป็น 250)
-         * 4. ราคาขายนักศึกษา = ราคาส่งคณะ * 1.20 (250 * 1.20 = 300)
-         * 5. ราคาปกบุคคลภายนอก = (ราคาส่งคณะ * 1.50) * 1.40 ปัดเศษขึ้นหลัก 5 บาท ((250 * 1.5) * 1.4 = 525)
-         */
         function calculatePricing() {
             const printQuantity = parseFloat(document.getElementById('formPrintQuantity').value) || 0;
             const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
@@ -885,16 +939,15 @@
             const vatAmount = productionCost * 0.07;
             const totalCostWithVat = productionCost + vatAmount;
 
-            // ต้นทุนต่อเล่ม รวม VAT 7%
             const unitCostWithVat = printQuantity > 0 ? (totalCostWithVat / printQuantity) : 0;
 
             // 1. ราคาส่งคณะ: ต้นทุนต่อเล่มรวม VAT * 1.35 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
             const wholesaleFaculty = unitCostWithVat > 0 ? Math.ceil((unitCostWithVat * 1.35) / 5) * 5 : 0;
 
-            // 2. ราคาขายนักศึกษา/สมาชิก: คิด Markup 20% จากราคาส่งคณะ
+            // 2. ราคาขายนักศึกษา (คำนวณ): คิด Markup 20% จากราคาส่งคณะ
             const studentPrice = wholesaleFaculty > 0 ? Math.ceil((wholesaleFaculty * 1.20) / 5) * 5 : 0;
 
-            // 3. ราคาปกบุคคลภายนอก: (ราคาส่งคณะ * 1.50) * 1.40 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
+            // 3. ราคาปกบุคคลภายนอก (คำนวณ): (ราคาส่งคณะ * 1.50) * 1.40 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
             const externalWholesale = wholesaleFaculty * 1.50;
             const externalCover = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
 
@@ -905,6 +958,21 @@
             document.getElementById('formWholesaleFaculty').value = wholesaleFaculty;
             document.getElementById('formStudentPrice').value = studentPrice;
             document.getElementById('formExternalCover').value = externalCover;
+
+            // Auto fill actual prices if not manually overwritten
+            if (!isManualActualPriceEdit) {
+                document.getElementById('formActualStudentPrice').value = studentPrice;
+                document.getElementById('formActualPublicPrice').value = externalCover;
+            }
+        }
+
+        function setupActualPriceManualListeners() {
+            const actualStudentInput = document.getElementById('formActualStudentPrice');
+            const actualPublicInput = document.getElementById('formActualPublicPrice');
+
+            const markManual = () => { isManualActualPriceEdit = true; };
+            if (actualStudentInput) actualStudentInput.addEventListener('input', markManual);
+            if (actualPublicInput) actualPublicInput.addEventListener('input', markManual);
         }
 
         function openFormModal(book = null) {
@@ -912,6 +980,7 @@
             form.reset();
 
             if (book) {
+                isManualActualPriceEdit = true;
                 document.getElementById('formModalTitle').innerText = 'แก้ไขรายการตำราเรียน';
                 document.getElementById('formBookId').value = book.id;
                 document.getElementById('formTitle').value = book.title || '';
@@ -932,10 +1001,18 @@
                 if (book.wholesale_faculty_rounded) document.getElementById('formWholesaleFaculty').value = book.wholesale_faculty_rounded;
                 if (book.student_price_rounded) document.getElementById('formStudentPrice').value = book.student_price_rounded;
                 if (book.external_cover_rounded) document.getElementById('formExternalCover').value = book.external_cover_rounded;
+
+                // Load actual prices from database
+                document.getElementById('formActualStudentPrice').value = book.actual_student_price !== null && book.actual_student_price !== undefined 
+                                                                         ? book.actual_student_price 
+                                                                         : (book.student_price_rounded || 0);
+                document.getElementById('formActualPublicPrice').value = book.actual_public_price !== null && book.actual_public_price !== undefined 
+                                                                        ? book.actual_public_price 
+                                                                        : (book.external_cover_rounded || 0);
             } else {
+                isManualActualPriceEdit = false;
                 document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
                 document.getElementById('formBookId').value = '';
-                // Default test values corresponding to standard example
                 document.getElementById('formPrintQuantity').value = 100;
                 document.getElementById('formUnitCost').value = 170;
                 calculatePricing();
@@ -973,6 +1050,8 @@
                 wholesale_faculty_rounded: parseFloat(document.getElementById('formWholesaleFaculty').value) || 0,
                 student_price_rounded: parseFloat(document.getElementById('formStudentPrice').value) || 0,
                 external_cover_rounded: parseFloat(document.getElementById('formExternalCover').value) || 0,
+                actual_student_price: parseFloat(document.getElementById('formActualStudentPrice').value) || 0,
+                actual_public_price: parseFloat(document.getElementById('formActualPublicPrice').value) || 0,
                 remarks: document.getElementById('formRemarks').value.trim() || null,
                 created_by: currentUser.id
             };

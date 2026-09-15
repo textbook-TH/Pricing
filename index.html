@@ -71,7 +71,7 @@
                 <div class="flex items-center space-x-3">
                     <!-- Public / Admin View Toggles -->
                     <div class="bg-slate-100 p-1 rounded-lg flex items-center space-x-1 border border-slate-200 text-sm font-medium">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 bg-white text-slate-800 shadow-sm">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3.5 py-1.5 rounded-md transition-all duration-200 flex items-center space-x-1.5 bg-white text-slate-800 shadow-sm font-semibold">
                             <i class="fa-solid fa-globe text-xs"></i>
                             <span>หน้าหลัก</span>
                         </button>
@@ -365,7 +365,7 @@
                     </div>
                 </div>
 
-                <!-- Prices Highlight Section (ไม่แสดงการคำนวณต้นทุน) -->
+                <!-- Prices Highlight Section -->
                 <div class="border border-orange-100 bg-orange-50/50 rounded-xl p-4 space-y-3">
                     <h4 class="text-xs font-bold font-kanit text-kmitl-orange uppercase tracking-wider flex items-center">
                         <i class="fa-solid fa-tags mr-1.5"></i>ราคาจำหน่ายสุทธิ
@@ -490,7 +490,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนพิมพ์ (เล่ม) <span class="text-rose-500">*</span></label>
-                        <input type="number" id="formPrintQuantity" required min="1" value="200" oninput="calculatePricing()"
+                        <input type="number" id="formPrintQuantity" required min="1" value="100" oninput="calculatePricing()"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold text-kmitl-orange focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -499,15 +499,15 @@
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                         <span class="text-xs font-bold font-kanit text-slate-800 flex items-center">
-                            <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ (Auto-Calculator)
+                            <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ (ตามเกณฑ์ วศ.สจล.)
                         </span>
-                        <span class="text-[10px] text-slate-400">คำนวณ VAT 7% และปัดเศษราคาขาย</span>
+                        <span class="text-[10px] text-slate-400">สูตรคำนวณราคาหนังสือ คณะวิศวกรรมศาสตร์</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">ต้นทุนต่อหน่วย (ก่อน VAT) <span class="text-rose-500">*</span></label>
-                            <input type="number" step="0.01" id="formUnitCost" required min="0" value="150" oninput="calculatePricing()"
+                            <input type="number" step="0.01" id="formUnitCost" required min="0" value="170" oninput="calculatePricing()"
                                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                         <div>
@@ -530,12 +530,22 @@
                         </div>
                     </div>
 
+                    <!-- Formula Explanation -->
+                    <div class="text-[11px] text-slate-500 bg-white p-2.5 rounded-lg border border-slate-200 space-y-1">
+                        <div class="font-semibold text-slate-700"><i class="fa-solid fa-circle-info text-kmitl-orange mr-1"></i>เกณฑ์การคิดราคา คณะวิศวกรรมศาสตร์:</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 text-[10px] text-slate-600">
+                            <div>• ราคาส่งคณะ = ต้นทุนรวมVAT/เล่ม × 1.35 (ปัดขึ้น 10)</div>
+                            <div>• ราคานักศึกษา = ราคาส่งคณะ × 1.20</div>
+                            <div>• ราคาปกบุคคลนอก = (ราคาส่งคณะ × 1.5) + 40%</div>
+                        </div>
+                    </div>
+
                     <!-- Computed Sale Prices -->
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-xs">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">ราคาส่งคณะ (บาท)</label>
                             <input type="number" step="0.01" id="formWholesaleFaculty" required
-                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700">
+                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-slate-50">
                         </div>
                         <div>
                             <label class="block font-medium text-emerald-700 mb-1">ราคาขายนักศึกษา (บาท)</label>
@@ -605,7 +615,6 @@
         const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
         const ALLOWED_ADMINS = ['textbook@kmitl.ac.th', 'suchada.da@kmitl.ac.th'];
 
-        // Renamed variable to 'supabaseClient' to avoid identifier collision with window.supabase from CDN
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // Global State
@@ -685,7 +694,7 @@
             }
         }
 
-        // Fetch Data from Supabase (ORDER BY id DESC or created_at DESC)
+        // Fetch Data from Supabase
         async function loadTextbooksData() {
             try {
                 document.getElementById('publicLoading').classList.remove('hidden');
@@ -813,12 +822,10 @@
                     <td class="py-3.5 px-4 text-center text-xs text-slate-400">${createdDate}</td>
                     <td class="py-3.5 px-4 text-center">
                         <div class="flex items-center justify-center space-x-1">
-                            <!-- Edit Icon Pencil -->
                             <button onclick='openFormModal(${JSON.stringify(book).replace(/'/g, "&apos;")})' title="แก้ไข" 
                                     class="w-8 h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
-                            <!-- Delete Icon Trash -->
                             <button onclick="confirmDelete('${book.id}', '${escapeHtml(book.title)}')" title="ลบ" 
                                     class="w-8 h-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-trash-can"></i>
@@ -868,7 +875,7 @@
             renderAdminTable(filtered);
         }
 
-        // Public Popup Modal Details (Without displaying cost calculation steps)
+        // Public Popup Modal Details
         function openPublicDetailModal(book) {
             document.getElementById('detailTitle').innerText = book.title;
             document.getElementById('detailStatusBadge').innerHTML = getStatusBadge(book.status);
@@ -900,23 +907,53 @@
             openModal('modalPublicDetail');
         }
 
-        // Admin Auto-Calculator logic
+        /**
+         * CALCULATE PRICING ACCORDING TO KMITL FACULTY OF ENGINEERING SPREADSHEET (ภาพ 02):
+         * 
+         * 1. ต้นทุนรวม (ก่อน VAT) = จำนวนพิมพ์ * ต้นทุนต่อหน่วย
+         * 2. VAT 7% = ต้นทุนรวม * 0.07
+         * 3. ยอดรวมทั้งสิ้น (รวม VAT) = ต้นทุนรวม + VAT 7%
+         * 4. ต้นทุนรวม VAT ต่อเล่ม = ยอดรวมทั้งสิ้น / จำนวนพิมพ์
+         * 
+         * 5. ราคาส่ง (จากคณะ) = (ต้นทุนรวม VAT ต่อเล่ม * 1.35) -> ปัดเศษขึ้น (CEIL) เป็นจำนวนเต็มสิบ
+         * 6. ราคาขาย (นักศึกษา/สมาชิก) = ราคาส่งคณะ(ปัดเศษแล้ว) * 1.20
+         * 7. ราคาส่งบุคคลภายนอก = ราคาส่งคณะ(ปัดเศษแล้ว) * 1.50
+         * 8. ราคาปก (สำหรับบุคคลภายนอก) = ราคาส่งบุคคลภายนอก * 1.40  (หรือ ราคาส่งคณะ * 1.5 * 1.4)
+         */
         function calculatePricing() {
             const printQuantity = parseFloat(document.getElementById('formPrintQuantity').value) || 0;
             const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
 
+            if (printQuantity <= 0 || unitCost <= 0) {
+                document.getElementById('formProductionCost').value = '0.00';
+                document.getElementById('formVatAmount').value = '0.00';
+                document.getElementById('formTotalCostWithVat').value = '0.00';
+                document.getElementById('formWholesaleFaculty').value = '0';
+                document.getElementById('formStudentPrice').value = '0';
+                document.getElementById('formExternalCover').value = '0';
+                return;
+            }
+
+            // 1-3. Basic Production Cost & VAT
             const productionCost = printQuantity * unitCost;
             const vatAmount = productionCost * 0.07;
             const totalCostWithVat = productionCost + vatAmount;
 
-            // Unit total cost incl. VAT
-            const unitCostWithVat = printQuantity > 0 ? (totalCostWithVat / printQuantity) : 0;
+            // 4. Unit Cost including VAT
+            const unitCostWithVat = totalCostWithVat / printQuantity; // e.g. 18,190 / 100 = 181.90
 
-            // Auto calculations rounded to nearest 5 Baht
-            const wholesaleFaculty = Math.ceil((unitCostWithVat * 1.05) / 5) * 5;
-            const studentPrice = Math.ceil((unitCostWithVat * 1.15) / 5) * 5;
-            const externalCover = Math.ceil((unitCostWithVat * 1.30) / 5) * 5;
+            // 5. ราคาส่งคณะ = ต้นทุนรวม VAT ต่อเล่ม * 1.35 -> ปัดเศษขึ้นหลักสิบ
+            const rawWholesaleFaculty = unitCostWithVat * 1.35; // e.g. 181.90 * 1.35 = 245.565
+            const wholesaleFaculty = Math.ceil(rawWholesaleFaculty / 10) * 10; // e.g. 250.00
 
+            // 6. ราคาขายนักศึกษา / สมาชิก = ราคาส่งคณะ * 1.20
+            const studentPrice = Math.ceil((wholesaleFaculty * 1.20) / 5) * 5; // e.g. 250 * 1.20 = 300.00
+
+            // 7-8. ราคาปกบุคคลภายนอก = (ราคาส่งคณะ * 1.50) * 1.40
+            const externalWholesale = wholesaleFaculty * 1.50; // e.g. 250 * 1.50 = 375.00
+            const externalCover = Math.ceil((externalWholesale * 1.40) / 5) * 5; // e.g. 375 * 1.40 = 525.00
+
+            // Set inputs
             document.getElementById('formProductionCost').value = productionCost.toFixed(2);
             document.getElementById('formVatAmount').value = vatAmount.toFixed(2);
             document.getElementById('formTotalCostWithVat').value = totalCostWithVat.toFixed(2);
@@ -944,11 +981,10 @@
                 document.getElementById('formStatus').value = book.status || 'ร่าง';
                 document.getElementById('formEdition').value = book.edition || 1;
                 document.getElementById('formPages').value = book.pages || 0;
-                document.getElementById('formPrintQuantity').value = book.print_quantity || 0;
-                document.getElementById('formUnitCost').value = book.unit_cost || 0;
+                document.getElementById('formPrintQuantity').value = book.print_quantity || 100;
+                document.getElementById('formUnitCost').value = book.unit_cost || 170;
                 document.getElementById('formRemarks').value = book.remarks || '';
 
-                // Trigger pricing calculation or fill values
                 calculatePricing();
                 if (book.wholesale_faculty_rounded) document.getElementById('formWholesaleFaculty').value = book.wholesale_faculty_rounded;
                 if (book.student_price_rounded) document.getElementById('formStudentPrice').value = book.student_price_rounded;
@@ -956,6 +992,8 @@
             } else {
                 document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
                 document.getElementById('formBookId').value = '';
+                document.getElementById('formPrintQuantity').value = 100;
+                document.getElementById('formUnitCost').value = 170;
                 calculatePricing();
             }
 
@@ -1003,11 +1041,9 @@
             try {
                 let error;
                 if (bookId) {
-                    // Update
                     const res = await supabaseClient.from('textbooks').update(payload).eq('id', bookId);
                     error = res.error;
                 } else {
-                    // Insert
                     const res = await supabaseClient.from('textbooks').insert([payload]);
                     error = res.error;
                 }

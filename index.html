@@ -99,7 +99,7 @@
         <!-- PUBLIC VIEW SECTION -->
         <section id="publicView" class="space-y-6">
             
-            <!-- Banner / Header (ข้อ 1: ปรับเป็น สถานะการดำเนินการจัดพิมพ์) -->
+            <!-- Banner / Header -->
             <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-kmitl-slate rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10 pointer-events-none">
                     <i class="fa-solid fa-book-bookmark text-[220px]"></i>
@@ -161,7 +161,7 @@
                 </div>
             </div>
 
-            <!-- Public Data Table Container (ข้อ 1, 2, 3, 4, 5, 6, 7 ปรับปรุงที่ส่วนตารางหน้าหลัก) -->
+            <!-- Public Data Table Container -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left text-sm text-slate-600">
@@ -358,14 +358,12 @@
                                 <i class="fa-solid fa-graduation-cap"></i> ราคาจริงนักศึกษา
                             </span>
                             <span id="detailActualStudentPrice" class="text-2xl font-bold font-kanit text-emerald-600"></span>
-                            <span id="detailCalcStudentPrice" class="text-[10px] text-slate-400 block mt-0.5"></span>
                         </div>
                         <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm text-center">
                             <span class="text-[11px] text-slate-600 block font-semibold flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-users"></i> ราคาจริงบุคคลภายนอก
                             </span>
                             <span id="detailActualPublicPrice" class="text-2xl font-bold font-kanit text-slate-900"></span>
-                            <span id="detailCalcPublicPrice" class="text-[10px] text-slate-400 block mt-0.5"></span>
                         </div>
                     </div>
                 </div>
@@ -678,14 +676,12 @@
                 publicView.classList.remove('hidden');
                 adminView.classList.add('hidden');
 
-                // สลับสีและพื้นหลังของปุ่มในแคปซูล
                 btnTabPublic.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 bg-white text-kmitl-orange shadow-sm font-bold border border-slate-200/60';
                 btnTabAdmin.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50';
             } else {
                 publicView.classList.add('hidden');
                 adminView.classList.remove('hidden');
 
-                // สลับสีและพื้นหลังของปุ่มในแคปซูล
                 btnTabAdmin.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 bg-white text-kmitl-orange shadow-sm font-bold border border-slate-200/60';
                 btnTabPublic.className = 'px-3.5 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200/50';
             }
@@ -729,7 +725,6 @@
             document.getElementById('statCompleted').innerText = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
         }
 
-        // ข้อ 2: บังคับใช้ whitespace-nowrap และ inline-flex ให้แสดงผลเป็นแถวเดียวเสมอ
         function getStatusBadge(status) {
             switch (status) {
                 case 'ร่าง':
@@ -747,7 +742,6 @@
             }
         }
 
-        // การแสดงผลตารางเฉพาะหน้าหลักตามข้อกำหนด 1-7
         function renderPublicTable(books) {
             const tbody = document.getElementById('publicTableBody');
             const emptyState = document.getElementById('publicEmpty');
@@ -763,10 +757,8 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50/80 transition cursor-pointer border-b border-slate-100';
                 
-                // ข้อ 7: กดที่รายการแล้วเปิด Pop-up แสดงรายละเอียดตามปกติ
                 tr.onclick = () => openPublicDetailModal(book);
 
-                // ข้อ 5: แสดงตำแหน่งและผู้แต่งในแถวเดียวกัน (เช่น รศ. ศิริพันธ์ มุรธาธัญลักษณ์)
                 const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
                 
                 const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
@@ -909,9 +901,6 @@
             document.getElementById('detailActualStudentPrice').innerText = actualStudent ? `${Number(actualStudent).toLocaleString()} บาท` : '-';
             document.getElementById('detailActualPublicPrice').innerText = actualPublic ? `${Number(actualPublic).toLocaleString()} บาท` : '-';
 
-            document.getElementById('detailCalcStudentPrice').innerText = book.student_price_rounded ? `(ราคาคำนวณ: ${Number(book.student_price_rounded).toLocaleString()} บาท)` : '';
-            document.getElementById('detailCalcPublicPrice').innerText = book.external_cover_rounded ? `(ราคาคำนวณ: ${Number(book.external_cover_rounded).toLocaleString()} บาท)` : '';
-
             const remarksContainer = document.getElementById('detailRemarksContainer');
             if (book.remarks) {
                 document.getElementById('detailRemarks').innerText = book.remarks;
@@ -926,7 +915,6 @@
             openModal('modalPublicDetail');
         }
 
-        // ฟังก์ชันคำนวณราคาอัตโนมัติ (คงไว้ 100% ห้ามแก้ไข)
         function calculatePricing() {
             const printQuantity = parseFloat(document.getElementById('formPrintQuantity').value) || 0;
             const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
@@ -937,13 +925,9 @@
 
             const unitCostWithVat = printQuantity > 0 ? (totalCostWithVat / printQuantity) : 0;
 
-            // 1. ราคาส่งคณะ: ต้นทุนต่อเล่มรวม VAT * 1.35 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
             const wholesaleFaculty = unitCostWithVat > 0 ? Math.ceil((unitCostWithVat * 1.35) / 5) * 5 : 0;
-
-            // 2. ราคาขายนักศึกษา (คำนวณ): คิด Markup 20% จากราคาส่งคณะ
             const studentPrice = wholesaleFaculty > 0 ? Math.ceil((wholesaleFaculty * 1.20) / 5) * 5 : 0;
 
-            // 3. ราคาปกบุคคลภายนอก (คำนวณ): (ราคาส่งคณะ * 1.50) * 1.40 -> ปัดเศษขึ้นทวีคูณของ 5 บาท
             const externalWholesale = wholesaleFaculty * 1.50;
             const externalCover = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
 
@@ -955,7 +939,6 @@
             document.getElementById('formStudentPrice').value = studentPrice;
             document.getElementById('formExternalCover').value = externalCover;
 
-            // Auto fill actual prices if not manually overwritten
             if (!isManualActualPriceEdit) {
                 document.getElementById('formActualStudentPrice').value = studentPrice;
                 document.getElementById('formActualPublicPrice').value = externalCover;
@@ -998,7 +981,6 @@
                 if (book.student_price_rounded) document.getElementById('formStudentPrice').value = book.student_price_rounded;
                 if (book.external_cover_rounded) document.getElementById('formExternalCover').value = book.external_cover_rounded;
 
-                // Load actual prices from database
                 document.getElementById('formActualStudentPrice').value = book.actual_student_price !== null && book.actual_student_price !== undefined 
                                                                          ? book.actual_student_price 
                                                                          : (book.student_price_rounded || 0);

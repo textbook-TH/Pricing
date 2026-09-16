@@ -137,24 +137,37 @@
                 </div>
             </div>
 
-            <!-- Toolbar: Search & Filter -->
+            <!-- Toolbar: Search, Department & Status Filter -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                <div class="relative w-full md:w-96">
+                <!-- Search Input -->
+                <div class="relative w-full md:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="publicSearchInput" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, ภาควิชา..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
-                <div class="flex items-center space-x-2 w-full md:w-auto">
-                    <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
-                    <select id="publicStatusFilter" onchange="filterPublicData()" class="w-full md:w-48 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                        <option value="ALL">ทั้งหมดทุกสถานะ</option>
-                        <option value="ร่าง">ร่าง</option>
-                        <option value="รออนุมัติ">รออนุมัติ</option>
-                        <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
-                        <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
-                        <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
-                    </select>
+                <!-- Filters Group -->
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                    <!-- Department Filter (เพิ่มใหม่ตามคำขอ) -->
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-building-columns mr-1"></i>ภาควิชา:</span>
+                        <select id="publicDepartmentFilter" onchange="filterPublicData()" class="w-full sm:w-48 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                            <option value="ALL">ทุกภาควิชา</option>
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
+                        <select id="publicStatusFilter" onchange="filterPublicData()" class="w-full sm:w-44 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                            <option value="ALL">ทั้งหมดทุกสถานะ</option>
+                            <option value="ร่าง">ร่าง</option>
+                            <option value="รออนุมัติ">รออนุมัติ</option>
+                            <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+                            <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
+                            <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -186,7 +199,7 @@
                 <div id="publicEmpty" class="hidden p-12 text-center text-slate-400">
                     <i class="fa-solid fa-book-open-reader text-4xl text-slate-300 mb-3"></i>
                     <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลรายการตำราเรียน</p>
-                    <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ</p>
+                    <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองภาควิชา/สถานะ</p>
                 </div>
             </div>
 
@@ -239,6 +252,46 @@
             <!-- ADMIN DASHBOARD CONTENT -->
             <div id="adminDashboard" class="hidden space-y-6">
 
+                <!-- Admin Status Banner Box (เพิ่มตามคำขอข้อที่ 2) -->
+                <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
+                    <div class="relative z-10 max-w-2xl space-y-2">
+                        <h2 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-kmitl-orange text-xl"></i>
+                            สถานะการดำเนินการจัดพิมพ์ (เจ้าหน้าที่)
+                        </h2>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            ภาพรวมข้อมูลการจัดพิมพ์ตำราเรียน และสถานะปัจจุบันทั้งหมดในระบบ
+                        </p>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-orange-400" id="adminStatTotal">0</span>
+                            <span class="text-[11px] text-slate-300">ตำราในระบบ</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-slate-300" id="adminStatDraft">0</span>
+                            <span class="text-[11px] text-slate-300">ร่าง</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-amber-400" id="adminStatPending">0</span>
+                            <span class="text-[11px] text-slate-300">รออนุมัติ</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-emerald-400" id="adminStatApproved">0</span>
+                            <span class="text-[11px] text-slate-300">อนุมัติแล้ว</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-blue-400" id="adminStatPrinting">0</span>
+                            <span class="text-[11px] text-slate-300">อยู่ระหว่างจัดพิมพ์</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-purple-400" id="adminStatCompleted">0</span>
+                            <span class="text-[11px] text-slate-300">จัดพิมพ์เสร็จสิ้น</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Admin Action Bar -->
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
                     <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -247,6 +300,11 @@
                             <input type="text" id="adminSearchInput" onkeyup="filterAdminData()" placeholder="ค้นหารายการแอดมิน..." 
                                    class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
+
+                        <!-- Department Filter for Admin -->
+                        <select id="adminDepartmentFilter" onchange="filterAdminData()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                            <option value="ALL">ทุกภาควิชา</option>
+                        </select>
 
                         <select id="adminStatusFilter" onchange="filterAdminData()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                             <option value="ALL">ทุกสถานะ</option>
@@ -700,6 +758,7 @@
 
                 allBooks = data || [];
                 
+                populateDepartmentDropdowns(allBooks);
                 renderPublicTable(allBooks);
                 renderAdminTable(allBooks);
                 updateStats(allBooks);
@@ -713,13 +772,61 @@
             }
         }
 
+        // ฟังก์ชันสร้างตัวเลือกภาควิชาอัตโนมัติจากข้อมูลในระบบ
+        function populateDepartmentDropdowns(data) {
+            const departments = new Set();
+            data.forEach(book => {
+                if (book.department && book.department.trim() !== '') {
+                    departments.add(book.department.trim());
+                }
+            });
+
+            const sortedDepts = Array.from(departments).sort();
+
+            const publicDeptSelect = document.getElementById('publicDepartmentFilter');
+            const adminDeptSelect = document.getElementById('adminDepartmentFilter');
+
+            const currentPublicVal = publicDeptSelect ? publicDeptSelect.value : 'ALL';
+            const currentAdminVal = adminDeptSelect ? adminDeptSelect.value : 'ALL';
+
+            let optionsHtml = '<option value="ALL">ทุกภาควิชา</option>';
+            sortedDepts.forEach(dept => {
+                optionsHtml += `<option value="${escapeHtml(dept)}">${escapeHtml(dept)}</option>`;
+            });
+
+            if (publicDeptSelect) {
+                publicDeptSelect.innerHTML = optionsHtml;
+                publicDeptSelect.value = currentPublicVal;
+            }
+            if (adminDeptSelect) {
+                adminDeptSelect.innerHTML = optionsHtml;
+                adminDeptSelect.value = currentAdminVal;
+            }
+        }
+
         function updateStats(data) {
-            document.getElementById('statTotal').innerText = data.length;
-            document.getElementById('statDraft').innerText = data.filter(b => b.status === 'ร่าง').length;
-            document.getElementById('statPending').innerText = data.filter(b => b.status === 'รออนุมัติ').length;
-            document.getElementById('statApproved').innerText = data.filter(b => b.status === 'อนุมัติแล้ว').length;
-            document.getElementById('statPrinting').innerText = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
-            document.getElementById('statCompleted').innerText = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
+            const total = data.length;
+            const draft = data.filter(b => b.status === 'ร่าง').length;
+            const pending = data.filter(b => b.status === 'รออนุมัติ').length;
+            const approved = data.filter(b => b.status === 'อนุมัติแล้ว').length;
+            const printing = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
+            const completed = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
+
+            // อัปเดตกล่องสถานะหน้าหลัก (Public)
+            if (document.getElementById('statTotal')) document.getElementById('statTotal').innerText = total;
+            if (document.getElementById('statDraft')) document.getElementById('statDraft').innerText = draft;
+            if (document.getElementById('statPending')) document.getElementById('statPending').innerText = pending;
+            if (document.getElementById('statApproved')) document.getElementById('statApproved').innerText = approved;
+            if (document.getElementById('statPrinting')) document.getElementById('statPrinting').innerText = printing;
+            if (document.getElementById('statCompleted')) document.getElementById('statCompleted').innerText = completed;
+
+            // อัปเดตกล่องสถานะหน้าเจ้าหน้าที่ (Admin) - เพิ่มตามข้อที่ 2
+            if (document.getElementById('adminStatTotal')) document.getElementById('adminStatTotal').innerText = total;
+            if (document.getElementById('adminStatDraft')) document.getElementById('adminStatDraft').innerText = draft;
+            if (document.getElementById('adminStatPending')) document.getElementById('adminStatPending').innerText = pending;
+            if (document.getElementById('adminStatApproved')) document.getElementById('adminStatApproved').innerText = approved;
+            if (document.getElementById('adminStatPrinting')) document.getElementById('adminStatPrinting').innerText = printing;
+            if (document.getElementById('adminStatCompleted')) document.getElementById('adminStatCompleted').innerText = completed;
         }
 
         function getStatusBadge(status) {
@@ -842,17 +949,20 @@
 
         function filterPublicData() {
             const search = document.getElementById('publicSearchInput').value.toLowerCase().trim();
+            const dept = document.getElementById('publicDepartmentFilter').value;
             const status = document.getElementById('publicStatusFilter').value;
 
             const filtered = allBooks.filter(book => {
                 const matchSearch = (
-                    book.title?.toLowerCase().includes(search) ||
-                    book.author?.toLowerCase().includes(search) ||
-                    book.department?.toLowerCase().includes(search) ||
-                    book.book_code?.toLowerCase().includes(search)
+                    (book.title && book.title.toLowerCase().includes(search)) ||
+                    (book.author && book.author.toLowerCase().includes(search)) ||
+                    (book.department && book.department.toLowerCase().includes(search)) ||
+                    (book.book_code && book.book_code.toLowerCase().includes(search))
                 );
+                const matchDept = (dept === 'ALL' || book.department === dept);
                 const matchStatus = (status === 'ALL' || book.status === status);
-                return matchSearch && matchStatus;
+                
+                return matchSearch && matchDept && matchStatus;
             });
 
             renderPublicTable(filtered);
@@ -860,17 +970,20 @@
 
         function filterAdminData() {
             const search = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+            const dept = document.getElementById('adminDepartmentFilter').value;
             const status = document.getElementById('adminStatusFilter').value;
 
             const filtered = allBooks.filter(book => {
                 const matchSearch = (
-                    book.title?.toLowerCase().includes(search) ||
-                    book.author?.toLowerCase().includes(search) ||
-                    book.department?.toLowerCase().includes(search) ||
-                    book.book_code?.toLowerCase().includes(search)
+                    (book.title && book.title.toLowerCase().includes(search)) ||
+                    (book.author && book.author.toLowerCase().includes(search)) ||
+                    (book.department && book.department.toLowerCase().includes(search)) ||
+                    (book.book_code && book.book_code.toLowerCase().includes(search))
                 );
+                const matchDept = (dept === 'ALL' || book.department === dept);
                 const matchStatus = (status === 'ALL' || book.status === status);
-                return matchSearch && matchStatus;
+                
+                return matchSearch && matchDept && matchStatus;
             });
 
             renderAdminTable(filtered);

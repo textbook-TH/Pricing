@@ -534,7 +534,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">ต้นทุนรวม (ก่อน VAT)</label>
-                            <input type="number" step="0.01" id="formProductionCost" readonly
+                            <input type="text" id="formProductionCost" readonly
                                    class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600 font-mono">
                         </div>
                     </div>
@@ -542,12 +542,12 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">VAT 7% (บาท)</label>
-                            <input type="number" step="0.01" id="formVatAmount" readonly
+                            <input type="text" id="formVatAmount" readonly
                                    class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600 font-mono">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">ยอดรวมทั้งสิ้น (รวม VAT)</label>
-                            <input type="number" step="0.01" id="formTotalCostWithVat" readonly
+                            <input type="text" id="formTotalCostWithVat" readonly
                                    class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm font-bold text-slate-800 font-mono">
                         </div>
                     </div>
@@ -556,17 +556,17 @@
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-xs">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">ราคาส่งคณะ (บาท)</label>
-                            <input type="number" step="0.01" id="formWholesaleFaculty" readonly
+                            <input type="text" id="formWholesaleFaculty" readonly
                                    class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-slate-100">
                         </div>
                         <div>
                             <label class="block font-medium text-emerald-700 mb-1">ราคาขายนักศึกษา (คำนวณ)</label>
-                            <input type="number" step="0.01" id="formStudentPrice" readonly
+                            <input type="text" id="formStudentPrice" readonly
                                    class="w-full px-2.5 py-1.5 border border-emerald-200 rounded-lg font-bold text-emerald-700 bg-emerald-50/50">
                         </div>
                         <div>
                             <label class="block font-medium text-slate-800 mb-1">ราคาปกบุคคลนอก (คำนวณ)</label>
-                            <input type="number" step="0.01" id="formExternalCover" readonly
+                            <input type="text" id="formExternalCover" readonly
                                    class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg font-bold text-slate-900 bg-slate-100">
                         </div>
                     </div>
@@ -931,7 +931,7 @@
                     <td class="py-3.5 px-4">${getStatusBadge(book.status)}</td>
                     <td class="py-3.5 px-4">
                         <div class="font-bold text-slate-900 font-kanit text-sm">${escapeHtml(book.title)}</div>
-                        ${book.book_code ? `<span class="text-[11px] font-mono text-slate-400">รหัส: ${escapeHtml(book.book_code)}</span>` : ''}
+                        ${book.department ? `<div class="text-[11px] text-slate-400 font-normal mt-0.5">${escapeHtml(book.department)}</div>` : ''}
                     </td>
                     <td class="py-3.5 px-4 font-medium text-slate-700 text-xs">${escapeHtml(academicPrefix + book.author)}</td>
                     <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-sm">
@@ -1059,13 +1059,14 @@
             const externalWholesale = wholesaleFaculty * 1.50;
             const externalCover = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
 
-            document.getElementById('formProductionCost').value = productionCost > 0 ? productionCost.toFixed(2) : '';
-            document.getElementById('formVatAmount').value = vatAmount > 0 ? vatAmount.toFixed(2) : '';
-            document.getElementById('formTotalCostWithVat').value = totalCostWithVat > 0 ? totalCostWithVat.toFixed(2) : '';
+            // แสดงผลใส่เครื่องหมายจุลภาค (,) ในช่องป๊อปอัพ
+            document.getElementById('formProductionCost').value = productionCost > 0 ? productionCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
+            document.getElementById('formVatAmount').value = vatAmount > 0 ? vatAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
+            document.getElementById('formTotalCostWithVat').value = totalCostWithVat > 0 ? totalCostWithVat.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
 
-            document.getElementById('formWholesaleFaculty').value = wholesaleFaculty > 0 ? wholesaleFaculty : '';
-            document.getElementById('formStudentPrice').value = studentPrice > 0 ? studentPrice : '';
-            document.getElementById('formExternalCover').value = externalCover > 0 ? externalCover : '';
+            document.getElementById('formWholesaleFaculty').value = wholesaleFaculty > 0 ? wholesaleFaculty.toLocaleString('en-US') : '';
+            document.getElementById('formStudentPrice').value = studentPrice > 0 ? studentPrice.toLocaleString('en-US') : '';
+            document.getElementById('formExternalCover').value = externalCover > 0 ? externalCover.toLocaleString('en-US') : '';
 
             if (!isManualActualPriceEdit) {
                 document.getElementById('formActualStudentPrice').value = studentPrice > 0 ? studentPrice : '';
@@ -1118,7 +1119,10 @@
                 document.getElementById('formRemarks').value = book.remarks || '';
 
                 calculatePricing();
-                if (book.wholesale_faculty_rounded) document.getElementById('formWholesaleFaculty').value = book.wholesale_faculty_rounded;
+                if (book.wholesale_faculty_rounded) document.getElementById('formWholesaleFaculty').value = Number(book.wholesale_faculty_rounded).toLocaleString('en-US');
+                if (book.student_price_rounded) document.getElementById('formStudentPrice').value = Number(book.student_price_rounded).toLocaleString('en-US');
+                if (book.external_cover_rounded) document.getElementById('formExternalCover').value = Number(book.external_cover_rounded).toLocaleString('en-US');
+
                 if (book.student_price_rounded) document.getElementById('formStudentPrice').value = book.student_price_rounded;
                 if (book.external_cover_rounded) document.getElementById('formExternalCover').value = book.external_cover_rounded;
 
@@ -1166,13 +1170,13 @@
                 pages: parseInt(document.getElementById('formPages').value) || 0,
                 print_quantity: parseInt(document.getElementById('formPrintQuantity').value) || 0,
                 unit_cost: parseFloat(document.getElementById('formUnitCost').value) || 0,
-                production_cost: parseFloat(document.getElementById('formProductionCost').value) || 0,
+                production_cost: parseFloat(String(document.getElementById('formProductionCost').value).replace(/,/g, '')) || 0,
                 vat_rate: 7.00,
-                vat_amount: parseFloat(document.getElementById('formVatAmount').value) || 0,
-                total_cost_with_vat: parseFloat(document.getElementById('formTotalCostWithVat').value) || 0,
-                wholesale_faculty_rounded: parseFloat(document.getElementById('formWholesaleFaculty').value) || 0,
-                student_price_rounded: parseFloat(document.getElementById('formStudentPrice').value) || 0,
-                external_cover_rounded: parseFloat(document.getElementById('formExternalCover').value) || 0,
+                vat_amount: parseFloat(String(document.getElementById('formVatAmount').value).replace(/,/g, '')) || 0,
+                total_cost_with_vat: parseFloat(String(document.getElementById('formTotalCostWithVat').value).replace(/,/g, '')) || 0,
+                wholesale_faculty_rounded: parseFloat(String(document.getElementById('formWholesaleFaculty').value).replace(/,/g, '')) || 0,
+                student_price_rounded: parseFloat(String(document.getElementById('formStudentPrice').value).replace(/,/g, '')) || 0,
+                external_cover_rounded: parseFloat(String(document.getElementById('formExternalCover').value).replace(/,/g, '')) || 0,
                 actual_student_price: parseFloat(document.getElementById('formActualStudentPrice').value) || 0,
                 actual_public_price: parseFloat(document.getElementById('formActualPublicPrice').value) || 0,
                 remarks: document.getElementById('formRemarks').value.trim(),

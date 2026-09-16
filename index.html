@@ -1027,7 +1027,6 @@
             }
 
             const chartLabels = top10.map((item, idx) => item.book_code ? item.book_code : `อันดับ ${idx + 1}`);
-
             const chartData = top10.map(b => b.computedCost);
 
             topCostChartInstance = new Chart(ctx, {
@@ -1101,7 +1100,7 @@
                 case 'จัดพิมพ์เสร็จสิ้น':
                     return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200 whitespace-nowrap"><i class="fa-solid fa-check-double mr-1"></i>จัดพิมพ์เสร็จสิ้น</span>`;
                 default:
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">${status}</span>`;
+                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">${escapeHtml(status)}</span>`;
             }
         }
 
@@ -1152,6 +1151,7 @@
             });
         }
 
+        /* Security Hardened: Uses safe lookup by ID instead of inline object injection */
         function renderAdminTable(books) {
             const tbody = document.getElementById('adminTableBody');
             const emptyState = document.getElementById('adminEmpty');
@@ -1194,11 +1194,11 @@
                     </td>
                     <td class="py-3.5 px-4 text-center">
                         <div class="flex items-center justify-center space-x-1">
-                            <button onclick='openFormModal(${JSON.stringify(book).replace(/'/g, "&apos;")})' title="แก้ไข" 
+                            <button onclick="openFormModalById('${escapeJsAttr(book.id)}')" title="แก้ไข" 
                                     class="w-8 h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
-                            <button onclick="confirmDelete('${book.id}', '${escapeHtml(book.title)}')" title="ลบ" 
+                            <button onclick="confirmDeleteById('${escapeJsAttr(book.id)}')" title="ลบ" 
                                     class="w-8 h-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
@@ -1207,6 +1207,22 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        /* Helper to safely fetch book by ID for Editing */
+        function openFormModalById(id) {
+            const book = allBooks.find(b => String(b.id) === String(id));
+            if (book) {
+                openFormModal(book);
+            }
+        }
+
+        /* Helper to safely fetch book by ID for Deletion */
+        function confirmDeleteById(id) {
+            const book = allBooks.find(b => String(b.id) === String(id));
+            if (book) {
+                confirmDelete(book.id, book.title);
+            }
         }
 
         function filterPublicData() {
@@ -1260,12 +1276,12 @@
         }
 
         function openPublicDetailModal(book) {
-            document.getElementById('detailTitle').innerText = book.title;
+            document.getElementById('detailTitle').innerText = book.title || '';
             document.getElementById('detailStatusBadge').innerHTML = getStatusBadge(book.status);
             
             const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
-            document.getElementById('detailAuthor').innerText = academicPrefix + book.author;
-            document.getElementById('detailDepartment').innerText = book.department;
+            document.getElementById('detailAuthor').innerText = academicPrefix + (book.author || '');
+            document.getElementById('detailDepartment').innerText = book.department || '';
             document.getElementById('detailBookCode').innerText = book.book_code || '-';
             document.getElementById('detailEditionPages').innerText = `พิมพ์ครั้งที่ ${book.edition || 1} (${book.pages || 0} หน้า)`;
             document.getElementById('detailIsbn').innerText = book.isbn || '-';
@@ -1567,13 +1583,18 @@
         }
 
         function escapeHtml(str) {
-            if (!str) return '';
+            if (str === null || str === undefined) return '';
             return String(str)
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
+        }
+
+        function escapeJsAttr(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
     </script>
 </body>

@@ -228,7 +228,7 @@
         </section>
 
         <!-- ADMIN VIEW SECTION -->
-        <section id="adminView" class="hidden space-y-6">
+        <section id="adminView" class="hidden">
 
             <!-- LOGIN CARD -->
             <div id="adminLoginCard" class="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-8 space-y-6">
@@ -268,6 +268,58 @@
 
             <!-- ADMIN DASHBOARD CONTENT -->
             <div id="adminDashboard" class="hidden space-y-6">
+
+                <!-- Banner / Header (Admin) -->
+                <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
+                    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="space-y-2 max-w-2xl">
+                            <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                ตรวจสอบสถานะจัดพิมพ์ และราคาจำหน่าย
+                            </p>
+                        </div>
+
+                        <!-- ปุ่มแสดงยอดรวมค่าใช้จ่ายจัดพิมพ์ (มุมขวาบน) -->
+                        <div onclick="openChartModal()" class="cursor-pointer bg-slate-800/90 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 p-3.5 rounded-xl transition-all duration-200 flex items-center space-x-3.5 shadow-lg shrink-0 group">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg group-hover:scale-105 transition">
+                                <i class="fa-solid fa-chart-column"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs sm:text-sm text-slate-300 block font-semibold">ยอดรวมการผลิต</span>
+                                <span id="adminStatTotalCost" class="text-base sm:text-lg font-bold font-kanit text-amber-400">0.00 ฿</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                        </div>
+                    </div>
+
+                    <!-- แสดงผล 6 รายการสถานะ -->
+                    <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-orange-400" id="adminStatTotal">0</span>
+                            <span class="text-[11px] text-slate-300">ตำราในระบบ</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-slate-300" id="adminStatDraft">0</span>
+                            <span class="text-[11px] text-slate-300">ร่าง</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-amber-400" id="adminStatPending">0</span>
+                            <span class="text-[11px] text-slate-300">รออนุมัติ</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-emerald-400" id="adminStatApproved">0</span>
+                            <span class="text-[11px] text-slate-300">อนุมัติแล้ว</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-blue-400" id="adminStatPrinting">0</span>
+                            <span class="text-[11px] text-slate-300">อยู่ระหว่างจัดพิมพ์</span>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-xl font-bold font-kanit text-purple-400" id="adminStatCompleted">0</span>
+                            <span class="text-[11px] text-slate-300">จัดพิมพ์เสร็จสิ้น</span>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Admin Action Bar -->
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col xl:flex-row gap-3 justify-between items-center">
@@ -934,12 +986,24 @@
         }
 
         function updateStats(data) {
-            document.getElementById('statTotal').innerText = data.length;
-            document.getElementById('statDraft').innerText = data.filter(b => b.status === 'ร่าง').length;
-            document.getElementById('statPending').innerText = data.filter(b => b.status === 'รออนุมัติ').length;
-            document.getElementById('statApproved').innerText = data.filter(b => b.status === 'อนุมัติแล้ว').length;
-            document.getElementById('statPrinting').innerText = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
-            document.getElementById('statCompleted').innerText = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
+            const total = data.length;
+            const draft = data.filter(b => b.status === 'ร่าง').length;
+            const pending = data.filter(b => b.status === 'รออนุมัติ').length;
+            const approved = data.filter(b => b.status === 'อนุมัติแล้ว').length;
+            const printing = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
+            const completed = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
+
+            const setVal = (id1, id2, val) => {
+                const e1 = document.getElementById(id1); if (e1) e1.innerText = val;
+                const e2 = document.getElementById(id2); if (e2) e2.innerText = val;
+            };
+
+            setVal('statTotal', 'adminStatTotal', total);
+            setVal('statDraft', 'adminStatDraft', draft);
+            setVal('statPending', 'adminStatPending', pending);
+            setVal('statApproved', 'adminStatApproved', approved);
+            setVal('statPrinting', 'adminStatPrinting', printing);
+            setVal('statCompleted', 'adminStatCompleted', completed);
 
             const totalCostSum = data.reduce((sum, b) => {
                 const val = parseFloat(b.total_cost_with_vat);
@@ -949,12 +1013,11 @@
                 return sum + (qty * unit * 1.07);
             }, 0);
 
-            const statTotalCostElem = document.getElementById('statTotalCost');
-            if (statTotalCostElem) {
-                statTotalCostElem.innerText = totalCostSum > 0 
-                    ? totalCostSum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿'
-                    : '0.00 ฿';
-            }
+            const costStr = totalCostSum > 0 
+                ? totalCostSum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿'
+                : '0.00 ฿';
+
+            setVal('statTotalCost', 'adminStatTotalCost', costStr);
         }
 
         function openChartModal() {

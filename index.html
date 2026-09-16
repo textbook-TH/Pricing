@@ -53,8 +53,8 @@
 </head>
 <body class="h-full flex flex-col text-slate-800 bg-slate-50">
 
-    <!-- Top Navigation Bar (Dark Slate Navy style matching Image 03) -->
-    <header class="bg-[#111726] border-b border-slate-800/80 sticky top-0 z-30 shadow-md text-white">
+    <!-- Top Navigation Bar (ปรับโทนสีเข้มตามภาพ 03) -->
+    <header class="bg-[#111726] border-b border-slate-800 sticky top-0 z-30 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 
@@ -71,20 +71,20 @@
                     </div>
                 </div>
 
-                <!-- Navigation Tabs / Capsule Controller (Matched with Image 03) -->
+                <!-- Navigation Tabs / Capsule Controller (ปรับปุ่มทรงแคปซูลตามภาพ 03) -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-[#0B0F19] p-1.5 rounded-full flex items-center space-x-1.5 border border-slate-800/80 text-xs sm:text-sm font-medium shadow-inner">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 text-slate-900 font-bold shadow-sm">
+                    <div class="bg-[#0B0F19] p-1.5 rounded-full flex items-center space-x-2 border border-slate-800/80 shadow-inner">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-house text-xs"></i>
                             <span>หน้าหลัก</span>
                         </button>
-                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-slate-200 hover:bg-white/10">
+                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
                             <i class="fa-solid fa-user-gear text-xs"></i>
                             <span>สำหรับเจ้าหน้าที่</span>
                         </button>
-                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-3.5 py-1.5 rounded-full border border-rose-500/80 text-white hover:bg-rose-500/20 transition-all duration-200 flex items-center space-x-1.5">
-                            <i class="fa-solid fa-power-off text-xs text-rose-400"></i>
-                            <span class="hidden md:inline text-xs font-semibold">ออกจากระบบ</span>
+                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-3.5 py-1.5 rounded-full text-rose-400 border border-rose-500/80 hover:bg-rose-500/10 transition-all duration-200 flex items-center space-x-1.5 text-xs sm:text-sm font-medium">
+                            <i class="fa-solid fa-power-off text-xs"></i>
+                            <span class="hidden md:inline">ออกจากระบบ</span>
                         </button>
                     </div>
                 </div>
@@ -99,11 +99,8 @@
         <!-- PUBLIC VIEW SECTION -->
         <section id="publicView" class="space-y-6">
             
-            <!-- Banner / Header (Dark Slate Navy Theme matched with Image 03) -->
-            <div class="bg-[#111726] rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800/80">
-                <div class="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10 pointer-events-none">
-                    <i class="fa-solid fa-book-bookmark text-[220px]"></i>
-                </div>
+            <!-- Banner / Header (เอา Decorative Icon ออกแล้ว สีกรมท่าเรียบหรูตามภาพ 03) -->
+            <div class="bg-[#111726] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
                 <div class="relative z-10 max-w-2xl space-y-2">
                     <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
                     <p class="text-slate-300 text-sm leading-relaxed">
@@ -676,14 +673,14 @@
                 publicView.classList.remove('hidden');
                 adminView.classList.add('hidden');
 
-                btnTabPublic.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 text-slate-900 font-bold shadow-sm';
-                btnTabAdmin.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-slate-200 hover:bg-white/10';
+                btnTabPublic.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
+                btnTabAdmin.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
             } else {
                 publicView.classList.add('hidden');
                 adminView.classList.remove('hidden');
 
-                btnTabAdmin.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 text-slate-900 font-bold shadow-sm';
-                btnTabPublic.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-slate-200 hover:bg-white/10';
+                btnTabAdmin.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
+                btnTabPublic.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
             }
         }
 

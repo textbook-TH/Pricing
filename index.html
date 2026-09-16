@@ -53,7 +53,7 @@
 </head>
 <body class="h-full flex flex-col text-slate-800 bg-slate-50">
 
-    <!-- Top Navigation Bar (ปรับโทนสีตามภาพถ่ายจริง #161B2A) -->
+    <!-- Top Navigation Bar -->
     <header class="bg-[#161B2A] border-b border-slate-800 sticky top-0 z-30 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -134,26 +134,34 @@
 
             <!-- Toolbar: Search & Filter -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                <div class="relative w-full md:w-80">
+                <div class="relative w-full md:w-72">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
                 <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full md:w-auto">
+                    <!-- Dropdown เลือกปีการศึกษา -->
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-calendar-days mr-1"></i>ปีการศึกษา:</span>
+                        <select id="publicYearFilter" onchange="filterPublicData()" class="w-full sm:w-36 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                            <option value="ALL">เลือกปี</option>
+                        </select>
+                    </div>
+
                     <!-- Dropdown เลือกภาควิชา -->
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
                         <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-building-user mr-1"></i>ภาควิชา:</span>
-                        <select id="publicDepartmentFilter" onchange="filterPublicData()" class="w-full sm:w-44 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                            <option value="ALL">ทุกภาควิชา</option>
+                        <select id="publicDepartmentFilter" onchange="filterPublicData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                            <option value="ALL">เลือกภาควิชา</option>
                         </select>
                     </div>
 
                     <!-- Dropdown เลือกสถานะ -->
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
                         <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
-                        <select id="publicStatusFilter" onchange="filterPublicData()" class="w-full sm:w-44 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                            <option value="ALL">ทั้งหมดทุกสถานะ</option>
+                        <select id="publicStatusFilter" onchange="filterPublicData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                            <option value="ALL">เลือกสถานะ</option>
                             <option value="ร่าง">ร่าง</option>
                             <option value="รออนุมัติ">รออนุมัติ</option>
                             <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
@@ -171,11 +179,11 @@
                         <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                             <tr>
                                 <th scope="col" class="py-3.5 px-4 text-center w-16">ID</th>
-                                <th scope="col" class="py-3.5 px-4 whitespace-nowrap">สถานะการดำเนินการจัดพิมพ์</th>
+                                <th scope="col" class="py-3.5 px-4 whitespace-nowrap">สถานะ</th>
                                 <th scope="col" class="py-3.5 px-4 min-w-[220px]">ชื่อหนังสือ / ตำราเรียน</th>
-                                <th scope="col" class="py-3.5 px-4 whitespace-nowrap">ผู้แต่ง</th>
-                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">ราคาจริงนักศึกษา</th>
-                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">ราคาจริงบุคคลภายนอก</th>
+                                <th scope="col" class="py-3.5 px-4 whitespace-nowrap">ชื่อผู้แต่ง</th>
+                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">ราคา นศ.</th>
+                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">ราคาปก</th>
                             </tr>
                         </thead>
                         <tbody id="publicTableBody" class="divide-y divide-slate-100">
@@ -192,7 +200,7 @@
                 <div id="publicEmpty" class="hidden p-12 text-center text-slate-400">
                     <i class="fa-solid fa-book-open-reader text-4xl text-slate-300 mb-3"></i>
                     <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลรายการตำราเรียน</p>
-                    <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ/ภาควิชา</p>
+                    <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ/ภาควิชา/ปีการศึกษา</p>
                 </div>
             </div>
 
@@ -241,30 +249,47 @@
             <div id="adminDashboard" class="hidden space-y-6">
 
                 <!-- Admin Action Bar -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                    <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                        <div class="relative w-full sm:w-64">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col xl:flex-row gap-3 justify-between items-center">
+                    <div class="flex flex-col xl:flex-row items-center gap-3 w-full xl:w-auto">
+                        <div class="relative w-full xl:w-72">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นหารายการแอดมิน..." 
-                                   class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง..." 
+                                   class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                         </div>
 
-                        <!-- Dropdown เลือกภาควิชา สำหรับเจ้าหน้าที่ -->
-                        <select id="adminDepartmentFilter" onchange="filterAdminData()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
-                            <option value="ALL">ทุกภาควิชา</option>
-                        </select>
+                        <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+                            <!-- Dropdown เลือกปีการศึกษา -->
+                            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                                <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-calendar-days mr-1"></i>ปีการศึกษา:</span>
+                                <select id="adminYearFilter" onchange="filterAdminData()" class="w-full sm:w-36 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                                    <option value="ALL">เลือกปี</option>
+                                </select>
+                            </div>
 
-                        <select id="adminStatusFilter" onchange="filterAdminData()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
-                            <option value="ALL">ทุกสถานะ</option>
-                            <option value="ร่าง">ร่าง</option>
-                            <option value="รออนุมัติ">รออนุมัติ</option>
-                            <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
-                            <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
-                            <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
-                        </select>
+                            <!-- Dropdown เลือกภาควิชา -->
+                            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                                <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-building-user mr-1"></i>ภาควิชา:</span>
+                                <select id="adminDepartmentFilter" onchange="filterAdminData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                                    <option value="ALL">เลือกภาควิชา</option>
+                                </select>
+                            </div>
+
+                            <!-- Dropdown เลือกสถานะ -->
+                            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                                <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
+                                <select id="adminStatusFilter" onchange="filterAdminData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                                    <option value="ALL">เลือกสถานะ</option>
+                                    <option value="ร่าง">ร่าง</option>
+                                    <option value="รออนุมัติ">รออนุมัติ</option>
+                                    <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+                                    <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
+                                    <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <button onclick="openFormModal()" class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-sm hover:shadow-lg hover:brightness-105 transition flex items-center justify-center space-x-2">
+                    <button onclick="openFormModal()" class="w-full xl:w-auto px-5 py-2.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-sm hover:shadow-lg hover:brightness-105 transition flex items-center justify-center space-x-2 shrink-0">
                         <i class="fa-solid fa-plus"></i>
                         <span>เพิ่มรายการตำราเรียน</span>
                     </button>
@@ -443,7 +468,7 @@
                 <!-- Row 3: Codes & Status -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ (ประเมิน)</label>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ</label>
                         <input type="text" id="formBookCode" autocomplete="off" placeholder="เช่น Text-001"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
@@ -691,6 +716,30 @@
             }
         }
 
+        // ฟังก์ชันช่วยดึงเฉพาะ "ปี" จาก calc_date (หรือ fallback จาก created_at)
+        function getYearFromCalcDate(book) {
+            const rawDate = book.calc_date || book.created_at;
+            if (!rawDate) return '';
+            
+            const str = String(rawDate).trim();
+            // กรณีเป็นตัวเลข 4 หลัก เช่น "2567" หรือ "2024"
+            if (/^\d{4}$/.test(str)) {
+                return str;
+            }
+            
+            // กรณีขึ้นต้นด้วยปี YYYY-MM-DD
+            const match = str.match(/^(\d{4})/);
+            if (match) {
+                return match[1];
+            }
+            
+            const d = new Date(str);
+            if (!isNaN(d.getTime())) {
+                return String(d.getFullYear());
+            }
+            return '';
+        }
+
         async function loadTextbooksData() {
             try {
                 document.getElementById('publicLoading').classList.remove('hidden');
@@ -707,6 +756,7 @@
 
                 allBooks = data || [];
                 
+                populateYearDropdown(allBooks);
                 populateDepartmentDropdown(allBooks);
                 renderPublicTable(allBooks);
                 renderAdminTable(allBooks);
@@ -718,6 +768,36 @@
             } finally {
                 document.getElementById('publicLoading').classList.add('hidden');
                 document.getElementById('adminLoading').classList.add('hidden');
+            }
+        }
+
+        // ดึงข้อมูล "ปี" จาก calc_date มาใส่ Dropdown ทั้งหน้าหลักและหน้าเจ้าหน้าที่
+        function populateYearDropdown(books) {
+            const publicYearSelect = document.getElementById('publicYearFilter');
+            const adminYearSelect = document.getElementById('adminYearFilter');
+
+            const publicVal = publicYearSelect ? publicYearSelect.value : 'ALL';
+            const adminVal = adminYearSelect ? adminYearSelect.value : 'ALL';
+
+            const years = [...new Set(
+                books
+                    .map(b => getYearFromCalcDate(b))
+                    .filter(y => y.length > 0)
+            )].sort((a, b) => b.localeCompare(a)); // เรียงปีจากมากไปน้อย
+
+            let html = '<option value="ALL">เลือกปี</option>';
+            years.forEach(yr => {
+                html += `<option value="${escapeHtml(yr)}">${escapeHtml(yr)}</option>`;
+            });
+
+            if (publicYearSelect) {
+                publicYearSelect.innerHTML = html;
+                publicYearSelect.value = years.includes(publicVal) ? publicVal : 'ALL';
+            }
+
+            if (adminYearSelect) {
+                adminYearSelect.innerHTML = html;
+                adminYearSelect.value = years.includes(adminVal) ? adminVal : 'ALL';
             }
         }
 
@@ -734,7 +814,7 @@
                     .filter(d => d.length > 0)
             )].sort((a, b) => a.localeCompare(b, 'th'));
 
-            let html = '<option value="ALL">ทุกภาควิชา</option>';
+            let html = '<option value="ALL">เลือกภาควิชา</option>';
             departments.forEach(dept => {
                 html += `<option value="${escapeHtml(dept)}">${escapeHtml(dept)}</option>`;
             });
@@ -881,18 +961,22 @@
             const search = document.getElementById('publicSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('publicStatusFilter').value;
             const department = document.getElementById('publicDepartmentFilter') ? document.getElementById('publicDepartmentFilter').value : 'ALL';
+            const yearFilter = document.getElementById('publicYearFilter') ? document.getElementById('publicYearFilter').value : 'ALL';
 
             const filtered = allBooks.filter(book => {
+                const bookYear = getYearFromCalcDate(book);
                 const matchSearch = (
                     book.title?.toLowerCase().includes(search) ||
                     book.author?.toLowerCase().includes(search) ||
                     book.department?.toLowerCase().includes(search) ||
-                    book.book_code?.toLowerCase().includes(search)
+                    book.book_code?.toLowerCase().includes(search) ||
+                    bookYear.includes(search)
                 );
                 const matchStatus = (status === 'ALL' || book.status === status);
                 const matchDepartment = (department === 'ALL' || (book.department && book.department.trim() === department));
+                const matchYear = (yearFilter === 'ALL' || bookYear === yearFilter);
                 
-                return matchSearch && matchStatus && matchDepartment;
+                return matchSearch && matchStatus && matchDepartment && matchYear;
             });
 
             renderPublicTable(filtered);
@@ -902,17 +986,22 @@
             const search = document.getElementById('adminSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('adminStatusFilter').value;
             const department = document.getElementById('adminDepartmentFilter') ? document.getElementById('adminDepartmentFilter').value : 'ALL';
+            const yearFilter = document.getElementById('adminYearFilter') ? document.getElementById('adminYearFilter').value : 'ALL';
 
             const filtered = allBooks.filter(book => {
+                const bookYear = getYearFromCalcDate(book);
                 const matchSearch = (
                     book.title?.toLowerCase().includes(search) ||
                     book.author?.toLowerCase().includes(search) ||
                     book.department?.toLowerCase().includes(search) ||
-                    book.book_code?.toLowerCase().includes(search)
+                    book.book_code?.toLowerCase().includes(search) ||
+                    bookYear.includes(search)
                 );
                 const matchStatus = (status === 'ALL' || book.status === status);
                 const matchDepartment = (department === 'ALL' || (book.department && book.department.trim() === department));
-                return matchSearch && matchStatus && matchDepartment;
+                const matchYear = (yearFilter === 'ALL' || bookYear === yearFilter);
+
+                return matchSearch && matchStatus && matchDepartment && matchYear;
             });
 
             renderAdminTable(filtered);

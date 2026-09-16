@@ -141,7 +141,7 @@
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
                 <div class="relative w-full md:w-80">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="publicSearchInput" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง..." 
+                    <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
@@ -216,12 +216,12 @@
                     <p class="text-xs text-slate-500">เฉพาะผู้ได้รับสิทธิ์จัดการข้อมูลตำราเรียนเท่านั้น</p>
                 </div>
 
-                <form onsubmit="handleLogin(event)" class="space-y-4">
+                <form onsubmit="handleLogin(event)" autocomplete="off" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">อีเมลผู้ใช้งาน (Email)</label>
                         <div class="relative">
                             <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="email" id="loginEmail" required placeholder="textbook@kmitl.ac.th"
+                            <input type="email" id="loginEmail" required placeholder="example@kmitl.ac.th" autocomplete="off"
                                    class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                     </div>
@@ -230,7 +230,7 @@
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสผ่าน (Password)</label>
                         <div class="relative">
                             <i class="fa-solid fa-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="password" id="loginPassword" required placeholder="••••••••"
+                            <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="new-password"
                                    class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                     </div>
@@ -240,11 +240,6 @@
                         <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
                 </form>
-
-                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800 text-xs flex items-start space-x-2">
-                    <i class="fa-solid fa-shield-halved text-amber-600 mt-0.5"></i>
-                    <span>อนุญาตเฉพาะแอดมิน <code>textbook@kmitl.ac.th</code> และ <code>suchada.da@kmitl.ac.th</code></span>
-                </div>
             </div>
 
             <!-- ADMIN DASHBOARD CONTENT -->
@@ -255,7 +250,7 @@
                     <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <div class="relative w-full sm:w-64">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="text" id="adminSearchInput" onkeyup="filterAdminData()" placeholder="ค้นหารายการแอดมิน..." 
+                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นหารายการแอดมิน..." 
                                    class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
 
@@ -396,7 +391,7 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (ปรับปรุงข้อความและเลเบลตามข้อกำหนด ห้ามแก้ไขโครงสร้างการคำนวณ) -->
+    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (คงโครงสร้าง ฟิลด์ และวิธีการคำนวณเดิม 100%) -->
     <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
             
@@ -410,19 +405,19 @@
                 </button>
             </div>
 
-            <form id="textbookForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scrollbar">
+            <form id="textbookForm" autocomplete="off" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scrollbar">
                 <input type="hidden" id="formBookId">
 
                 <!-- Row 1: Title & Academic Title -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อหนังสือ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formTitle" required placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน"
+                        <input type="text" id="formTitle" autocomplete="off" required placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่งทางวิชาการ</label>
-                        <input type="text" id="formAcademicTitle" placeholder="ผศ.ดร. รศ. หรือ ศ."
+                        <input type="text" id="formAcademicTitle" autocomplete="off" placeholder="ผศ.ดร. รศ. หรือ ศ."
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -431,12 +426,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อผู้แต่ง <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formAuthor" required placeholder="ชื่อ-นามสกุล ผู้แต่ง"
+                        <input type="text" id="formAuthor" autocomplete="off" required placeholder="ชื่อ-นามสกุล ผู้แต่ง"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ภาควิชา <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formDepartment" required placeholder="วิศวกรรม...."
+                        <input type="text" id="formDepartment" autocomplete="off" required placeholder="วิศวกรรม...."
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -445,17 +440,17 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ (ประเมิน)</label>
-                        <input type="text" id="formBookCode" placeholder="เช่น Text-001"
+                        <input type="text" id="formBookCode" autocomplete="off" placeholder="เช่น Text-001"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัส วศ.สจล.</label>
-                        <input type="text" id="formKmitlCode" placeholder="เลขรับ...."
+                        <input type="text" id="formKmitlCode" autocomplete="off" placeholder="เลขรับ...."
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">เลข ISBN</label>
-                        <input type="text" id="formIsbn" placeholder="978-xxx-xxx-xxx-x"
+                        <input type="text" id="formIsbn" autocomplete="off" placeholder="978-xxx-xxx-xxx-x"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
@@ -470,21 +465,21 @@
                     </div>
                 </div>
 
-                <!-- Row 4: Quantity, Pages, Edition (เปิดว่างสำหรับกรอกเอง) -->
+                <!-- Row 4: Quantity, Pages, Edition -->
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">พิมพ์ครั้งที่</label>
-                        <input type="number" id="formEdition" min="1" value="" placeholder=""
+                        <input type="number" id="formEdition" autocomplete="off" min="1" value="" placeholder=""
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนหน้า</label>
-                        <input type="number" id="formPages" min="1" value="" placeholder=""
+                        <input type="number" id="formPages" autocomplete="off" min="1" value="" placeholder=""
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนพิมพ์ (เล่ม) <span class="text-rose-500">*</span></label>
-                        <input type="number" id="formPrintQuantity" required min="1" value="" placeholder="" oninput="calculatePricing()"
+                        <input type="number" id="formPrintQuantity" autocomplete="off" required min="1" value="" placeholder="" oninput="calculatePricing()"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold text-kmitl-orange focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
@@ -501,7 +496,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">ต้นทุนต่อหน่วย (ก่อน VAT) <span class="text-rose-500">*</span></label>
-                            <input type="number" step="0.01" id="formUnitCost" required min="0" value="" placeholder="" oninput="calculatePricing()"
+                            <input type="number" step="0.01" id="formUnitCost" autocomplete="off" required min="0" value="" placeholder="" oninput="calculatePricing()"
                                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                         <div>
@@ -557,7 +552,7 @@
                                     ราคาขายจริงสำหรับนักศึกษา <span class="text-rose-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <input type="number" step="0.01" id="formActualStudentPrice" required min="0" placeholder="เช่น 210.00"
+                                    <input type="number" step="0.01" id="formActualStudentPrice" autocomplete="off" required min="0" placeholder="เช่น 210.00"
                                            class="w-full px-3 py-2 border-2 border-emerald-400 bg-white rounded-lg text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
                                     <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-emerald-600">บาท</span>
                                 </div>
@@ -567,7 +562,7 @@
                                     ราคาขายจริงหลังปก <span class="text-rose-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <input type="number" step="0.01" id="formActualPublicPrice" required min="0" placeholder="เช่น 240.00"
+                                    <input type="number" step="0.01" id="formActualPublicPrice" autocomplete="off" required min="0" placeholder="เช่น 240.00"
                                            class="w-full px-3 py-2 border-2 border-slate-400 bg-white rounded-lg text-sm font-bold text-slate-900 focus:ring-2 focus:ring-slate-400 focus:outline-none">
                                     <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-600">บาท</span>
                                 </div>
@@ -636,28 +631,19 @@
 
         window.onload = async function() {
             switchTab('public');
-            await checkAuthSession();
+            
+            // บังคับออกจากระบบทุกครั้งที่โหลด/เปิดหน้าใหม่ เพื่อไม่ให้จดจำการล็อกอินค้างไว้
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (err) {
+                console.log('Session cleared');
+            }
+            currentUser = null;
+            updateUserUI(false);
+
             await loadTextbooksData();
             setupActualPriceManualListeners();
         };
-
-        async function checkAuthSession() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                if (ALLOWED_ADMINS.includes(session.user.email)) {
-                    currentUser = session.user;
-                    updateUserUI(true);
-                } else {
-                    await supabaseClient.auth.signOut();
-                    currentUser = null;
-                    updateUserUI(false);
-                    showToast('อีเมลนี้ไม่มีสิทธิ์เข้าใช้งานระบบเจ้าหน้าที่', 'error');
-                }
-            } else {
-                currentUser = null;
-                updateUserUI(false);
-            }
-        }
 
         function updateUserUI(isLoggedIn) {
             const adminLoginCard = document.getElementById('adminLoginCard');

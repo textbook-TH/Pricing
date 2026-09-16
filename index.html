@@ -151,7 +151,8 @@
 
             <!-- Toolbar: Search & Filter -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                <div class="relative w-full md:w-72">
+                <!-- กล่องค้นหาหน้าหลักปรับความยาวชนปีการศึกษา -->
+                <div class="relative w-full flex-1">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, รหัส..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
@@ -793,9 +794,6 @@
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT APPLICATION LOGIC & SUPABASE    -->
-    <!-- ========================================== -->
     <script>
         const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
@@ -1229,10 +1227,10 @@
                     </td>
                     <td class="py-3.5 px-4 font-medium text-slate-700 whitespace-nowrap">${escapeHtml(academicPrefix + book.author)}</td>
                     <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-base whitespace-nowrap">
-                        ${actualStudent ? `${Number(actualStudent).toLocaleString()} ฿` : '-'}
+                        ${actualStudent ? `${Number(actualStudent).toLocaleString()}` : '-'}
                     </td>
                     <td class="py-3.5 px-4 text-center font-bold font-kanit text-slate-900 text-base whitespace-nowrap">
-                        ${actualPublic ? `${Number(actualPublic).toLocaleString()} ฿` : '-'}
+                        ${actualPublic ? `${Number(actualPublic).toLocaleString()}` : '-'}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1241,7 +1239,6 @@
             renderPaginationControls(paginationContainer, publicCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changePublicPage');
         }
 
-        /* Security Hardened: Uses safe lookup by ID instead of inline object injection */
         function renderAdminTable(books) {
             const tbody = document.getElementById('adminTableBody');
             const emptyState = document.getElementById('adminEmpty');
@@ -1286,10 +1283,10 @@
                     </td>
                     <td class="py-3.5 px-4 font-medium text-slate-700 text-xs">${escapeHtml(academicPrefix + book.author)}</td>
                     <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-sm">
-                        ${actualStudent ? `${Number(actualStudent).toLocaleString()} ฿` : '-'}
+                        ${actualStudent ? `${Number(actualStudent).toLocaleString()}` : '-'}
                     </td>
                     <td class="py-3.5 px-4 text-center font-bold font-kanit text-slate-900 text-sm">
-                        ${actualPublic ? `${Number(actualPublic).toLocaleString()} ฿` : '-'}
+                        ${actualPublic ? `${Number(actualPublic).toLocaleString()}` : '-'}
                     </td>
                     <td class="py-3.5 px-4 text-center">
                         <div class="flex items-center justify-center space-x-1">
@@ -1369,7 +1366,6 @@
             `;
         }
 
-        /* Helper to safely fetch book by ID for Editing */
         function openFormModalById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
             if (book) {
@@ -1377,7 +1373,6 @@
             }
         }
 
-        /* Helper to safely fetch book by ID for Deletion */
         function confirmDeleteById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
             if (book) {
@@ -1547,76 +1542,89 @@
                 document.getElementById('formRemarks').value = book.remarks || '';
 
                 calculatePricing();
-                if (book.wholesale_faculty_rounded) document.getElementById('formWholesaleFaculty').value = Number(book.wholesale_faculty_rounded).toLocaleString('en-US');
-                if (book.student_price_rounded) document.getElementById('formStudentPrice').value = Number(book.student_price_rounded).toLocaleString('en-US');
-                if (book.external_cover_rounded) document.getElementById('formExternalCover').value = Number(book.external_cover_rounded).toLocaleString('en-US');
 
-                if (book.student_price_rounded) document.getElementById('formStudentPrice').value = book.student_price_rounded;
-                if (book.external_cover_rounded) document.getElementById('formExternalCover').value = book.external_cover_rounded;
-
-                document.getElementById('formActualStudentPrice').value = book.actual_student_price !== null && book.actual_student_price !== undefined 
-                                                                         ? book.actual_student_price 
-                                                                         : (book.student_price_rounded || '');
-                document.getElementById('formActualPublicPrice').value = book.actual_public_price !== null && book.actual_public_price !== undefined 
-                                                                        ? book.actual_public_price 
-                                                                        : (book.external_cover_rounded || '');
+                if (book.actual_student_price !== null && book.actual_student_price !== undefined) {
+                    document.getElementById('formActualStudentPrice').value = book.actual_student_price;
+                }
+                if (book.actual_public_price !== null && book.actual_public_price !== undefined) {
+                    document.getElementById('formActualPublicPrice').value = book.actual_public_price;
+                }
             } else {
                 isManualActualPriceEdit = false;
                 document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
                 document.getElementById('formBookId').value = '';
                 document.getElementById('formCalcDate').value = todayStr;
-                document.getElementById('formPrintQuantity').value = '';
-                document.getElementById('formUnitCost').value = '';
-                document.getElementById('formEdition').value = '';
-                document.getElementById('formPages').value = '';
-                calculatePricing();
+                document.getElementById('formStatus').value = 'ร่าง';
             }
 
             openModal('modalAdminForm');
         }
 
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-
-            if (!currentUser) {
-                showToast('กรุณาเข้าสู่ระบบก่อนทำรายการ', 'error');
-                return;
-            }
-
-            const bookId = document.getElementById('formBookId').value;
-            const payload = {
-                calc_date: document.getElementById('formCalcDate').value,
-                title: document.getElementById('formTitle').value.trim(),
-                academic_title: document.getElementById('formAcademicTitle').value.trim(),
-                author: document.getElementById('formAuthor').value.trim(),
-                department: document.getElementById('formDepartment').value.trim(),
-                book_code: document.getElementById('formBookCode').value.trim(),
-                kmitl_code: document.getElementById('formKmitlCode').value.trim(),
-                isbn: document.getElementById('formIsbn').value.trim(),
-                status: document.getElementById('formStatus').value,
-                edition: parseInt(document.getElementById('formEdition').value) || 1,
-                pages: parseInt(document.getElementById('formPages').value) || 0,
-                print_quantity: parseInt(document.getElementById('formPrintQuantity').value) || 0,
-                unit_cost: parseFloat(document.getElementById('formUnitCost').value) || 0,
-                production_cost: parseFloat(String(document.getElementById('formProductionCost').value).replace(/,/g, '')) || 0,
-                vat_rate: 7.00,
-                vat_amount: parseFloat(String(document.getElementById('formVatAmount').value).replace(/,/g, '')) || 0,
-                total_cost_with_vat: parseFloat(String(document.getElementById('formTotalCostWithVat').value).replace(/,/g, '')) || 0,
-                wholesale_faculty_rounded: parseFloat(String(document.getElementById('formWholesaleFaculty').value).replace(/,/g, '')) || 0,
-                student_price_rounded: parseFloat(String(document.getElementById('formStudentPrice').value).replace(/,/g, '')) || 0,
-                external_cover_rounded: parseFloat(String(document.getElementById('formExternalCover').value).replace(/,/g, '')) || 0,
-                actual_student_price: parseFloat(document.getElementById('formActualStudentPrice').value) || 0,
-                actual_public_price: parseFloat(document.getElementById('formActualPublicPrice').value) || 0,
-                remarks: document.getElementById('formRemarks').value.trim(),
-                created_by: currentUser.id
-            };
-
-            const btnSubmit = document.getElementById('btnSaveSubmit');
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังบันทึก...`;
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const btnSaveSubmit = document.getElementById('btnSaveSubmit');
+            btnSaveSubmit.disabled = true;
+            btnSaveSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังบันทึก...';
 
             try {
-                let error;
+                const bookId = document.getElementById('formBookId').value;
+                const calcDate = document.getElementById('formCalcDate').value;
+                const title = document.getElementById('formTitle').value.trim();
+                const academicTitle = document.getElementById('formAcademicTitle').value.trim();
+                const author = document.getElementById('formAuthor').value.trim();
+                const department = document.getElementById('formDepartment').value.trim();
+                const bookCode = document.getElementById('formBookCode').value.trim();
+                const kmitlCode = document.getElementById('formKmitlCode').value.trim();
+                const isbn = document.getElementById('formIsbn').value.trim();
+                const status = document.getElementById('formStatus').value;
+                const edition = parseInt(document.getElementById('formEdition').value) || 1;
+                const pages = parseInt(document.getElementById('formPages').value) || 0;
+                const printQuantity = parseInt(document.getElementById('formPrintQuantity').value) || 0;
+                const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
+                const remarks = document.getElementById('formRemarks').value.trim();
+
+                const actualStudentVal = document.getElementById('formActualStudentPrice').value;
+                const actualPublicVal = document.getElementById('formActualPublicPrice').value;
+
+                const actualStudentPrice = actualStudentVal !== '' ? parseFloat(actualStudentVal) : null;
+                const actualPublicPrice = actualPublicVal !== '' ? parseFloat(actualPublicVal) : null;
+
+                const productionCost = printQuantity * unitCost;
+                const vatAmount = productionCost * 0.07;
+                const totalCostWithVat = productionCost + vatAmount;
+
+                const unitCostWithVat = printQuantity > 0 ? (totalCostWithVat / printQuantity) : 0;
+                const wholesaleFacultyRounded = unitCostWithVat > 0 ? Math.ceil((unitCostWithVat * 1.35) / 5) * 5 : 0;
+                const studentPriceRounded = wholesaleFacultyRounded > 0 ? Math.ceil((wholesaleFacultyRounded * 1.20) / 5) * 5 : 0;
+                const externalWholesale = wholesaleFacultyRounded * 1.50;
+                const externalCoverRounded = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
+
+                const payload = {
+                    calc_date: calcDate,
+                    title,
+                    academic_title: academicTitle,
+                    author,
+                    department,
+                    book_code: bookCode,
+                    kmitl_code: kmitlCode,
+                    isbn,
+                    status,
+                    edition,
+                    pages,
+                    print_quantity: printQuantity,
+                    unit_cost: unitCost,
+                    production_cost: productionCost,
+                    vat_amount: vatAmount,
+                    total_cost_with_vat: totalCostWithVat,
+                    wholesale_faculty_rounded: wholesaleFacultyRounded,
+                    student_price_rounded: studentPriceRounded,
+                    external_cover_rounded: externalCoverRounded,
+                    actual_student_price: actualStudentPrice,
+                    actual_public_price: actualPublicPrice,
+                    remarks
+                };
+
+                let error = null;
                 if (bookId) {
                     const res = await supabaseClient.from('textbooks').update(payload).eq('id', bookId);
                     error = res.error;
@@ -1627,110 +1635,124 @@
 
                 if (error) throw error;
 
-                showToast(bookId ? 'แก้ไขข้อมูลเรียบร้อยแล้ว' : 'บันทึกตำราเรียนใหม่เรียบร้อยแล้ว', 'success');
+                showToast(bookId ? 'บันทึกการแก้ไขสำเร็จ' : 'เพิ่มรายการตำราเรียนใหม่สำเร็จ', 'success');
                 closeModal('modalAdminForm');
                 await loadTextbooksData();
 
             } catch (err) {
-                console.error('Error saving textbook:', err.message);
+                console.error('Save error:', err);
                 showToast('เกิดข้อผิดพลาดในการบันทึก: ' + err.message, 'error');
             } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = 'บันทึกข้อมูล';
+                btnSaveSubmit.disabled = false;
+                btnSaveSubmit.innerHTML = 'บันทึกข้อมูล';
             }
         }
 
         function confirmDelete(id, title) {
             deleteTargetId = id;
-            document.getElementById('deleteTargetTitle').innerText = `คุณต้องการลบ "${title}" ใช่หรือไม่?`;
-            document.getElementById('btnConfirmDelete').onclick = () => executeDelete();
+            document.getElementById('deleteTargetTitle').innerText = `"${title}"`;
+            document.getElementById('btnConfirmDelete').onclick = handleDelete;
             openModal('modalDeleteConfirm');
         }
 
-        async function executeDelete() {
-            if (!deleteTargetId || !currentUser) return;
-
-            const btn = document.getElementById('btnConfirmDelete');
-            btn.disabled = true;
-            btn.innerText = 'กำลังลบ...';
+        async function handleDelete() {
+            if (!deleteTargetId) return;
+            const btnConfirmDelete = document.getElementById('btnConfirmDelete');
+            btnConfirmDelete.disabled = true;
+            btnConfirmDelete.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังลบ...';
 
             try {
-                const { error } = await supabaseClient.from('textbooks').delete().eq('id', deleteTargetId);
+                const { error } = await supabaseClient
+                    .from('textbooks')
+                    .delete()
+                    .eq('id', deleteTargetId);
+
                 if (error) throw error;
 
-                showToast('ลบรายการเรียบร้อยแล้ว', 'success');
+                showToast('ลบรายการตำราเรียนเรียบร้อยแล้ว', 'success');
                 closeModal('modalDeleteConfirm');
+                deleteTargetId = null;
                 await loadTextbooksData();
             } catch (err) {
-                console.error('Error deleting:', err.message);
-                showToast('ไม่สามารถลบได้: ' + err.message, 'error');
+                console.error('Delete error:', err);
+                showToast('ไม่สามารถลบข้อมูลได้: ' + err.message, 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerText = 'ยืนยันลบข้อมูล';
-                deleteTargetId = null;
+                btnConfirmDelete.disabled = false;
+                btnConfirmDelete.innerHTML = 'ยืนยันลบข้อมูล';
             }
         }
 
-        async function handleLogin(e) {
-            e.preventDefault();
+        async function handleLogin(event) {
+            event.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+            const password = document.getElementById('loginPassword').value.trim();
+            const btnSubmit = document.getElementById('btnLoginSubmit');
 
-            if (!ALLOWED_ADMINS.includes(email)) {
-                showToast('อีเมลนี้ไม่มีสิทธิ์ใช้งานระบบเจ้าหน้าที่', 'error');
+            if (!ALLOWED_ADMINS.includes(email.toLowerCase())) {
+                showToast('บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานระบบเจ้าหน้าที่', 'error');
                 return;
             }
 
-            const btn = document.getElementById('btnLoginSubmit');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>กำลังเข้าสู่ระบบ...</span>`;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังเข้าสู่ระบบ...';
 
             try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
                 if (error) throw error;
 
                 currentUser = data.user;
                 updateUserUI(true);
                 showToast('เข้าสู่ระบบสำเร็จ', 'success');
             } catch (err) {
-                showToast('เข้าสู่ระบบไม่สำเร็จ: ' + err.message, 'error');
+                console.error('Login error:', err);
+                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<span>เข้าสู่ระบบ</span><i class="fa-solid fa-arrow-right text-xs"></i>`;
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span>เข้าสู่ระบบ</span><i class="fa-solid fa-arrow-right text-xs"></i>';
             }
         }
 
         async function handleLogout() {
-            await supabaseClient.auth.signOut();
-            currentUser = null;
-            updateUserUI(false);
-            showToast('ออกจากระบบเรียบร้อย', 'info');
+            try {
+                await supabaseClient.auth.signOut();
+                currentUser = null;
+                updateUserUI(false);
+                showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
         }
 
         function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
         }
+
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
+
             const toast = document.createElement('div');
-            
-            let bgClass = 'bg-slate-900 text-white';
-            let icon = '<i class="fa-solid fa-circle-info text-blue-400"></i>';
+            let iconClass = 'fa-circle-info text-blue-500';
+            let bgBorder = 'bg-white border-slate-200 text-slate-800';
 
             if (type === 'success') {
-                bgClass = 'bg-emerald-900 text-emerald-100 border border-emerald-700';
-                icon = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+                iconClass = 'fa-circle-check text-emerald-500';
             } else if (type === 'error') {
-                bgClass = 'bg-rose-900 text-rose-100 border border-rose-700';
-                icon = '<i class="fa-solid fa-triangle-exclamation text-rose-400"></i>';
+                iconClass = 'fa-circle-exclamation text-rose-500';
             }
 
-            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-medium transition-all transform duration-300 translate-y-2 opacity-0 ${bgClass}`;
-            toast.innerHTML = `${icon}<span>${escapeHtml(message)}</span>`;
+            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 text-sm font-medium ${bgBorder}`;
+            toast.innerHTML = `<i class="fa-solid ${iconClass} text-lg"></i><span>${escapeHtml(message)}</span>`;
 
             container.appendChild(toast);
 
@@ -1741,11 +1763,11 @@
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            }, 3000);
         }
 
         function escapeHtml(str) {
-            if (str === null || str === undefined) return '';
+            if (!str) return '';
             return String(str)
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -1755,8 +1777,8 @@
         }
 
         function escapeJsAttr(str) {
-            if (str === null || str === undefined) return '';
-            return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            if (!str) return '';
+            return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
     </script>
 </body>

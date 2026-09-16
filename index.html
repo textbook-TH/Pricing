@@ -71,18 +71,18 @@
                     </div>
                 </div>
 
-                <!-- Navigation Tabs / Capsule Controller (ปรับปุ่มทรงแคปซูลเป็น "เจ้าหน้าที่") -->
+                <!-- Navigation Tabs / Capsule Controller (ปรับขนาดแคปซูลให้เท่ากับ index02.html) -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-[#0B0F19] p-1.5 rounded-full flex items-center space-x-2 border border-slate-800/80 shadow-inner">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
+                    <div class="bg-[#0B0F19] p-1 rounded-full flex items-center space-x-1.5 border border-slate-800/80 shadow-inner">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-house text-xs"></i>
                             <span>หน้าหลัก</span>
                         </button>
-                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
+                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
                             <i class="fa-solid fa-user-gear text-xs"></i>
                             <span>เจ้าหน้าที่</span>
                         </button>
-                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-3.5 py-1.5 rounded-full text-rose-400 border border-rose-500/80 hover:bg-rose-500/10 transition-all duration-200 flex items-center space-x-1.5 text-xs sm:text-sm font-medium">
+                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-3 py-1 rounded-full text-rose-400 border border-rose-500/80 hover:bg-rose-500/10 transition-all duration-200 flex items-center space-x-1 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-power-off text-xs"></i>
                             <span class="hidden md:inline">ออกจากระบบ</span>
                         </button>
@@ -673,14 +673,14 @@
                 publicView.classList.remove('hidden');
                 adminView.classList.add('hidden');
 
-                btnTabPublic.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
-                btnTabAdmin.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
+                btnTabPublic.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
+                btnTabAdmin.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
             } else {
                 publicView.classList.add('hidden');
                 adminView.classList.remove('hidden');
 
-                btnTabAdmin.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
-                btnTabPublic.className = 'px-4 py-1.5 rounded-full transition-all duration-200 flex items-center space-x-2 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
+                btnTabAdmin.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
+                btnTabPublic.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
             }
         }
 

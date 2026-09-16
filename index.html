@@ -74,11 +74,11 @@
                 <!-- Navigation Tabs / Capsule Controller (ปรับรหัสสีแคปซูลตามภาพถ่ายจริง #0B0E17) -->
                 <div class="flex items-center space-x-3">
                     <div class="bg-[#0B0E17] p-1 rounded-full flex items-center space-x-1.5 border border-slate-800/80 shadow-inner">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
                             <i class="fa-solid fa-house text-xs"></i>
                             <span>หน้าหลัก</span>
                         </button>
-                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
+                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-user-gear text-xs"></i>
                             <span>เจ้าหน้าที่</span>
                         </button>
@@ -635,6 +635,7 @@
         let isManualActualPriceEdit = false;
 
         window.onload = async function() {
+            switchTab('public');
             await checkAuthSession();
             await loadTextbooksData();
             setupActualPriceManualListeners();

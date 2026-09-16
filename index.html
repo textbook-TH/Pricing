@@ -37,6 +37,9 @@
     <!-- Supabase JS Client v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         h1, h2, h3, h4, .font-kanit { font-family: 'Kanit', sans-serif; }
@@ -94,13 +97,27 @@
         <!-- PUBLIC VIEW SECTION -->
         <section id="publicView" class="space-y-6">
 
-            <!-- Banner / Header (ย้ายมาจากหน้าเจ้าหน้าที่มาไว้หน้าหลัก) -->
+            <!-- Banner / Header -->
             <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
-                <div class="relative z-10 max-w-2xl space-y-2">
-                    <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        ตรวจสอบสถานะจัดพิมพ์ และราคาจำหน่าย
-                    </p>
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-2 max-w-2xl">
+                        <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            ตรวจสอบสถานะจัดพิมพ์ และราคาจำหน่าย
+                        </p>
+                    </div>
+
+                    <!-- ปุ่มแสดงยอดรวมค่าใช้จ่ายจัดพิมพ์ (มุมขวาบน) -->
+                    <div onclick="openChartModal()" class="cursor-pointer bg-slate-800/90 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 p-3.5 rounded-xl transition-all duration-200 flex items-center space-x-3.5 shadow-lg shrink-0 group">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg group-hover:scale-105 transition">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs sm:text-sm text-slate-300 block font-semibold">ยอดรวมการผลิต</span>
+                            <span id="statTotalCost" class="text-base sm:text-lg font-bold font-kanit text-amber-400">0.00 ฿</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                    </div>
                 </div>
 
                 <!-- แสดงผล 6 รายการสถานะ -->
@@ -136,7 +153,7 @@
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
                 <div class="relative w-full md:w-72">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง..." 
+                    <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, รหัส..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
@@ -178,7 +195,7 @@
                     <table class="w-full text-left text-sm text-slate-600">
                         <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                             <tr>
-                                <th scope="col" class="py-3.5 px-4 text-center w-16">ID</th>
+                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">รหัสหนังสือ</th>
                                 <th scope="col" class="py-3.5 px-4 whitespace-nowrap">สถานะ</th>
                                 <th scope="col" class="py-3.5 px-4 min-w-[220px]">ชื่อหนังสือ / ตำราเรียน</th>
                                 <th scope="col" class="py-3.5 px-4 whitespace-nowrap">ชื่อผู้แต่ง</th>
@@ -253,7 +270,7 @@
                     <div class="flex flex-col xl:flex-row items-center gap-3 w-full xl:w-auto">
                         <div class="relative w-full xl:w-72">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง..." 
+                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, รหัส..." 
                                    class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                         </div>
 
@@ -301,7 +318,7 @@
                         <table class="w-full text-left text-sm text-slate-600">
                             <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                                 <tr>
-                                    <th scope="col" class="py-3.5 px-4 text-center w-16">ID</th>
+                                    <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">รหัสหนังสือ</th>
                                     <th scope="col" class="py-3.5 px-4">สถานะ</th>
                                     <th scope="col" class="py-3.5 px-4 min-w-[200px]">ชื่อหนังสือ / ตำราเรียน</th>
                                     <th scope="col" class="py-3.5 px-4">ชื่อผู้แต่ง</th>
@@ -419,7 +436,7 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (คงรูปแบบ ช่องกรอกข้อมูล และสูตรการคำนวณทั้งหมดไว้ 100%) -->
+    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน -->
     <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
             
@@ -473,7 +490,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formBookCode" autocomplete="off" required placeholder="เช่น Text-001"
+                        <input type="text" id="formBookCode" autocomplete="off" required placeholder="เช่น Text-024"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
@@ -517,7 +534,7 @@
                     </div>
                 </div>
 
-                <!-- Calculation Section Box (AUTO-CALCULATOR WITH ACTUAL PRICES INTEGRATION - ห้ามแก้ไขสูตร 100%) -->
+                <!-- Calculation Section Box -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                         <span class="text-xs font-bold font-kanit text-slate-800 flex items-center">
@@ -643,6 +660,76 @@
         </div>
     </div>
 
+    <!-- POPUP MODAL 4: กราฟแสดง 10 อันดับรายการที่มีค่าใช้จ่ายการผลิตสูงสุด -->
+    <div id="modalTopCostChart" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-white rounded-2xl w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
+            <div class="bg-slate-900 text-white p-4 sm:p-5 flex justify-between items-center border-b border-slate-800 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold font-kanit leading-snug">10 อันดับยอดรวมการผลิตสูงสุด</h3>
+                        <p class="text-xs text-slate-400">คำนวณจากยอดรวมทั้งสิ้น (รวม VAT)</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modalTopCostChart')" class="text-slate-400 hover:text-white text-xl p-1 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto custom-scrollbar flex-1">
+                <!-- Filter Dropdown Header inside modal -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <i class="fa-solid fa-calendar-days text-amber-500 text-sm"></i>
+                        <span class="text-xs font-semibold text-slate-700 whitespace-nowrap">เลือกปีการศึกษา:</span>
+                        <select id="modalChartYearFilter" onchange="renderTopCostChart()" class="w-full sm:w-40 py-1.5 px-3 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            <option value="ALL">ทุกปีการศึกษา</option>
+                        </select>
+                    </div>
+                    <div class="text-xs text-slate-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 w-full sm:w-auto text-right">
+                        ยอดรวมผลิตปีที่เลือก: <span id="modalChartYearTotal" class="font-bold text-amber-700 font-kanit text-sm ml-1">0.00 ฿</span>
+                    </div>
+                </div>
+
+                <!-- Chart Container -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative min-h-[300px] flex items-center justify-center">
+                    <canvas id="topCostChartCanvas"></canvas>
+                </div>
+
+                <!-- Top 10 Table Breakdown -->
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold font-kanit text-slate-700 uppercase tracking-wider flex items-center">
+                        <i class="fa-solid fa-list-ol text-amber-500 mr-1.5"></i>รายละเอียด 10 อันดับค่าใช้จ่ายจัดพิมพ์สูงสุด
+                    </h4>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <table class="w-full text-left text-xs text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold">
+                                <tr>
+                                    <th class="py-2.5 px-3 text-center w-12">อันดับ</th>
+                                    <th class="py-2.5 px-3">รหัสหนังสือ / ชื่อตำราเรียน</th>
+                                    <th class="py-2.5 px-3 text-center whitespace-nowrap">พิมพ์ครั้งที่</th>
+                                    <th class="py-2.5 px-3 text-center whitespace-nowrap">จำนวนพิมพ์</th>
+                                    <th class="py-2.5 px-3 text-right whitespace-nowrap">ยอดรวม (รวม VAT)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topCostTableBody" class="divide-y divide-slate-100">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-end shrink-0">
+                <button onclick="closeModal('modalTopCostChart')" class="px-5 py-2 bg-slate-200 text-slate-700 font-medium text-xs rounded-lg hover:bg-slate-300 transition">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
@@ -661,11 +748,11 @@
         let currentUser = null;
         let deleteTargetId = null;
         let isManualActualPriceEdit = false;
+        let topCostChartInstance = null;
 
         window.onload = async function() {
             switchTab('public');
             
-            // บังคับออกจากระบบทุกครั้งที่โหลด/เปิดหน้าใหม่ เพื่อไม่ให้จดจำการล็อกอินค้างไว้
             try {
                 await supabaseClient.auth.signOut();
             } catch (err) {
@@ -720,7 +807,6 @@
             }
         }
 
-        // ฟังก์ชันช่วยดึงเฉพาะ "ปี" จาก calc_date (หรือ fallback จาก created_at)
         function getYearFromCalcDate(book) {
             const rawDate = book.calc_date || book.created_at;
             if (!rawDate) return '';
@@ -838,6 +924,168 @@
             document.getElementById('statApproved').innerText = data.filter(b => b.status === 'อนุมัติแล้ว').length;
             document.getElementById('statPrinting').innerText = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
             document.getElementById('statCompleted').innerText = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
+
+            const totalCostSum = data.reduce((sum, b) => {
+                const val = parseFloat(b.total_cost_with_vat);
+                if (!isNaN(val)) return sum + val;
+                const qty = parseFloat(b.print_quantity) || 0;
+                const unit = parseFloat(b.unit_cost) || 0;
+                return sum + (qty * unit * 1.07);
+            }, 0);
+
+            const statTotalCostElem = document.getElementById('statTotalCost');
+            if (statTotalCostElem) {
+                statTotalCostElem.innerText = totalCostSum > 0 
+                    ? totalCostSum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿'
+                    : '0.00 ฿';
+            }
+        }
+
+        function openChartModal() {
+            populateChartModalYears();
+            renderTopCostChart();
+            openModal('modalTopCostChart');
+        }
+
+        function populateChartModalYears() {
+            const chartYearSelect = document.getElementById('modalChartYearFilter');
+            if (!chartYearSelect) return;
+
+            const years = [...new Set(
+                allBooks
+                    .map(b => getYearFromCalcDate(b))
+                    .filter(y => y.length > 0)
+            )].sort((a, b) => b.localeCompare(a));
+
+            let html = '<option value="ALL">ทุกปีการศึกษา</option>';
+            years.forEach(yr => {
+                html += `<option value="${escapeHtml(yr)}">ปีการศึกษา ${escapeHtml(yr)}</option>`;
+            });
+
+            chartYearSelect.innerHTML = html;
+        }
+
+        function getItemTotalCostWithVat(b) {
+            const val = parseFloat(b.total_cost_with_vat);
+            if (!isNaN(val) && val > 0) return val;
+            const qty = parseFloat(b.print_quantity) || 0;
+            const unit = parseFloat(b.unit_cost) || 0;
+            return qty * unit * 1.07;
+        }
+
+        function renderTopCostChart() {
+            const selectedYear = document.getElementById('modalChartYearFilter')?.value || 'ALL';
+            
+            const filteredBooks = allBooks.filter(b => {
+                if (selectedYear === 'ALL') return true;
+                return getYearFromCalcDate(b) === selectedYear;
+            });
+
+            const totalYearCost = filteredBooks.reduce((sum, b) => sum + getItemTotalCostWithVat(b), 0);
+            const totalYearElem = document.getElementById('modalChartYearTotal');
+            if (totalYearElem) {
+                totalYearElem.innerText = totalYearCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿';
+            }
+
+            const top10 = [...filteredBooks]
+                .map(b => ({ ...b, computedCost: getItemTotalCostWithVat(b) }))
+                .sort((a, b) => b.computedCost - a.computedCost)
+                .slice(0, 10);
+
+            const tbody = document.getElementById('topCostTableBody');
+            if (tbody) {
+                tbody.innerHTML = '';
+                if (top10.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">ไม่พบข้อมูลในระบบ</td></tr>`;
+                } else {
+                    top10.forEach((item, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+                        const codeStr = item.book_code ? `${item.book_code} - ` : '';
+                        tr.innerHTML = `
+                            <td class="py-2.5 px-3 text-center font-bold font-kanit text-slate-500">#${idx + 1}</td>
+                            <td class="py-2.5 px-3 font-semibold text-slate-800">
+                                ${escapeHtml(codeStr + item.title)}
+                                ${item.author ? `<span class="block text-[10px] font-normal text-slate-400">ผู้แต่ง: ${escapeHtml(item.author)}</span>` : ''}
+                            </td>
+                            <td class="py-2.5 px-3 text-center text-slate-600">${item.edition || 1}</td>
+                            <td class="py-2.5 px-3 text-center text-slate-600 font-mono">${(item.print_quantity || 0).toLocaleString()}</td>
+                            <td class="py-2.5 px-3 text-right font-bold text-amber-600 font-kanit whitespace-nowrap">
+                                ${item.computedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ฿
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            }
+
+            const ctx = document.getElementById('topCostChartCanvas');
+            if (!ctx) return;
+
+            if (topCostChartInstance) {
+                topCostChartInstance.destroy();
+            }
+
+            const chartLabels = top10.map((item, idx) => item.book_code ? item.book_code : `อันดับ ${idx + 1}`);
+
+            const chartData = top10.map(b => b.computedCost);
+
+            topCostChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'ยอดรวมค่าใช้จ่ายจัดพิมพ์ (บาท)',
+                        data: chartData,
+                        backgroundColor: 'rgba(224, 90, 16, 0.85)',
+                        borderColor: '#C44B07',
+                        borderWidth: 1.5,
+                        borderRadius: 6,
+                        hoverBackgroundColor: '#E05A10'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    const item = top10[index];
+                                    if (!item) return '';
+                                    return item.title;
+                                },
+                                label: function(context) {
+                                    return ' ยอดรวม VAT: ' + Number(context.raw).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#F1F5F9' },
+                            ticks: {
+                                font: { family: 'Sarabun', size: 10 },
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { family: 'Sarabun', size: 11, weight: '600' },
+                                color: '#334155'
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function getStatusBadge(status) {
@@ -883,8 +1131,10 @@
                                      ? book.actual_public_price 
                                      : book.external_cover_rounded;
 
+                const displayCode = book.book_code ? book.book_code : `#${books.length - index}`;
+
                 tr.innerHTML = `
-                    <td class="py-3.5 px-4 text-center font-mono text-xs font-semibold text-slate-400">#${books.length - index}</td>
+                    <td class="py-3.5 px-4 text-center font-mono text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
                     <td class="py-3.5 px-4 whitespace-nowrap">${getStatusBadge(book.status)}</td>
                     <td class="py-3.5 px-4">
                         <div class="font-bold text-slate-900 font-kanit text-base">${escapeHtml(book.title)}</div>
@@ -926,8 +1176,10 @@
                                      ? book.actual_public_price 
                                      : book.external_cover_rounded;
 
+                const displayCode = book.book_code ? book.book_code : `#${books.length - index}`;
+
                 tr.innerHTML = `
-                    <td class="py-3.5 px-4 text-center font-mono text-xs font-semibold text-slate-400">#${books.length - index}</td>
+                    <td class="py-3.5 px-4 text-center font-mono text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
                     <td class="py-3.5 px-4">${getStatusBadge(book.status)}</td>
                     <td class="py-3.5 px-4">
                         <div class="font-bold text-slate-900 font-kanit text-sm">${escapeHtml(book.title)}</div>
@@ -1059,7 +1311,6 @@
             const externalWholesale = wholesaleFaculty * 1.50;
             const externalCover = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
 
-            // แสดงผลใส่เครื่องหมายจุลภาค (,) ในช่องป๊อปอัพ
             document.getElementById('formProductionCost').value = productionCost > 0 ? productionCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
             document.getElementById('formVatAmount').value = vatAmount > 0 ? vatAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
             document.getElementById('formTotalCostWithVat').value = totalCostWithVat > 0 ? totalCostWithVat.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
@@ -1094,7 +1345,6 @@
                 document.getElementById('formModalTitle').innerText = 'แก้ไขรายการตำราเรียน';
                 document.getElementById('formBookId').value = book.id;
                 
-                // จัดการ calc_date สำหรับปฏิทิน
                 let formattedCalcDate = todayStr;
                 if (book.calc_date) {
                     const dStr = String(book.calc_date).trim();

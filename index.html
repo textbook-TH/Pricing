@@ -259,6 +259,11 @@
                                    class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
 
+                        <!-- Dropdown เลือกภาควิชา สำหรับเจ้าหน้าที่ -->
+                        <select id="adminDepartmentFilter" onchange="filterAdminData()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                            <option value="ALL">ทุกภาควิชา</option>
+                        </select>
+
                         <select id="adminStatusFilter" onchange="filterAdminData()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                             <option value="ALL">ทุกสถานะ</option>
                             <option value="ร่าง">ร่าง</option>
@@ -725,12 +730,13 @@
             }
         }
 
-        /* ฟังก์ชันสร้างรายการตัวเลือกภาควิชาอัตโนมัติจากฐานข้อมูล (Dynamic Department List) */
+        /* ฟังก์ชันสร้างรายการตัวเลือกภาควิชาอัตโนมัติจากฐานข้อมูล (Dynamic Department List) ทั้งหน้าหลักและหน้าเจ้าหน้าที่ */
         function populateDepartmentDropdown(books) {
-            const deptSelect = document.getElementById('publicDepartmentFilter');
-            if (!deptSelect) return;
+            const publicDeptSelect = document.getElementById('publicDepartmentFilter');
+            const adminDeptSelect = document.getElementById('adminDepartmentFilter');
 
-            const selectedValue = deptSelect.value;
+            const publicVal = publicDeptSelect ? publicDeptSelect.value : 'ALL';
+            const adminVal = adminDeptSelect ? adminDeptSelect.value : 'ALL';
 
             // ดึงเฉพาะชื่อภาควิชาที่มีอยู่ ไม่เป็นค่าว่อง และเรียงตามลำดับอักษร
             const departments = [...new Set(
@@ -744,12 +750,14 @@
                 html += `<option value="${escapeHtml(dept)}">${escapeHtml(dept)}</option>`;
             });
 
-            deptSelect.innerHTML = html;
+            if (publicDeptSelect) {
+                publicDeptSelect.innerHTML = html;
+                publicDeptSelect.value = departments.includes(publicVal) ? publicVal : 'ALL';
+            }
 
-            if (departments.includes(selectedValue)) {
-                deptSelect.value = selectedValue;
-            } else {
-                deptSelect.value = 'ALL';
+            if (adminDeptSelect) {
+                adminDeptSelect.innerHTML = html;
+                adminDeptSelect.value = departments.includes(adminVal) ? adminVal : 'ALL';
             }
         }
 
@@ -904,6 +912,7 @@
         function filterAdminData() {
             const search = document.getElementById('adminSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('adminStatusFilter').value;
+            const department = document.getElementById('adminDepartmentFilter') ? document.getElementById('adminDepartmentFilter').value : 'ALL';
 
             const filtered = allBooks.filter(book => {
                 const matchSearch = (
@@ -913,7 +922,8 @@
                     book.book_code?.toLowerCase().includes(search)
                 );
                 const matchStatus = (status === 'ALL' || book.status === status);
-                return matchSearch && matchStatus;
+                const matchDepartment = (department === 'ALL' || (book.department && book.department.trim() === department));
+                return matchSearch && matchStatus && matchDepartment;
             });
 
             renderAdminTable(filtered);

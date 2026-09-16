@@ -219,6 +219,10 @@
                     <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลรายการตำราเรียน</p>
                     <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ/ภาควิชา/ปีการศึกษา</p>
                 </div>
+
+                <!-- Public Pagination Controls -->
+                <div id="publicPagination" class="hidden px-4 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                </div>
             </div>
 
         </section>
@@ -340,6 +344,10 @@
                     <div id="adminEmpty" class="hidden p-12 text-center text-slate-400">
                         <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
                         <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลในระบบ</p>
+                    </div>
+
+                    <!-- Admin Pagination Controls -->
+                    <div id="adminPagination" class="hidden px-4 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                     </div>
                 </div>
 
@@ -744,6 +752,12 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allBooks = [];
+        let publicFilteredBooks = [];
+        let adminFilteredBooks = [];
+        let publicCurrentPage = 1;
+        let adminCurrentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+
         let currentTab = 'public';
         let currentUser = null;
         let deleteTargetId = null;
@@ -843,11 +857,13 @@
                 if (error) throw error;
 
                 allBooks = data || [];
+                publicFilteredBooks = [...allBooks];
+                adminFilteredBooks = [...allBooks];
                 
                 populateYearDropdown(allBooks);
                 populateDepartmentDropdown(allBooks);
-                renderPublicTable(allBooks);
-                renderAdminTable(allBooks);
+                filterPublicData(true);
+                filterAdminData(true);
                 updateStats(allBooks);
 
             } catch (err) {
@@ -1107,15 +1123,24 @@
         function renderPublicTable(books) {
             const tbody = document.getElementById('publicTableBody');
             const emptyState = document.getElementById('publicEmpty');
+            const paginationContainer = document.getElementById('publicPagination');
             tbody.innerHTML = '';
 
             if (books.length === 0) {
                 emptyState.classList.remove('hidden');
+                if (paginationContainer) paginationContainer.classList.add('hidden');
                 return;
             }
             emptyState.classList.add('hidden');
 
-            books.forEach((book, index) => {
+            const totalPages = Math.ceil(books.length / ITEMS_PER_PAGE);
+            if (publicCurrentPage > totalPages) publicCurrentPage = totalPages;
+            if (publicCurrentPage < 1) publicCurrentPage = 1;
+
+            const startIndex = (publicCurrentPage - 1) * ITEMS_PER_PAGE;
+            const pageBooks = books.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+            pageBooks.forEach((book, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50/80 transition cursor-pointer border-b border-slate-100';
                 
@@ -1130,7 +1155,7 @@
                                      ? book.actual_public_price 
                                      : book.external_cover_rounded;
 
-                const displayCode = book.book_code ? book.book_code : `#${books.length - index}`;
+                const displayCode = book.book_code ? book.book_code : `#${books.length - (startIndex + index)}`;
 
                 tr.innerHTML = `
                     <td class="py-3.5 px-4 text-center font-mono text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
@@ -1149,21 +1174,32 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            renderPaginationControls(paginationContainer, publicCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changePublicPage');
         }
 
         /* Security Hardened: Uses safe lookup by ID instead of inline object injection */
         function renderAdminTable(books) {
             const tbody = document.getElementById('adminTableBody');
             const emptyState = document.getElementById('adminEmpty');
+            const paginationContainer = document.getElementById('adminPagination');
             tbody.innerHTML = '';
 
             if (books.length === 0) {
                 emptyState.classList.remove('hidden');
+                if (paginationContainer) paginationContainer.classList.add('hidden');
                 return;
             }
             emptyState.classList.add('hidden');
 
-            books.forEach((book, index) => {
+            const totalPages = Math.ceil(books.length / ITEMS_PER_PAGE);
+            if (adminCurrentPage > totalPages) adminCurrentPage = totalPages;
+            if (adminCurrentPage < 1) adminCurrentPage = 1;
+
+            const startIndex = (adminCurrentPage - 1) * ITEMS_PER_PAGE;
+            const pageBooks = books.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+            pageBooks.forEach((book, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
 
@@ -1176,7 +1212,7 @@
                                      ? book.actual_public_price 
                                      : book.external_cover_rounded;
 
-                const displayCode = book.book_code ? book.book_code : `#${books.length - index}`;
+                const displayCode = book.book_code ? book.book_code : `#${books.length - (startIndex + index)}`;
 
                 tr.innerHTML = `
                     <td class="py-3.5 px-4 text-center font-mono text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
@@ -1207,6 +1243,67 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            renderPaginationControls(paginationContainer, adminCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changeAdminPage');
+        }
+
+        function changePublicPage(page) {
+            publicCurrentPage = page;
+            renderPublicTable(publicFilteredBooks);
+        }
+
+        function changeAdminPage(page) {
+            adminCurrentPage = page;
+            renderAdminTable(adminFilteredBooks);
+        }
+
+        function renderPaginationControls(container, currentPage, totalPages, totalItems, startIndex, pageItemCount, handlerName) {
+            if (!container) return;
+            if (totalItems === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+            container.classList.remove('hidden');
+
+            const fromNum = startIndex + 1;
+            const toNum = startIndex + pageItemCount;
+
+            const prevDisabled = currentPage === 1;
+            const nextDisabled = currentPage === totalPages;
+
+            const prevClass = prevDisabled
+                ? 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200 font-medium'
+                : 'px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer';
+
+            const nextClass = nextDisabled
+                ? 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200 font-medium'
+                : 'px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer';
+
+            let pageBtns = '';
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    pageBtns += `<button class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-bold shadow-sm transition">${i}</button>`;
+                } else {
+                    pageBtns += `<button onclick="${handlerName}(${i})" class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer">${i}</button>`;
+                }
+            }
+
+            container.innerHTML = `
+                <div class="text-slate-500 font-sarabun">
+                    แสดง <span class="font-semibold text-slate-800 font-mono">${fromNum}</span> ถึง <span class="font-semibold text-slate-800 font-mono">${toNum}</span> จากทั้งหมด <span class="font-semibold text-amber-600 font-mono">${totalItems}</span> รายการ
+                </div>
+                <div class="flex items-center space-x-1.5">
+                    <button ${prevDisabled ? 'disabled' : `onclick="${handlerName}(${currentPage - 1})"`} class="${prevClass}">
+                        <i class="fa-solid fa-chevron-left mr-1 text-[10px]"></i>ก่อนหน้า
+                    </button>
+                    <div class="flex items-center space-x-1">
+                        ${pageBtns}
+                    </div>
+                    <button ${nextDisabled ? 'disabled' : `onclick="${handlerName}(${currentPage + 1})"`} class="${nextClass}">
+                        ถัดไป<i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+                    </button>
+                </div>
+            `;
         }
 
         /* Helper to safely fetch book by ID for Editing */
@@ -1225,13 +1322,14 @@
             }
         }
 
-        function filterPublicData() {
+        function filterPublicData(resetPage = true) {
+            if (resetPage) publicCurrentPage = 1;
             const search = document.getElementById('publicSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('publicStatusFilter').value;
             const department = document.getElementById('publicDepartmentFilter') ? document.getElementById('publicDepartmentFilter').value : 'ALL';
             const yearFilter = document.getElementById('publicYearFilter') ? document.getElementById('publicYearFilter').value : 'ALL';
 
-            const filtered = allBooks.filter(book => {
+            publicFilteredBooks = allBooks.filter(book => {
                 const bookYear = getYearFromCalcDate(book);
                 const matchSearch = (
                     book.title?.toLowerCase().includes(search) ||
@@ -1247,16 +1345,17 @@
                 return matchSearch && matchStatus && matchDepartment && matchYear;
             });
 
-            renderPublicTable(filtered);
+            renderPublicTable(publicFilteredBooks);
         }
 
-        function filterAdminData() {
+        function filterAdminData(resetPage = true) {
+            if (resetPage) adminCurrentPage = 1;
             const search = document.getElementById('adminSearchInput').value.toLowerCase().trim();
             const status = document.getElementById('adminStatusFilter').value;
             const department = document.getElementById('adminDepartmentFilter') ? document.getElementById('adminDepartmentFilter').value : 'ALL';
             const yearFilter = document.getElementById('adminYearFilter') ? document.getElementById('adminYearFilter').value : 'ALL';
 
-            const filtered = allBooks.filter(book => {
+            adminFilteredBooks = allBooks.filter(book => {
                 const bookYear = getYearFromCalcDate(book);
                 const matchSearch = (
                     book.title?.toLowerCase().includes(search) ||
@@ -1272,7 +1371,7 @@
                 return matchSearch && matchStatus && matchDepartment && matchYear;
             });
 
-            renderAdminTable(filtered);
+            renderAdminTable(adminFilteredBooks);
         }
 
         function openPublicDetailModal(book) {

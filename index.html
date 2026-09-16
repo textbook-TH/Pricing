@@ -53,7 +53,7 @@
 </head>
 <body class="h-full flex flex-col text-slate-800 bg-slate-50">
 
-    <!-- Top Navigation Bar (ปรับโทนสีตามภาพถ่ายจริง #161B2A) -->
+    <!-- Top Navigation Bar -->
     <header class="bg-[#161B2A] border-b border-slate-800 sticky top-0 z-30 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -71,14 +71,14 @@
                     </div>
                 </div>
 
-                <!-- Navigation Tabs / Capsule Controller (ปรับรหัสสีแคปซูลตามภาพถ่ายจริง #0B0E17) -->
+                <!-- Navigation Tabs / Capsule Controller -->
                 <div class="flex items-center space-x-3">
                     <div class="bg-[#0B0E17] p-1 rounded-full flex items-center space-x-1.5 border border-slate-800/80 shadow-inner">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
                             <i class="fa-solid fa-house text-xs"></i>
                             <span>หน้าหลัก</span>
                         </button>
-                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
+                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-user-gear text-xs"></i>
                             <span>เจ้าหน้าที่</span>
                         </button>
@@ -93,13 +93,13 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
+    <!-- Main Content Container (กำหนดระยะขอบบน py-6 ให้เท่ากันสมบูรณ์แบบ) -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         <!-- PUBLIC VIEW SECTION -->
         <section id="publicView" class="space-y-6">
             
-            <!-- Banner / Header (ปรับพื้นหลังกล่องสถานะตามภาพถ่ายจริง #101421) -->
+            <!-- Banner / Header Box -->
             <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
                 <div class="relative z-10 max-w-2xl space-y-2">
                     <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
@@ -140,7 +140,7 @@
             <!-- Toolbar: Search, Department & Status Filter -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
                 <!-- Search Input -->
-                <div class="relative w-full md:w-80">
+                <div class="relative w-full md:w-72">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                     <input type="text" id="publicSearchInput" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, ภาควิชา..." 
                            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
@@ -148,10 +148,10 @@
                 
                 <!-- Filters Group -->
                 <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                    <!-- Department Filter (เพิ่มใหม่ตามคำขอ) -->
+                    <!-- Department Filter -->
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
                         <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-building-columns mr-1"></i>ภาควิชา:</span>
-                        <select id="publicDepartmentFilter" onchange="filterPublicData()" class="w-full sm:w-48 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                        <select id="publicDepartmentFilter" onchange="filterPublicData()" class="w-full sm:w-44 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                             <option value="ALL">ทุกภาควิชา</option>
                         </select>
                     </div>
@@ -205,11 +205,11 @@
 
         </section>
 
-        <!-- ADMIN VIEW SECTION -->
+        <!-- ADMIN VIEW SECTION (ปรับให้ระดับขอบบนเท่ากับหน้าหลักพอดี) -->
         <section id="adminView" class="hidden space-y-6">
 
-            <!-- LOGIN CARD -->
-            <div id="adminLoginCard" class="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-8 space-y-6">
+            <!-- LOGIN CARD (ปรับระยะขอบด้านบนให้อยู่ในระนาบมาตรฐานพอดี) -->
+            <div id="adminLoginCard" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 p-8 space-y-6">
                 <div class="text-center space-y-2">
                     <div class="w-14 h-14 bg-orange-100 text-kmitl-orange rounded-2xl mx-auto flex items-center justify-center text-2xl shadow-inner">
                         <i class="fa-solid fa-lock"></i>
@@ -252,7 +252,7 @@
             <!-- ADMIN DASHBOARD CONTENT -->
             <div id="adminDashboard" class="hidden space-y-6">
 
-                <!-- Admin Status Banner Box (เพิ่มตามคำขอข้อที่ 2) -->
+                <!-- Admin Status Banner Box (ขนานและสูงเท่ากับของหน้าหลักทุกประการ) -->
                 <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
                     <div class="relative z-10 max-w-2xl space-y-2">
                         <h2 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide flex items-center gap-2">
@@ -295,7 +295,7 @@
                 <!-- Admin Action Bar -->
                 <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
                     <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                        <div class="relative w-full sm:w-64">
+                        <div class="relative w-full md:w-72">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                             <input type="text" id="adminSearchInput" onkeyup="filterAdminData()" placeholder="ค้นหารายการแอดมิน..." 
                                    class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
@@ -438,7 +438,7 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (ห้ามแก้ไขช่องกรอกและวิธีการคำนวณ 100%) -->
+    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน -->
     <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
             
@@ -660,9 +660,7 @@
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT APPLICATION LOGIC & SUPABASE    -->
-    <!-- ========================================== -->
+    <!-- JAVASCRIPT APPLICATION LOGIC & SUPABASE -->
     <script>
         const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
@@ -772,7 +770,6 @@
             }
         }
 
-        // ฟังก์ชันสร้างตัวเลือกภาควิชาอัตโนมัติจากข้อมูลในระบบ
         function populateDepartmentDropdowns(data) {
             const departments = new Set();
             data.forEach(book => {
@@ -812,7 +809,6 @@
             const printing = data.filter(b => b.status === 'อยู่ระหว่างจัดพิมพ์').length;
             const completed = data.filter(b => b.status === 'จัดพิมพ์เสร็จสิ้น').length;
 
-            // อัปเดตกล่องสถานะหน้าหลัก (Public)
             if (document.getElementById('statTotal')) document.getElementById('statTotal').innerText = total;
             if (document.getElementById('statDraft')) document.getElementById('statDraft').innerText = draft;
             if (document.getElementById('statPending')) document.getElementById('statPending').innerText = pending;
@@ -820,7 +816,6 @@
             if (document.getElementById('statPrinting')) document.getElementById('statPrinting').innerText = printing;
             if (document.getElementById('statCompleted')) document.getElementById('statCompleted').innerText = completed;
 
-            // อัปเดตกล่องสถานะหน้าเจ้าหน้าที่ (Admin) - เพิ่มตามข้อที่ 2
             if (document.getElementById('adminStatTotal')) document.getElementById('adminStatTotal').innerText = total;
             if (document.getElementById('adminStatDraft')) document.getElementById('adminStatDraft').innerText = draft;
             if (document.getElementById('adminStatPending')) document.getElementById('adminStatPending').innerText = pending;

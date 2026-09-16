@@ -210,7 +210,7 @@
             <!-- ADMIN DASHBOARD CONTENT -->
             <div id="adminDashboard" class="hidden space-y-6">
 
-                <!-- Banner / Header (ย้ายมาจากหน้าหลัก) -->
+                <!-- Banner / Header -->
                 <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
                     <div class="relative z-10 max-w-2xl space-y-2">
                         <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
@@ -302,12 +302,11 @@
                             <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
                                 <tr>
                                     <th scope="col" class="py-3.5 px-4 text-center w-16">ID</th>
-                                    <th scope="col" class="py-3.5 px-4">สถานะดำเนินการ</th>
+                                    <th scope="col" class="py-3.5 px-4">สถานะ</th>
                                     <th scope="col" class="py-3.5 px-4 min-w-[200px]">ชื่อหนังสือ / ตำราเรียน</th>
-                                    <th scope="col" class="py-3.5 px-4">ผู้แต่ง & ตำแหน่ง</th>
-                                    <th scope="col" class="py-3.5 px-4">ภาควิชา</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center">ราคาจริงนักศึกษา</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center">ราคาจริงบุคคลนอก</th>
+                                    <th scope="col" class="py-3.5 px-4">ชื่อผู้แต่ง</th>
+                                    <th scope="col" class="py-3.5 px-4 text-center">ราคา นศ.</th>
+                                    <th scope="col" class="py-3.5 px-4 text-center">ราคาปก</th>
                                     <th scope="col" class="py-3.5 px-4 text-center w-28">จัดการ</th>
                                 </tr>
                             </thead>
@@ -420,7 +419,7 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (คงโครงสร้าง ฟิลด์ และวิธีการคำนวณเดิม 100%) -->
+    <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน (ปรับปรุงเฉพาะฟิลด์และโครงสร้างในป๊อปอับตามสั่ง 100%) -->
     <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
             
@@ -437,22 +436,27 @@
             <form id="textbookForm" autocomplete="off" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scrollbar">
                 <input type="hidden" id="formBookId">
 
-                <!-- Row 1: Title & Academic Title -->
+                <!-- Row 1: วันที่คำนวณ & ชื่อหนังสือ (อยู่ในแถวเดียวกัน) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">วันที่คำนวณ <span class="text-rose-500">*</span></label>
+                        <input type="date" id="formCalcDate" autocomplete="off" required
+                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                    </div>
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อหนังสือ <span class="text-rose-500">*</span></label>
                         <input type="text" id="formTitle" autocomplete="off" required placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่งทางวิชาการ</label>
-                        <input type="text" id="formAcademicTitle" autocomplete="off" placeholder="ผศ.ดร. รศ. หรือ ศ."
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
-                    </div>
                 </div>
 
-                <!-- Row 2: Author & Department -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Row 2: ตำแหน่ง & ชื่อผู้แต่ง & ภาควิชา (อยู่ในแถวเดียวกัน) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่ง <span class="text-rose-500">*</span></label>
+                        <input type="text" id="formAcademicTitle" autocomplete="off" required placeholder="ผศ.ดร. รศ. หรือ ศ."
+                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                    </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อผู้แต่ง <span class="text-rose-500">*</span></label>
                         <input type="text" id="formAuthor" autocomplete="off" required placeholder="ชื่อ-นามสกุล ผู้แต่ง"
@@ -468,18 +472,18 @@
                 <!-- Row 3: Codes & Status -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ</label>
-                        <input type="text" id="formBookCode" autocomplete="off" placeholder="เช่น Text-001"
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ <span class="text-rose-500">*</span></label>
+                        <input type="text" id="formBookCode" autocomplete="off" required placeholder="เช่น Text-001"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัส วศ.สจล.</label>
-                        <input type="text" id="formKmitlCode" autocomplete="off" placeholder="เลขรับ...."
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัส วศ.สจล. <span class="text-rose-500">*</span></label>
+                        <input type="text" id="formKmitlCode" autocomplete="off" required placeholder="เลขรับ...."
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">เลข ISBN</label>
-                        <input type="text" id="formIsbn" autocomplete="off" placeholder="978-xxx-xxx-xxx-x"
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">เลข ISBN <span class="text-rose-500">*</span></label>
+                        <input type="text" id="formIsbn" autocomplete="off" required placeholder="978-xxx-xxx-xxx-x"
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
@@ -497,13 +501,13 @@
                 <!-- Row 4: Quantity, Pages, Edition -->
                 <div class="grid grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">พิมพ์ครั้งที่</label>
-                        <input type="number" id="formEdition" autocomplete="off" min="1" value="" placeholder=""
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">พิมพ์ครั้งที่ <span class="text-rose-500">*</span></label>
+                        <input type="number" id="formEdition" autocomplete="off" required min="1" value="" placeholder=""
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนหน้า</label>
-                        <input type="number" id="formPages" autocomplete="off" min="1" value="" placeholder=""
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนหน้า <span class="text-rose-500">*</span></label>
+                        <input type="number" id="formPages" autocomplete="off" required min="1" value="" placeholder=""
                                class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
@@ -513,7 +517,7 @@
                     </div>
                 </div>
 
-                <!-- Calculation Section Box (AUTO-CALCULATOR WITH ACTUAL PRICES INTEGRATION) -->
+                <!-- Calculation Section Box (AUTO-CALCULATOR WITH ACTUAL PRICES INTEGRATION - ห้ามแก้ไขสูตร 100%) -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                         <span class="text-xs font-bold font-kanit text-slate-800 flex items-center">
@@ -722,12 +726,10 @@
             if (!rawDate) return '';
             
             const str = String(rawDate).trim();
-            // กรณีเป็นตัวเลข 4 หลัก เช่น "2567" หรือ "2024"
             if (/^\d{4}$/.test(str)) {
                 return str;
             }
             
-            // กรณีขึ้นต้นด้วยปี YYYY-MM-DD
             const match = str.match(/^(\d{4})/);
             if (match) {
                 return match[1];
@@ -771,7 +773,6 @@
             }
         }
 
-        // ดึงข้อมูล "ปี" จาก calc_date มาใส่ Dropdown ทั้งหน้าหลักและหน้าเจ้าหน้าที่
         function populateYearDropdown(books) {
             const publicYearSelect = document.getElementById('publicYearFilter');
             const adminYearSelect = document.getElementById('adminYearFilter');
@@ -783,7 +784,7 @@
                 books
                     .map(b => getYearFromCalcDate(b))
                     .filter(y => y.length > 0)
-            )].sort((a, b) => b.localeCompare(a)); // เรียงปีจากมากไปน้อย
+            )].sort((a, b) => b.localeCompare(a));
 
             let html = '<option value="ALL">เลือกปี</option>';
             years.forEach(yr => {
@@ -933,7 +934,6 @@
                         ${book.book_code ? `<span class="text-[11px] font-mono text-slate-400">รหัส: ${escapeHtml(book.book_code)}</span>` : ''}
                     </td>
                     <td class="py-3.5 px-4 font-medium text-slate-700 text-xs">${escapeHtml(academicPrefix + book.author)}</td>
-                    <td class="py-3.5 px-4 text-xs text-slate-600">${escapeHtml(book.department)}</td>
                     <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-sm">
                         ${actualStudent ? `${Number(actualStudent).toLocaleString()} ฿` : '-'}
                     </td>
@@ -1086,10 +1086,23 @@
             const form = document.getElementById('textbookForm');
             form.reset();
 
+            const todayStr = new Date().toISOString().split('T')[0];
+
             if (book) {
                 isManualActualPriceEdit = true;
                 document.getElementById('formModalTitle').innerText = 'แก้ไขรายการตำราเรียน';
                 document.getElementById('formBookId').value = book.id;
+                
+                // จัดการ calc_date สำหรับปฏิทิน
+                let formattedCalcDate = todayStr;
+                if (book.calc_date) {
+                    const dStr = String(book.calc_date).trim();
+                    if (/^\d{4}-\d{2}-\d{2}/.test(dStr)) {
+                        formattedCalcDate = dStr.substring(0, 10);
+                    }
+                }
+                document.getElementById('formCalcDate').value = formattedCalcDate;
+
                 document.getElementById('formTitle').value = book.title || '';
                 document.getElementById('formAcademicTitle').value = book.academic_title || '';
                 document.getElementById('formAuthor').value = book.author || '';
@@ -1119,6 +1132,7 @@
                 isManualActualPriceEdit = false;
                 document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
                 document.getElementById('formBookId').value = '';
+                document.getElementById('formCalcDate').value = todayStr;
                 document.getElementById('formPrintQuantity').value = '';
                 document.getElementById('formUnitCost').value = '';
                 document.getElementById('formEdition').value = '';
@@ -1139,13 +1153,14 @@
 
             const bookId = document.getElementById('formBookId').value;
             const payload = {
+                calc_date: document.getElementById('formCalcDate').value,
                 title: document.getElementById('formTitle').value.trim(),
-                academic_title: document.getElementById('formAcademicTitle').value.trim() || null,
+                academic_title: document.getElementById('formAcademicTitle').value.trim(),
                 author: document.getElementById('formAuthor').value.trim(),
                 department: document.getElementById('formDepartment').value.trim(),
-                book_code: document.getElementById('formBookCode').value.trim() || null,
-                kmitl_code: document.getElementById('formKmitlCode').value.trim() || null,
-                isbn: document.getElementById('formIsbn').value.trim() || null,
+                book_code: document.getElementById('formBookCode').value.trim(),
+                kmitl_code: document.getElementById('formKmitlCode').value.trim(),
+                isbn: document.getElementById('formIsbn').value.trim(),
                 status: document.getElementById('formStatus').value,
                 edition: parseInt(document.getElementById('formEdition').value) || 1,
                 pages: parseInt(document.getElementById('formPages').value) || 0,
@@ -1160,7 +1175,7 @@
                 external_cover_rounded: parseFloat(document.getElementById('formExternalCover').value) || 0,
                 actual_student_price: parseFloat(document.getElementById('formActualStudentPrice').value) || 0,
                 actual_public_price: parseFloat(document.getElementById('formActualPublicPrice').value) || 0,
-                remarks: document.getElementById('formRemarks').value.trim() || null,
+                remarks: document.getElementById('formRemarks').value.trim(),
                 created_by: currentUser.id
             };
 

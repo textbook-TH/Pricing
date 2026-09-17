@@ -39,6 +39,10 @@
     
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- pdfMake for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     
     <style>
         body { font-family: 'Sarabun', sans-serif; }
@@ -362,10 +366,19 @@
                         </div>
                     </div>
 
-                    <button onclick="openFormModal()" class="w-full xl:w-auto px-4 py-2 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-xs sm:text-sm hover:shadow-md transition flex items-center justify-center space-x-1.5 shrink-0">
-                        <i class="fa-solid fa-plus text-xs"></i>
-                        <span>เพิ่มรายการตำราเรียน</span>
-                    </button>
+                    <div class="flex items-center space-x-2">
+                        <!-- ปุ่มดาวน์โหลดรายงานสรุปภาพรวม -->
+                        <button onclick="exportSummaryReportPDF()" class="w-full xl:w-auto px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg font-kanit font-bold text-xs sm:text-sm hover:shadow-md transition flex items-center justify-center space-x-1.5 shrink-0">
+                            <i class="fa-solid fa-file-invoice text-xs"></i>
+                            <span>รายงานสรุป PDF</span>
+                        </button>
+
+                        <!-- ปุ่มเพิ่มรายการตำราเรียน -->
+                        <button onclick="openFormModal()" class="w-full xl:w-auto px-4 py-2 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-xs sm:text-sm hover:shadow-md transition flex items-center justify-center space-x-1.5 shrink-0">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>เพิ่มรายการตำราเรียน</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Admin Data Table -->
@@ -380,7 +393,7 @@
                                     <th scope="col" class="py-3 px-3 whitespace-nowrap">ผู้แต่ง</th>
                                     <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคา นศ.</th>
                                     <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคาปก</th>
-                                    <th scope="col" class="py-3 px-3 text-center w-20 whitespace-nowrap">จัดการ</th>
+                                    <th scope="col" class="py-3 px-3 text-center min-w-[110px] whitespace-nowrap">จัดการ</th>
                                 </tr>
                             </thead>
                             <tbody id="adminTableBody" class="divide-y divide-slate-100">
@@ -792,6 +805,15 @@
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none max-w-xs w-full"></div>
 
     <script>
+        pdfMake.fonts = {
+            THSarabunNew: {
+                normal: 'https://cdn.jsdelivr.net/npm/@thfonts/sarabun-new@1.0.0/fonts/THSarabunNew-Regular.ttf',
+                bold: 'https://cdn.jsdelivr.net/npm/@thfonts/sarabun-new@1.0.0/fonts/THSarabunNew-Bold.ttf',
+                italics: 'https://cdn.jsdelivr.net/npm/@thfonts/sarabun-new@1.0.0/fonts/THSarabunNew-Italic.ttf',
+                bolditalics: 'https://cdn.jsdelivr.net/npm/@thfonts/sarabun-new@1.0.0/fonts/THSarabunNew-BoldItalic.ttf'
+            }
+        };
+
         const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
         const ALLOWED_ADMINS = ['textbook@kmitl.ac.th', 'suchada.da@kmitl.ac.th'];
@@ -1282,7 +1304,11 @@
                         ${actualPublic ? `${Number(actualPublic).toLocaleString()}` : '-'}
                     </td>
                     <td class="py-3 px-3 text-center">
-                        <div class="flex items-center justify-center space-x-1">
+                        <div class="flex items-center justify-center space-x-1.5">
+                            <button onclick="exportBookPDF('${escapeJsAttr(book.id)}')" title="ดาวน์โหลดแบบฟอร์ม PDF" 
+                                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 transition flex items-center justify-center border border-rose-200 shadow-sm">
+                                <i class="fa-solid fa-file-pdf text-xs sm:text-sm"></i>
+                            </button>
                             <button onclick="openFormModalById('${escapeJsAttr(book.id)}')" title="แก้ไข" 
                                     class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-pen-to-square text-xs"></i>
@@ -1298,6 +1324,302 @@
             });
 
             renderPaginationControls(paginationContainer, adminCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changeAdminPage');
+        }
+
+        async function getBase64ImageFromUrl(imageUrl) {
+            try {
+                const res = await fetch(imageUrl);
+                if (!res.ok) throw new Error('Image fetch error');
+                const blob = await res.blob();
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = () => resolve(null);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (err) {
+                return null;
+            }
+        }
+
+        async function exportBookPDF(bookId) {
+            const book = allBooks.find(b => String(b.id) === String(bookId));
+            if (!book) {
+                showToast('ไม่พบข้อมูลรายการหนังสือ', 'error');
+                return;
+            }
+
+            showToast('กำลังเตรียมไฟล์ PDF...', 'info');
+
+            const logoBase64 = await getBase64ImageFromUrl('logoSchool.png');
+            const signatureBase64 = await getBase64ImageFromUrl('suchada.png');
+
+            const calcDateFormatted = book.calc_date ? new Date(book.calc_date).toLocaleDateString('th-TH') : '-';
+            const qty = book.print_quantity || 0;
+            const unitCost = book.unit_cost || 0;
+            const prodCost = book.production_cost || (qty * unitCost);
+            const vatAmount = book.vat_amount || (prodCost * 0.07);
+            const totalCostVat = book.total_cost_with_vat || (prodCost + vatAmount);
+
+            const costPerUnitWithVat = qty > 0 ? (totalCostVat / qty) : 0;
+            const wholesaleFaculty = book.wholesale_faculty_rounded || Math.ceil((costPerUnitWithVat * 1.35) / 5) * 5;
+            const studentPrice = book.student_price_rounded || Math.ceil((wholesaleFaculty * 1.20) / 5) * 5;
+            const externalWholesale = wholesaleFaculty * 1.50;
+            const externalDiscount = externalWholesale * 0.40;
+            const externalCoverPrice = book.external_cover_rounded || (externalWholesale + externalDiscount);
+            const actualPublicPrice = book.actual_public_price || externalCoverPrice;
+
+            const docDefinition = {
+                pageSize: 'A4',
+                pageMargins: [36, 30, 36, 30],
+                defaultStyle: { font: 'THSarabunNew', fontSize: 13, lineHeight: 1.15 },
+                content: [
+                    {
+                        columns: [
+                            logoBase64 ? { image: logoBase64, width: 75 } : { text: '', width: 75 },
+                            {
+                                text: 'งานเทคโนโลยีการศึกษา คณะวิศวกรรมศาสตร์ สจล.\nตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ',
+                                fontSize: 15, bold: true, alignment: 'center', margin: [0, 5, 0, 0]
+                            },
+                            { text: '', width: 75 }
+                        ]
+                    },
+                    { text: '', margin: [0, 6, 0, 0] },
+                    {
+                        columns: [
+                            { text: `วันที่คำนวณ: ${calcDateFormatted}`, bold: true },
+                            { text: `รหัสหนังสือ: ${book.book_code || '-'}`, bold: true, alignment: 'right' }
+                        ]
+                    },
+                    { text: `ชื่อหนังสือ: ${book.title || '-'}`, bold: true, margin: [0, 2, 0, 0] },
+                    {
+                        columns: [
+                            { text: `ผู้แต่ง: ${book.academic_title || ''} ${book.author || '-'}` },
+                            { text: `ภาควิชา: ${book.department || '-'}` }
+                        ],
+                        margin: [0, 2, 0, 0]
+                    },
+                    {
+                        columns: [
+                            { text: `จำนวนหน้า: ${book.pages || 0} หน้า` },
+                            { text: `วศ.สจล.: ${book.kmitl_code || '-'}` },
+                            { text: `เลข ISBN: ${book.isbn || '-'}` }
+                        ],
+                        margin: [0, 2, 0, 6]
+                    },
+                    { text: 'ตารางที่ 1: รายการเสนอราคาจากโรงพิมพ์', bold: true, fontSize: 13, margin: [0, 4, 0, 3] },
+                    {
+                        table: {
+                            headerRows: 1,
+                            widths: ['*', 70, 95, 105],
+                            body: [
+                                [
+                                    { text: 'รายการคำนวณ', bold: true, alignment: 'center' },
+                                    { text: 'จำนวน (เล่ม)', bold: true, alignment: 'center' },
+                                    { text: 'ราคา/หน่วย (บาท)', bold: true, alignment: 'center' },
+                                    { text: 'จำนวนเงิน (บาท)', bold: true, alignment: 'center' }
+                                ],
+                                [
+                                    { text: 'ค่าจัดพิมพ์หนังสือ/ตำราเรียน (ต่อเทอม)' },
+                                    { text: qty.toLocaleString(), alignment: 'center' },
+                                    { text: unitCost.toLocaleString('en-US', {minimumFractionDigits: 2}), alignment: 'right' },
+                                    { text: prodCost.toLocaleString('en-US', {minimumFractionDigits: 2}), alignment: 'right' }
+                                ],
+                                [
+                                    { text: 'ภาษีมูลค่าเพิ่ม 7%', colSpan: 3, alignment: 'left' }, {}, {},
+                                    { text: vatAmount.toLocaleString('en-US', {minimumFractionDigits: 2}), alignment: 'right' }
+                                ],
+                                [
+                                    { text: 'จำนวนเงินรวมทั้งสิ้น', bold: true, colSpan: 3, alignment: 'left' }, {}, {},
+                                    { text: totalCostVat.toLocaleString('en-US', {minimumFractionDigits: 2}), bold: true, alignment: 'right' }
+                                ]
+                            ]
+                        },
+                        margin: [0, 0, 0, 10]
+                    },
+                    { text: 'ตารางที่ 2: การคิดราคาต้นทุนและราคาจำหน่ายหนังสือ', bold: true, fontSize: 13, margin: [0, 4, 0, 3] },
+                    {
+                        table: {
+                            headerRows: 1,
+                            widths: ['*', 130, 95, 105],
+                            body: [
+                                [
+                                    { text: 'รายการ', bold: true, alignment: 'center' },
+                                    { text: 'จำนวนเงิน (บาท)', bold: true, alignment: 'center' },
+                                    { text: 'หารจำนวนเล่ม', bold: true, alignment: 'center' },
+                                    { text: 'ราคา/หน่วย (บาท)', bold: true, alignment: 'center' }
+                                ],
+                                [
+                                    { text: '1. ราคาต้นทุน' },
+                                    { text: totalCostVat.toLocaleString('en-US', {maximumFractionDigits: 2}), alignment: 'center' },
+                                    { text: qty.toString(), alignment: 'center' },
+                                    { text: costPerUnitWithVat.toFixed(2), alignment: 'right' }
+                                ],
+                                [
+                                    { text: '2. ราคาส่งจากคณะ (+35%)' },
+                                    { text: `${costPerUnitWithVat.toFixed(2)} x 1.35`, alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: (costPerUnitWithVat * 1.35).toFixed(2), alignment: 'right' }
+                                ],
+                                [
+                                    { text: 'รวมราคาส่งจากคณะ (ปัดเศษ)', bold: true },
+                                    { text: '', alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: wholesaleFaculty.toFixed(2), bold: true, alignment: 'right' }
+                                ],
+                                [
+                                    { text: '3. ราคาขายนักศึกษา (+20%)' },
+                                    { text: `${wholesaleFaculty} x 1.2`, alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: (wholesaleFaculty * 1.2).toFixed(2), alignment: 'right' }
+                                ],
+                                [
+                                    { text: 'ราคาขายนักศึกษา (ปัดเศษ)', bold: true },
+                                    { text: '', alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: studentPrice.toFixed(2), bold: true, alignment: 'right' }
+                                ],
+                                [
+                                    { text: '4. ราคาส่งบุคคลภายนอก (+50%)' },
+                                    { text: `${wholesaleFaculty} x 1.5`, alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: externalWholesale.toFixed(2), alignment: 'right' }
+                                ],
+                                [
+                                    { text: '5. บวกส่วนลดร้านค้า (40%)' },
+                                    { text: `${externalWholesale.toFixed(2)} x 0.4`, alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: externalDiscount.toFixed(2), alignment: 'right' }
+                                ],
+                                [
+                                    { text: '6. ราคาปกตั้งขาย' },
+                                    { text: `${externalWholesale.toFixed(2)} + ${externalDiscount.toFixed(2)}`, alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: externalCoverPrice.toFixed(2), alignment: 'right' }
+                                ],
+                                [
+                                    { text: 'ราคาปกตั้งขายจริง (สำหรับบุคคลภายนอก)', bold: true },
+                                    { text: '', alignment: 'center' },
+                                    { text: '', alignment: 'center' },
+                                    { text: Number(actualPublicPrice).toFixed(2), bold: true, alignment: 'right' }
+                                ]
+                            ]
+                        },
+                        margin: [0, 0, 0, 15]
+                    },
+                    {
+                        columns: [
+                            { text: '', width: '*' },
+                            {
+                                stack: [
+                                    { text: 'ลงชื่อ .................................................................... (ผู้จัดทำ)', alignment: 'center' },
+                                    signatureBase64 ? { image: signatureBase64, width: 85, alignment: 'center', margin: [0, -15, 0, -10] } : { text: '', margin: [0, 10, 0, 0] },
+                                    { text: '( สุชาดา แดงอินทวัฒน์ )', alignment: 'center', margin: [0, 5, 0, 0] },
+                                    { text: 'ตำแหน่ง นักวิชาการโสตทัศนศึกษา ชำนาญการพิเศษ', alignment: 'center' }
+                                ],
+                                width: 260
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const fileName = `คำนวณต้นทุน_${book.book_code || 'TextBook'}.pdf`;
+            pdfMake.createPdf(docDefinition).download(fileName);
+            showToast('ดาวน์โหลด PDF รายเล่มสำเร็จ!', 'success');
+        }
+
+        async function exportSummaryReportPDF() {
+            if (adminFilteredBooks.length === 0) {
+                showToast('ไม่พบข้อมูลสำหรับออกรายงานสรุป', 'error');
+                return;
+            }
+
+            showToast('กำลังสร้างรายงานสรุปภาพรวม...', 'info');
+
+            const logoBase64 = await getBase64ImageFromUrl('logoSchool.png');
+            const signatureBase64 = await getBase64ImageFromUrl('suchada.png');
+
+            const tableRows = [
+                [
+                    { text: 'ลำดับ', bold: true, alignment: 'center' },
+                    { text: 'รหัสหนังสือ', bold: true, alignment: 'center' },
+                    { text: 'ชื่อหนังสือ / ตำราเรียน', bold: true, alignment: 'center' },
+                    { text: 'ผู้แต่ง', bold: true, alignment: 'center' },
+                    { text: 'จำนวน (เล่ม)', bold: true, alignment: 'center' },
+                    { text: 'ยอดรวมทั้งสิ้น (รวม VAT)', bold: true, alignment: 'center' }
+                ]
+            ];
+
+            let grandTotalCost = 0;
+            let grandTotalQty = 0;
+
+            adminFilteredBooks.forEach((book, idx) => {
+                const qty = book.print_quantity || 0;
+                const cost = parseFloat(book.total_cost_with_vat) || ((qty * (book.unit_cost || 0)) * 1.07);
+                grandTotalQty += qty;
+                grandTotalCost += cost;
+
+                tableRows.push([
+                    { text: (idx + 1).toString(), alignment: 'center' },
+                    { text: book.book_code || '-', alignment: 'center' },
+                    { text: book.title || '-' },
+                    { text: `${book.academic_title || ''} ${book.author || '-'}` },
+                    { text: qty.toLocaleString(), alignment: 'center' },
+                    { text: cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}), alignment: 'right' }
+                ]);
+            });
+
+            tableRows.push([
+                { text: 'รวมทั้งสิ้น', bold: true, colSpan: 4, alignment: 'center' }, {}, {}, {},
+                { text: grandTotalQty.toLocaleString(), bold: true, alignment: 'center' },
+                { text: grandTotalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}), bold: true, alignment: 'right' }
+            ]);
+
+            const docDefinition = {
+                pageSize: 'A4',
+                pageOrientation: 'landscape',
+                pageMargins: [30, 25, 30, 25],
+                defaultStyle: { font: 'THSarabunNew', fontSize: 11, lineHeight: 1.15 },
+                content: [
+                    {
+                        columns: [
+                            logoBase64 ? { image: logoBase64, width: 65 } : { text: '', width: 65 },
+                            {
+                                text: 'งานเทคโนโลยีการศึกษา คณะวิศวกรรมศาสตร์ สจล.\nรายงานสรุปรายการคำนวณราคาและต้นทุนจัดพิมพ์ตำราเรียน',
+                                fontSize: 14, bold: true, alignment: 'center', margin: [0, 5, 0, 0]
+                            },
+                            { text: '', width: 65 }
+                        ]
+                    },
+                    { text: `ข้อมูล ณ วันที่: ${new Date().toLocaleDateString('th-TH')}`, alignment: 'right', margin: [0, 4, 0, 8] },
+                    {
+                        table: {
+                            headerRows: 1,
+                            widths: [30, 65, '*', 140, 60, 100],
+                            body: tableRows
+                        },
+                        margin: [0, 0, 0, 15]
+                    },
+                    {
+                        columns: [
+                            { text: '', width: '*' },
+                            {
+                                stack: [
+                                    { text: 'ลงชื่อ .................................................................... (ผู้รายงาน)', alignment: 'center' },
+                                    signatureBase64 ? { image: signatureBase64, width: 75, alignment: 'center', margin: [0, -12, 0, -8] } : { text: '', margin: [0, 10, 0, 0] },
+                                    { text: '( สุชาดา แดงอินทวัฒน์ )', alignment: 'center', margin: [0, 3, 0, 0] },
+                                    { text: 'ตำแหน่ง นักวิชาการโสตทัศนศึกษา ชำนาญการพิเศษ', alignment: 'center' }
+                                ],
+                                width: 240
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            pdfMake.createPdf(docDefinition).download(`รายงานสรุปต้นทุนจัดพิมพ์_${new Date().toISOString().split('T')[0]}.pdf`);
+            showToast('ดาวน์โหลดรายงานสรุป PDF สำเร็จ!', 'success');
         }
 
         function changePublicPage(page) {

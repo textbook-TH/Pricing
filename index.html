@@ -52,6 +52,7 @@
             to { opacity: 1; transform: scale(1); }
         }
         .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
+        /* Smooth horizontal scrolling for stats on mobile */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -125,7 +126,7 @@
                     </div>
                 </div>
 
-                <!-- สรุปสถานะ 6 รายการ -->
+                <!-- สรุปสถานะ 6 รายการ: แสดงเป็น Horizontal Scroll Ribbon บนมือถือเพื่อประหยัดพื้นที่แนวตั้ง -->
                 <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/10">
                     <div class="flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory py-1 -mx-1 px-1">
                         <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
@@ -156,25 +157,31 @@
                 </div>
             </div>
 
-            <!-- Toolbar: Search & Filter -->
+            <!-- Toolbar: Search & Filter (ตัดข้อความกำกับออกและกระชับพื้นที่) -->
             <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5 sm:space-y-0 sm:flex sm:gap-3 sm:items-center">
+                
+                <!-- Search Box -->
                 <div class="relative flex-1">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs sm:text-sm"></i>
                     <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นชื่อหนังสือ, ผู้แต่ง, รหัส..." 
                            class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
+                <!-- Mobile Filter Dropdowns Grid (ไม่มีข้อความกำกับด้านหน้า) -->
                 <div class="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:gap-2">
+                    <!-- Dropdown เลือกปีการศึกษา -->
                     <select id="publicYearFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">📅 ทุกปี</option>
                     </select>
 
+                    <!-- Dropdown เลือกภาควิชา -->
                     <select id="publicDepartmentFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">🏢 ทุกภาควิชา</option>
                     </select>
 
+                    <!-- Dropdown เลือกสถานะ -->
                     <select id="publicStatusFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">🏷️ ทุกสถานะ</option>
@@ -202,6 +209,7 @@
                             </tr>
                         </thead>
                         <tbody id="publicTableBody" class="divide-y divide-slate-100">
+                            <!-- Dynamic Content -->
                         </tbody>
                     </table>
                 </div>
@@ -217,6 +225,7 @@
                     <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ</p>
                 </div>
 
+                <!-- Public Pagination Controls -->
                 <div id="publicPagination" class="hidden px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
                 </div>
             </div>
@@ -375,6 +384,7 @@
                                 </tr>
                             </thead>
                             <tbody id="adminTableBody" class="divide-y divide-slate-100">
+                                <!-- Dynamic Rows -->
                             </tbody>
                         </table>
                     </div>
@@ -388,6 +398,7 @@
                         <p class="text-sm sm:text-base font-medium text-slate-600">ไม่พบข้อมูลในระบบ</p>
                     </div>
 
+                    <!-- Admin Pagination Controls -->
                     <div id="adminPagination" class="hidden px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
                     </div>
                 </div>
@@ -762,6 +773,7 @@
                                 </tr>
                             </thead>
                             <tbody id="topCostTableBody" class="divide-y divide-slate-100">
+                                <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
@@ -1597,37 +1609,32 @@
                     production_cost: productionCost,
                     vat_amount: vatAmount,
                     total_cost_with_vat: totalCostWithVat,
-                    unit_cost_with_vat: unitCostWithVat,
                     wholesale_faculty_rounded: wholesaleFacultyRounded,
                     student_price_rounded: studentPriceRounded,
-                    external_wholesale: externalWholesale,
                     external_cover_rounded: externalCoverRounded,
                     actual_student_price: actualStudentPrice,
                     actual_public_price: actualPublicPrice,
                     remarks
                 };
 
-                let res;
+                let error = null;
                 if (bookId) {
-                    res = await supabaseClient
-                        .from('textbooks')
-                        .update(payload)
-                        .eq('id', bookId);
+                    const res = await supabaseClient.from('textbooks').update(payload).eq('id', bookId);
+                    error = res.error;
                 } else {
-                    res = await supabaseClient
-                        .from('textbooks')
-                        .insert([payload]);
+                    const res = await supabaseClient.from('textbooks').insert([payload]);
+                    error = res.error;
                 }
 
-                if (res.error) throw res.error;
+                if (error) throw error;
 
-                showToast(bookId ? 'แก้ไขข้อมูลสำเร็จ' : 'เพิ่มรายการใหม่สำเร็จ', 'success');
+                showToast(bookId ? 'บันทึกการแก้ไขสำเร็จ' : 'เพิ่มรายการใหม่สำเร็จ', 'success');
                 closeModal('modalAdminForm');
                 await loadTextbooksData();
 
             } catch (err) {
-                console.error('Error saving textbook:', err.message);
-                showToast('บันทึกข้อมูลไม่สำเร็จ: ' + err.message, 'error');
+                console.error('Save error:', err);
+                showToast('เกิดข้อผิดพลาดในการบันทึก: ' + err.message, 'error');
             } finally {
                 btnSaveSubmit.disabled = false;
                 btnSaveSubmit.innerHTML = 'บันทึกข้อมูล';
@@ -1637,15 +1644,15 @@
         function confirmDelete(id, title) {
             deleteTargetId = id;
             document.getElementById('deleteTargetTitle').innerText = `"${title}"`;
-            document.getElementById('btnConfirmDelete').onclick = executeDelete;
+            document.getElementById('btnConfirmDelete').onclick = handleDelete;
             openModal('modalDeleteConfirm');
         }
 
-        async function executeDelete() {
+        async function handleDelete() {
             if (!deleteTargetId) return;
-            const btn = document.getElementById('btnConfirmDelete');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังลบ...';
+            const btnConfirmDelete = document.getElementById('btnConfirmDelete');
+            btnConfirmDelete.disabled = true;
+            btnConfirmDelete.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังลบ...';
 
             try {
                 const { error } = await supabaseClient
@@ -1655,69 +1662,101 @@
 
                 if (error) throw error;
 
-                showToast('ลบรายการสำเร็จ', 'success');
+                showToast('ลบรายการตำราเรียนเรียบร้อยแล้ว', 'success');
                 closeModal('modalDeleteConfirm');
+                deleteTargetId = null;
                 await loadTextbooksData();
             } catch (err) {
-                console.error('Error deleting:', err.message);
+                console.error('Delete error:', err);
                 showToast('ไม่สามารถลบข้อมูลได้: ' + err.message, 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerText = 'ยืนยันลบข้อมูล';
-                deleteTargetId = null;
+                btnConfirmDelete.disabled = false;
+                btnConfirmDelete.innerHTML = 'ยืนยันลบข้อมูล';
             }
         }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
-            const btn = document.getElementById('btnLoginSubmit');
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const btnSubmit = document.getElementById('btnLoginSubmit');
 
-            if (!ALLOWED_ADMINS.includes(email)) {
-                showToast('อีเมลนี้ไม่มีสิทธิ์เข้าถึงระบบเจ้าหน้าที่', 'error');
+            if (!ALLOWED_ADMINS.includes(email.toLowerCase())) {
+                showToast('บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานระบบเจ้าหน้าที่', 'error');
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังตรวจสอบ...';
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังเข้าสู่ระบบ...';
 
             try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
                 if (error) throw error;
 
                 currentUser = data.user;
                 updateUserUI(true);
                 showToast('เข้าสู่ระบบสำเร็จ', 'success');
             } catch (err) {
-                console.error('Login error:', err.message);
-                showToast('เข้าสู่ระบบไม่สำเร็จ: อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
+                console.error('Login error:', err);
+                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<span>เข้าสู่ระบบ</span><i class="fa-solid fa-arrow-right text-xs"></i>';
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span>เข้าสู่ระบบ</span><i class="fa-solid fa-arrow-right text-xs"></i>';
             }
         }
 
         async function handleLogout() {
             try {
                 await supabaseClient.auth.signOut();
+                currentUser = null;
+                updateUserUI(false);
+                showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
             } catch (err) {
-                console.error('Logout error:', err.message);
+                console.error('Logout error:', err);
             }
-            currentUser = null;
-            updateUserUI(false);
-            switchTab('public');
-            showToast('ออกจากระบบแล้ว', 'info');
         }
 
         function openModal(id) {
-            const m = document.getElementById(id);
-            if (m) m.classList.remove('hidden');
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
         }
 
         function closeModal(id) {
-            const m = document.getElementById(id);
-            if (m) m.classList.add('hidden');
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            let iconClass = 'fa-circle-info text-blue-500';
+            let bgBorder = 'bg-white border-slate-200 text-slate-800';
+
+            if (type === 'success') {
+                iconClass = 'fa-circle-check text-emerald-500';
+            } else if (type === 'error') {
+                iconClass = 'fa-circle-exclamation text-rose-500';
+            }
+
+            toast.className = `pointer-events-auto flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 text-xs font-medium ${bgBorder}`;
+            toast.innerHTML = `<i class="fa-solid ${iconClass} text-base shrink-0"></i><span>${escapeHtml(message)}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         function escapeHtml(str) {
@@ -1733,35 +1772,6 @@
         function escapeJsAttr(str) {
             if (!str) return '';
             return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-
-            const toast = document.createElement('div');
-            toast.className = `pointer-events-auto flex items-center p-3 sm:p-3.5 rounded-xl shadow-xl text-xs sm:text-sm font-medium border animate-fadeIn transition duration-300 transform`;
-
-            let icon = '<i class="fa-solid fa-circle-info mr-2 text-blue-500"></i>';
-            let bg = 'bg-white border-slate-200 text-slate-800';
-
-            if (type === 'success') {
-                icon = '<i class="fa-solid fa-circle-check mr-2 text-emerald-500"></i>';
-                bg = 'bg-white border-emerald-200 text-slate-800';
-            } else if (type === 'error') {
-                icon = '<i class="fa-solid fa-circle-exclamation mr-2 text-rose-500"></i>';
-                bg = 'bg-white border-rose-200 text-slate-800';
-            }
-
-            toast.className += ` ${bg}`;
-            toast.innerHTML = `${icon}<span class="flex-1">${escapeHtml(message)}</span>`;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
         }
     </script>
 </body>

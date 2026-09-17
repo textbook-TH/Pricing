@@ -43,7 +43,7 @@
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         h1, h2, h3, h4, .font-kanit { font-family: 'Kanit', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
@@ -52,35 +52,39 @@
             to { opacity: 1; transform: scale(1); }
         }
         .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
+        /* Smooth horizontal scrolling for stats on mobile */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="h-full flex flex-col text-slate-800 bg-slate-50">
 
     <!-- Top Navigation Bar -->
     <header class="bg-[#161B2A] border-b border-slate-800 sticky top-0 z-30 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14 sm:h-16">
                 
                 <!-- Brand Logo & Title -->
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('public')">
-                    <img src="logo.png" alt="Logo" class="h-10 w-auto object-contain">
+                <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchTab('public')">
+                    <img src="logo.png" alt="Logo" class="h-8 sm:h-10 w-auto object-contain">
                     <div>
-                        <h1 class="font-kanit text-lg font-bold text-white tracking-tight">TextCalc Engine</h1>
-                        <p class="text-xs text-slate-400 hidden sm:block">ระบบคำนวณราคาและต้นทุนสิ่งพิมพ์</p>
+                        <h1 class="font-kanit text-base sm:text-lg font-bold text-white tracking-tight leading-none">TextCalc Engine</h1>
+                        <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">ระบบคำนวณราคาและต้นทุนสิ่งพิมพ์</p>
                     </div>
                 </div>
+
                 <!-- Navigation Tabs / Capsule Controller -->
-                <div class="flex items-center space-x-3">
-                    <div class="bg-[#0B0E17] p-1 rounded-full flex items-center space-x-1.5 border border-slate-800/80 shadow-inner">
-                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-[#0B0E17] p-1 rounded-full flex items-center space-x-1 border border-slate-800 shadow-inner">
+                        <button id="btnTabPublic" onclick="switchTab('public')" class="px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 text-slate-950 font-bold shadow-md text-xs sm:text-sm">
                             <i class="fa-solid fa-house text-xs"></i>
-                            <span>หน้าหลัก</span>
+                            <span class="hidden sm:inline">หน้าหลัก</span>
                         </button>
-                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
+                        <button id="btnTabAdmin" onclick="switchTab('admin')" class="px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-user-gear text-xs"></i>
-                            <span>เจ้าหน้าที่</span>
+                            <span class="hidden sm:inline">เจ้าหน้าที่</span>
                         </button>
-                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-3 py-1 rounded-full text-rose-400 border border-rose-500/80 hover:bg-rose-500/10 transition-all duration-200 flex items-center space-x-1 text-xs sm:text-sm font-medium">
+                        <button id="btnLogoutCapsule" onclick="handleLogout()" title="ออกจากระบบ" class="hidden px-2.5 sm:px-3 py-1 rounded-full text-rose-400 border border-rose-500/80 hover:bg-rose-500/10 transition-all duration-200 flex items-center space-x-1 text-xs sm:text-sm font-medium">
                             <i class="fa-solid fa-power-off text-xs"></i>
                             <span class="hidden md:inline">ออกจากระบบ</span>
                         </button>
@@ -92,116 +96,116 @@
     </header>
 
     <!-- Main Content Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
 
         <!-- PUBLIC VIEW SECTION -->
-        <section id="publicView" class="space-y-6">
+        <section id="publicView" class="space-y-4 sm:space-y-6">
 
-            <!-- Banner / Header -->
-            <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
-                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div class="space-y-2 max-w-2xl">
-                        <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
-                        <p class="text-slate-300 text-sm leading-relaxed">
+            <!-- Banner / Header Banner -->
+            <div class="bg-[#101421] rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
+                        <p class="text-slate-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
                             ตรวจสอบสถานะจัดพิมพ์ และราคาจำหน่าย
                         </p>
                     </div>
 
-                    <!-- ปุ่มแสดงยอดรวมค่าใช้จ่ายจัดพิมพ์ (มุมขวาบน) -->
-                    <div onclick="openChartModal()" class="cursor-pointer bg-slate-800/90 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 p-3.5 rounded-xl transition-all duration-200 flex items-center space-x-3.5 shadow-lg shrink-0 group">
-                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg group-hover:scale-105 transition">
-                            <i class="fa-solid fa-chart-column"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs sm:text-sm text-slate-300 block font-semibold">ยอดรวมการผลิต</span>
-                            <span id="statTotalCost" class="text-base sm:text-lg font-bold font-kanit text-amber-400">0.00 ฿</span>
+                    <!-- ปุ่มแสดงยอดรวมค่าใช้จ่ายจัดพิมพ์ -->
+                    <div onclick="openChartModal()" class="cursor-pointer bg-slate-800/90 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 p-2.5 sm:p-3.5 rounded-xl transition-all duration-200 flex items-center justify-between sm:justify-start space-x-3 shadow-lg shrink-0 group">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-base sm:text-lg group-hover:scale-105 transition">
+                                <i class="fa-solid fa-chart-column"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] sm:text-xs text-slate-300 block font-medium">ยอดรวมการผลิต</span>
+                                <span id="statTotalCost" class="text-sm sm:text-lg font-bold font-kanit text-amber-400">0.00 ฿</span>
+                            </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
                     </div>
                 </div>
 
-                <!-- แสดงผล 6 รายการสถานะ -->
-                <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center">
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                        <span class="block text-xl font-bold font-kanit text-orange-400" id="statTotal">0</span>
-                        <span class="text-[11px] text-slate-300">ตำราในระบบ</span>
-                    </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                        <span class="block text-xl font-bold font-kanit text-slate-300" id="statDraft">0</span>
-                        <span class="text-[11px] text-slate-300">ร่าง</span>
-                    </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                        <span class="block text-xl font-bold font-kanit text-amber-400" id="statPending">0</span>
-                        <span class="text-[11px] text-slate-300">รออนุมัติ</span>
-                    </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                        <span class="block text-xl font-bold font-kanit text-emerald-400" id="statApproved">0</span>
-                        <span class="text-[11px] text-slate-300">อนุมัติแล้ว</span>
-                    </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                        <span class="block text-xl font-bold font-kanit text-blue-400" id="statPrinting">0</span>
-                        <span class="text-[11px] text-slate-300">อยู่ระหว่างจัดพิมพ์</span>
-                    </div>
-                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                        <span class="block text-xl font-bold font-kanit text-purple-400" id="statCompleted">0</span>
-                        <span class="text-[11px] text-slate-300">จัดพิมพ์เสร็จสิ้น</span>
+                <!-- สรุปสถานะ 6 รายการ: แสดงเป็น Horizontal Scroll Ribbon บนมือถือเพื่อประหยัดพื้นที่แนวตั้ง -->
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/10">
+                    <div class="flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory py-1 -mx-1 px-1">
+                        <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-lg sm:text-xl font-bold font-kanit text-orange-400" id="statTotal">0</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">ตำราในระบบ</span>
+                        </div>
+                        <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-lg sm:text-xl font-bold font-kanit text-slate-300" id="statDraft">0</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">ร่าง</span>
+                        </div>
+                        <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-lg sm:text-xl font-bold font-kanit text-amber-400" id="statPending">0</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">รออนุมัติ</span>
+                        </div>
+                        <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-lg sm:text-xl font-bold font-kanit text-emerald-400" id="statApproved">0</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">อนุมัติแล้ว</span>
+                        </div>
+                        <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-lg sm:text-xl font-bold font-kanit text-blue-400" id="statPrinting">0</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">อยู่ระหว่างพิมพ์</span>
+                        </div>
+                        <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                            <span class="block text-lg sm:text-xl font-bold font-kanit text-purple-400" id="statCompleted">0</span>
+                            <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">จัดพิมพ์เสร็จสิ้น</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Toolbar: Search & Filter -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 justify-between items-center">
-                <!-- กล่องค้นหาหน้าหลักปรับความยาวชนปีการศึกษา -->
-                <div class="relative w-full flex-1">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, รหัส..." 
-                           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+            <!-- Toolbar: Search & Filter (ตัดข้อความกำกับออกและกระชับพื้นที่) -->
+            <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5 sm:space-y-0 sm:flex sm:gap-3 sm:items-center">
+                
+                <!-- Search Box -->
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs sm:text-sm"></i>
+                    <input type="text" id="publicSearchInput" autocomplete="off" onkeyup="filterPublicData()" placeholder="ค้นชื่อหนังสือ, ผู้แต่ง, รหัส..." 
+                           class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
-                <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full md:w-auto">
+                <!-- Mobile Filter Dropdowns Grid (ไม่มีข้อความกำกับด้านหน้า) -->
+                <div class="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:gap-2">
                     <!-- Dropdown เลือกปีการศึกษา -->
-                    <div class="flex items-center space-x-2 w-full sm:w-auto">
-                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-calendar-days mr-1"></i>ปีการศึกษา:</span>
-                        <select id="publicYearFilter" onchange="filterPublicData()" class="w-full sm:w-36 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                            <option value="ALL">เลือกปี</option>
-                        </select>
-                    </div>
+                    <select id="publicYearFilter" onchange="filterPublicData()" 
+                            class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                        <option value="ALL">📅 ทุกปี</option>
+                    </select>
 
                     <!-- Dropdown เลือกภาควิชา -->
-                    <div class="flex items-center space-x-2 w-full sm:w-auto">
-                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-building-user mr-1"></i>ภาควิชา:</span>
-                        <select id="publicDepartmentFilter" onchange="filterPublicData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                            <option value="ALL">เลือกภาควิชา</option>
-                        </select>
-                    </div>
+                    <select id="publicDepartmentFilter" onchange="filterPublicData()" 
+                            class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                        <option value="ALL">🏢 ทุกภาควิชา</option>
+                    </select>
 
                     <!-- Dropdown เลือกสถานะ -->
-                    <div class="flex items-center space-x-2 w-full sm:w-auto">
-                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
-                        <select id="publicStatusFilter" onchange="filterPublicData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                            <option value="ALL">เลือกสถานะ</option>
-                            <option value="ร่าง">ร่าง</option>
-                            <option value="รออนุมัติ">รออนุมัติ</option>
-                            <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
-                            <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
-                            <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
-                        </select>
-                    </div>
+                    <select id="publicStatusFilter" onchange="filterPublicData()" 
+                            class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                        <option value="ALL">🏷️ ทุกสถานะ</option>
+                        <option value="ร่าง">ร่าง</option>
+                        <option value="รออนุมัติ">รออนุมัติ</option>
+                        <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+                        <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
+                        <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
+                    </select>
                 </div>
             </div>
 
             <!-- Public Data Table Container -->
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
+                    <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                        <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-[11px] sm:text-xs uppercase tracking-wider border-b border-slate-200">
                             <tr>
-                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">รหัสหนังสือ</th>
-                                <th scope="col" class="py-3.5 px-4 whitespace-nowrap">สถานะ</th>
-                                <th scope="col" class="py-3.5 px-4 min-w-[220px]">ชื่อหนังสือ / ตำราเรียน</th>
-                                <th scope="col" class="py-3.5 px-4 whitespace-nowrap">ชื่อผู้แต่ง</th>
-                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">ราคา นศ.</th>
-                                <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">ราคาปก</th>
+                                <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">รหัสหนังสือ</th>
+                                <th scope="col" class="py-3 px-3 whitespace-nowrap">สถานะ</th>
+                                <th scope="col" class="py-3 px-3 min-w-[180px] sm:min-w-[220px]">ชื่อหนังสือ / ตำราเรียน</th>
+                                <th scope="col" class="py-3 px-3 whitespace-nowrap">ผู้แต่ง</th>
+                                <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคา นศ.</th>
+                                <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคาปก</th>
                             </tr>
                         </thead>
                         <tbody id="publicTableBody" class="divide-y divide-slate-100">
@@ -210,19 +214,19 @@
                     </table>
                 </div>
 
-                <div id="publicLoading" class="p-12 text-center text-slate-400">
-                    <i class="fa-solid fa-circle-notch fa-spin text-3xl text-kmitl-orange mb-3"></i>
-                    <p class="text-sm font-medium">กำลังโหลดข้อมูลตำราเรียน...</p>
+                <div id="publicLoading" class="p-8 sm:p-12 text-center text-slate-400">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl sm:text-3xl text-kmitl-orange mb-2"></i>
+                    <p class="text-xs sm:text-sm font-medium">กำลังโหลดข้อมูล...</p>
                 </div>
 
-                <div id="publicEmpty" class="hidden p-12 text-center text-slate-400">
-                    <i class="fa-solid fa-book-open-reader text-4xl text-slate-300 mb-3"></i>
-                    <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลรายการตำราเรียน</p>
-                    <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ/ภาควิชา/ปีการศึกษา</p>
+                <div id="publicEmpty" class="hidden p-8 sm:p-12 text-center text-slate-400">
+                    <i class="fa-solid fa-book-open-reader text-3xl sm:text-4xl text-slate-300 mb-2"></i>
+                    <p class="text-sm sm:text-base font-medium text-slate-600">ไม่พบข้อมูลรายการตำราเรียน</p>
+                    <p class="text-xs text-slate-400 mt-1">ลองเปลี่ยนคำค้นหาหรือตัวกรองสถานะ</p>
                 </div>
 
                 <!-- Public Pagination Controls -->
-                <div id="publicPagination" class="hidden px-4 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                <div id="publicPagination" class="hidden px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
                 </div>
             </div>
 
@@ -232,35 +236,35 @@
         <section id="adminView" class="hidden">
 
             <!-- LOGIN CARD -->
-            <div id="adminLoginCard" class="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-8 space-y-6">
-                <div class="text-center space-y-2">
-                    <div class="w-14 h-14 bg-orange-100 text-kmitl-orange rounded-2xl mx-auto flex items-center justify-center text-2xl shadow-inner">
+            <div id="adminLoginCard" class="max-w-md mx-auto my-6 sm:my-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-8 space-y-5">
+                <div class="text-center space-y-1.5">
+                    <div class="w-12 h-12 bg-orange-100 text-kmitl-orange rounded-2xl mx-auto flex items-center justify-center text-xl shadow-inner">
                         <i class="fa-solid fa-lock"></i>
                     </div>
-                    <h2 class="text-xl font-bold font-kanit text-slate-900">เข้าสู่ระบบเจ้าหน้าที่</h2>
+                    <h2 class="text-lg sm:text-xl font-bold font-kanit text-slate-900">เข้าสู่ระบบเจ้าหน้าที่</h2>
                     <p class="text-xs text-slate-500">เฉพาะผู้ได้รับสิทธิ์จัดการข้อมูลตำราเรียนเท่านั้น</p>
                 </div>
 
-                <form onsubmit="handleLogin(event)" autocomplete="off" class="space-y-4">
+                <form onsubmit="handleLogin(event)" autocomplete="off" class="space-y-3.5">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">อีเมลผู้ใช้งาน (Email)</label>
                         <div class="relative">
-                            <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                            <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="email" id="loginEmail" required placeholder="example@kmitl.ac.th" autocomplete="off"
-                                   class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                                   class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสผ่าน (Password)</label>
                         <div class="relative">
-                            <i class="fa-solid fa-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                            <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="new-password"
-                                   class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                                   class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                     </div>
 
-                    <button type="submit" id="btnLoginSubmit" class="w-full py-2.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-sm hover:shadow-lg transition duration-200 flex items-center justify-center space-x-2">
+                    <button type="submit" id="btnLoginSubmit" class="w-full py-2.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-xs sm:text-sm hover:shadow-lg transition duration-200 flex items-center justify-center space-x-2">
                         <span>เข้าสู่ระบบ</span>
                         <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
@@ -268,103 +272,98 @@
             </div>
 
             <!-- ADMIN DASHBOARD CONTENT -->
-            <div id="adminDashboard" class="hidden space-y-6">
+            <div id="adminDashboard" class="hidden space-y-4 sm:space-y-6">
 
                 <!-- Banner / Header (Admin) -->
-                <div class="bg-[#101421] rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
-                    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div class="space-y-2 max-w-2xl">
-                            <h1 class="text-2xl sm:text-3xl font-bold font-kanit tracking-wide">สถานะการดำเนินการจัดพิมพ์</h1>
-                            <p class="text-slate-300 text-sm leading-relaxed">
-                                ตรวจสอบสถานะจัดพิมพ์ และราคาจำหน่าย
+                <div class="bg-[#101421] rounded-2xl p-4 sm:p-6 md:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
+                    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                        <div>
+                            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-kanit tracking-wide">จัดการข้อมูลตำราเรียน</h1>
+                            <p class="text-slate-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
+                                บันทึก เพิ่มเติม และแก้ไขรายละเอียดการจัดพิมพ์
                             </p>
                         </div>
 
-                        <!-- ปุ่มแสดงยอดรวมค่าใช้จ่ายจัดพิมพ์ (มุมขวาบน) -->
-                        <div onclick="openChartModal()" class="cursor-pointer bg-slate-800/90 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 p-3.5 rounded-xl transition-all duration-200 flex items-center space-x-3.5 shadow-lg shrink-0 group">
-                            <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg group-hover:scale-105 transition">
-                                <i class="fa-solid fa-chart-column"></i>
-                            </div>
-                            <div>
-                                <span class="text-xs sm:text-sm text-slate-300 block font-semibold">ยอดรวมการผลิต</span>
-                                <span id="adminStatTotalCost" class="text-base sm:text-lg font-bold font-kanit text-amber-400">0.00 ฿</span>
+                        <!-- ปุ่มแสดงยอดรวมค่าใช้จ่ายจัดพิมพ์ -->
+                        <div onclick="openChartModal()" class="cursor-pointer bg-slate-800/90 hover:bg-slate-800 border border-amber-500/40 hover:border-amber-400 p-2.5 sm:p-3.5 rounded-xl transition-all duration-200 flex items-center justify-between sm:justify-start space-x-3 shadow-lg shrink-0 group">
+                            <div class="flex items-center space-x-2.5">
+                                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-base sm:text-lg group-hover:scale-105 transition">
+                                    <i class="fa-solid fa-chart-column"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] sm:text-xs text-slate-300 block font-medium">ยอดรวมการผลิต</span>
+                                    <span id="adminStatTotalCost" class="text-sm sm:text-lg font-bold font-kanit text-amber-400">0.00 ฿</span>
+                                </div>
                             </div>
                             <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
                         </div>
                     </div>
 
-                    <!-- แสดงผล 6 รายการสถานะ -->
-                    <div class="mt-6 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center">
-                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                            <span class="block text-xl font-bold font-kanit text-orange-400" id="adminStatTotal">0</span>
-                            <span class="text-[11px] text-slate-300">ตำราในระบบ</span>
-                        </div>
-                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                            <span class="block text-xl font-bold font-kanit text-slate-300" id="adminStatDraft">0</span>
-                            <span class="text-[11px] text-slate-300">ร่าง</span>
-                        </div>
-                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                            <span class="block text-xl font-bold font-kanit text-amber-400" id="adminStatPending">0</span>
-                            <span class="text-[11px] text-slate-300">รออนุมัติ</span>
-                        </div>
-                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                            <span class="block text-xl font-bold font-kanit text-emerald-400" id="adminStatApproved">0</span>
-                            <span class="text-[11px] text-slate-300">อนุมัติแล้ว</span>
-                        </div>
-                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                            <span class="block text-xl font-bold font-kanit text-blue-400" id="adminStatPrinting">0</span>
-                            <span class="text-[11px] text-slate-300">อยู่ระหว่างจัดพิมพ์</span>
-                        </div>
-                        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-2.5 border border-white/5 flex flex-col justify-center items-center">
-                            <span class="block text-xl font-bold font-kanit text-purple-400" id="adminStatCompleted">0</span>
-                            <span class="text-[11px] text-slate-300">จัดพิมพ์เสร็จสิ้น</span>
+                    <!-- สรุปสถานะ 6 รายการ Admin -->
+                    <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/10">
+                        <div class="flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory py-1 -mx-1 px-1">
+                            <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                                <span class="block text-lg sm:text-xl font-bold font-kanit text-orange-400" id="adminStatTotal">0</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">ตำราในระบบ</span>
+                            </div>
+                            <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                                <span class="block text-lg sm:text-xl font-bold font-kanit text-slate-300" id="adminStatDraft">0</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">ร่าง</span>
+                            </div>
+                            <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                                <span class="block text-lg sm:text-xl font-bold font-kanit text-amber-400" id="adminStatPending">0</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">รออนุมัติ</span>
+                            </div>
+                            <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                                <span class="block text-lg sm:text-xl font-bold font-kanit text-emerald-400" id="adminStatApproved">0</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">อนุมัติแล้ว</span>
+                            </div>
+                            <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                                <span class="block text-lg sm:text-xl font-bold font-kanit text-blue-400" id="adminStatPrinting">0</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">อยู่ระหว่างพิมพ์</span>
+                            </div>
+                            <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
+                                <span class="block text-lg sm:text-xl font-bold font-kanit text-purple-400" id="adminStatCompleted">0</span>
+                                <span class="text-[10px] sm:text-[11px] text-slate-300 whitespace-nowrap">จัดพิมพ์เสร็จสิ้น</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Admin Action Bar -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col xl:flex-row gap-3 justify-between items-center">
-                    <div class="flex flex-col xl:flex-row items-center gap-3 w-full xl:w-auto">
-                        <div class="relative w-full xl:w-72">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นหาตามชื่อหนังสือ, ผู้แต่ง, รหัส..." 
-                                   class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
+                <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5 xl:space-y-0 xl:flex xl:gap-3 xl:justify-between xl:items-center">
+                    
+                    <div class="space-y-2.5 xl:space-y-0 xl:flex xl:items-center xl:gap-3 flex-1">
+                        <!-- Search Box -->
+                        <div class="relative w-full xl:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs sm:text-sm"></i>
+                            <input type="text" id="adminSearchInput" autocomplete="off" onkeyup="filterAdminData()" placeholder="ค้นชื่อหนังสือ, ผู้แต่ง, รหัส..." 
+                                   class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                         </div>
 
-                        <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
-                            <!-- Dropdown เลือกปีการศึกษา -->
-                            <div class="flex items-center space-x-2 w-full sm:w-auto">
-                                <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-calendar-days mr-1"></i>ปีการศึกษา:</span>
-                                <select id="adminYearFilter" onchange="filterAdminData()" class="w-full sm:w-36 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                                    <option value="ALL">เลือกปี</option>
-                                </select>
-                            </div>
+                        <!-- Filters Grid -->
+                        <div class="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:gap-2">
+                            <select id="adminYearFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                                <option value="ALL">📅 ทุกปี</option>
+                            </select>
 
-                            <!-- Dropdown เลือกภาควิชา -->
-                            <div class="flex items-center space-x-2 w-full sm:w-auto">
-                                <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-building-user mr-1"></i>ภาควิชา:</span>
-                                <select id="adminDepartmentFilter" onchange="filterAdminData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                                    <option value="ALL">เลือกภาควิชา</option>
-                                </select>
-                            </div>
+                            <select id="adminDepartmentFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                                <option value="ALL">🏢 ทุกภาควิชา</option>
+                            </select>
 
-                            <!-- Dropdown เลือกสถานะ -->
-                            <div class="flex items-center space-x-2 w-full sm:w-auto">
-                                <span class="text-xs font-semibold text-slate-500 whitespace-nowrap"><i class="fa-solid fa-filter mr-1"></i>สถานะ:</span>
-                                <select id="adminStatusFilter" onchange="filterAdminData()" class="w-full sm:w-40 py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
-                                    <option value="ALL">เลือกสถานะ</option>
-                                    <option value="ร่าง">ร่าง</option>
-                                    <option value="รออนุมัติ">รออนุมัติ</option>
-                                    <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
-                                    <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
-                                    <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
-                                </select>
-                            </div>
+                            <select id="adminStatusFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                                <option value="ALL">🏷️ ทุกสถานะ</option>
+                                <option value="ร่าง">ร่าง</option>
+                                <option value="รออนุมัติ">รออนุมัติ</option>
+                                <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+                                <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
+                                <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
+                            </select>
                         </div>
                     </div>
 
-                    <button onclick="openFormModal()" class="w-full xl:w-auto px-5 py-2.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-sm hover:shadow-lg hover:brightness-105 transition flex items-center justify-center space-x-2 shrink-0">
-                        <i class="fa-solid fa-plus"></i>
+                    <button onclick="openFormModal()" class="w-full xl:w-auto px-4 py-2 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white rounded-lg font-kanit font-medium text-xs sm:text-sm hover:shadow-md transition flex items-center justify-center space-x-1.5 shrink-0">
+                        <i class="fa-solid fa-plus text-xs"></i>
                         <span>เพิ่มรายการตำราเรียน</span>
                     </button>
                 </div>
@@ -372,16 +371,16 @@
                 <!-- Admin Data Table -->
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
+                        <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold text-[11px] sm:text-xs uppercase tracking-wider border-b border-slate-200">
                                 <tr>
-                                    <th scope="col" class="py-3.5 px-4 text-center whitespace-nowrap">รหัสหนังสือ</th>
-                                    <th scope="col" class="py-3.5 px-4">สถานะ</th>
-                                    <th scope="col" class="py-3.5 px-4 min-w-[200px]">ชื่อหนังสือ / ตำราเรียน</th>
-                                    <th scope="col" class="py-3.5 px-4">ชื่อผู้แต่ง</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center">ราคา นศ.</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center">ราคาปก</th>
-                                    <th scope="col" class="py-3.5 px-4 text-center w-28">จัดการ</th>
+                                    <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">รหัสหนังสือ</th>
+                                    <th scope="col" class="py-3 px-3 whitespace-nowrap">สถานะ</th>
+                                    <th scope="col" class="py-3 px-3 min-w-[180px]">ชื่อหนังสือ / ตำราเรียน</th>
+                                    <th scope="col" class="py-3 px-3 whitespace-nowrap">ผู้แต่ง</th>
+                                    <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคา นศ.</th>
+                                    <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคาปก</th>
+                                    <th scope="col" class="py-3 px-3 text-center w-20 whitespace-nowrap">จัดการ</th>
                                 </tr>
                             </thead>
                             <tbody id="adminTableBody" class="divide-y divide-slate-100">
@@ -390,17 +389,17 @@
                         </table>
                     </div>
 
-                    <div id="adminLoading" class="p-12 text-center text-slate-400">
-                        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-kmitl-orange mb-3"></i>
-                        <p class="text-sm font-medium">กำลังโหลดข้อมูลเจ้าหน้าที่...</p>
+                    <div id="adminLoading" class="p-8 sm:p-12 text-center text-slate-400">
+                        <i class="fa-solid fa-circle-notch fa-spin text-2xl sm:text-3xl text-kmitl-orange mb-2"></i>
+                        <p class="text-xs sm:text-sm font-medium">กำลังโหลดข้อมูล...</p>
                     </div>
-                    <div id="adminEmpty" class="hidden p-12 text-center text-slate-400">
-                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
-                        <p class="text-base font-medium text-slate-600">ไม่พบข้อมูลในระบบ</p>
+                    <div id="adminEmpty" class="hidden p-8 sm:p-12 text-center text-slate-400">
+                        <i class="fa-solid fa-folder-open text-3xl sm:text-4xl text-slate-300 mb-2"></i>
+                        <p class="text-sm sm:text-base font-medium text-slate-600">ไม่พบข้อมูลในระบบ</p>
                     </div>
 
                     <!-- Admin Pagination Controls -->
-                    <div id="adminPagination" class="hidden px-4 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                    <div id="adminPagination" class="hidden px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
                     </div>
                 </div>
 
@@ -411,73 +410,73 @@
     </main>
 
     <!-- Footer Section -->
-    <footer class="bg-[#161B2A] border-t border-slate-800 py-6 mt-auto">
+    <footer class="bg-[#161B2A] border-t border-slate-800 py-4 sm:py-6 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-xs sm:text-sm text-slate-400 font-sarabun">
+            <p class="text-[11px] sm:text-xs text-slate-400 font-sarabun">
                 &copy; 2026 งานเทคโนโลยีการศึกษา คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
             </p>
         </div>
     </footer>
 
     <!-- POPUP MODAL 1: รายละเอียดตำราเรียน (Public Detail) -->
-    <div id="modalPublicDetail" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn">
-            <div class="bg-slate-900 text-white p-5 flex justify-between items-start">
-                <div class="space-y-1 pr-4">
+    <div id="modalPublicDetail" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn max-h-[92vh] flex flex-col">
+            <div class="bg-slate-900 text-white p-4 sm:p-5 flex justify-between items-start shrink-0">
+                <div class="space-y-1 pr-3">
                     <span id="detailStatusBadge" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold"></span>
-                    <h3 id="detailTitle" class="text-lg font-bold font-kanit leading-snug text-white"></h3>
+                    <h3 id="detailTitle" class="text-base sm:text-lg font-bold font-kanit leading-snug text-white"></h3>
                 </div>
-                <button onclick="closeModal('modalPublicDetail')" class="text-slate-400 hover:text-white text-xl p-1">
+                <button onclick="closeModal('modalPublicDetail')" class="text-slate-400 hover:text-white text-lg p-1">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto custom-scrollbar">
-                <div class="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
+            <div class="p-4 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+                <div class="grid grid-cols-2 gap-2.5 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100 text-xs">
                     <div>
-                        <span class="text-slate-400 block mb-0.5">ผู้แต่ง / อาจารย์:</span>
-                        <span id="detailAuthor" class="font-medium text-slate-800"></span>
+                        <span class="text-slate-400 block text-[10px] sm:text-xs mb-0.5">ผู้แต่ง / อาจารย์:</span>
+                        <span id="detailAuthor" class="font-medium text-slate-800 block"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block mb-0.5">ภาควิชา:</span>
-                        <span id="detailDepartment" class="font-medium text-slate-800"></span>
+                        <span class="text-slate-400 block text-[10px] sm:text-xs mb-0.5">ภาควิชา:</span>
+                        <span id="detailDepartment" class="font-medium text-slate-800 block"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block mb-0.5">รหัสหนังสือ (อ้างอิง):</span>
-                        <span id="detailBookCode" class="font-medium text-slate-800"></span>
+                        <span class="text-slate-400 block text-[10px] sm:text-xs mb-0.5">รหัสหนังสือ (อ้างอิง):</span>
+                        <span id="detailBookCode" class="font-medium text-slate-800 block"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block mb-0.5">พิมพ์ครั้งที่ / จำนวนหน้า:</span>
-                        <span id="detailEditionPages" class="font-medium text-slate-800"></span>
+                        <span class="text-slate-400 block text-[10px] sm:text-xs mb-0.5">พิมพ์ครั้งที่ / จำนวนหน้า:</span>
+                        <span id="detailEditionPages" class="font-medium text-slate-800 block"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block mb-0.5">เลข ISBN:</span>
-                        <span id="detailIsbn" class="font-medium text-slate-800"></span>
+                        <span class="text-slate-400 block text-[10px] sm:text-xs mb-0.5">เลข ISBN:</span>
+                        <span id="detailIsbn" class="font-medium text-slate-800 block"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block mb-0.5">รหัส วศ.สจล.:</span>
-                        <span id="detailKmitlCode" class="font-medium text-slate-800"></span>
+                        <span class="text-slate-400 block text-[10px] sm:text-xs mb-0.5">รหัส วศ.สจล.:</span>
+                        <span id="detailKmitlCode" class="font-medium text-slate-800 block"></span>
                     </div>
                 </div>
 
-                <!-- Price Box featuring actual prices -->
-                <div class="border border-orange-200 bg-gradient-to-br from-orange-50/70 to-amber-50/40 rounded-xl p-4 space-y-3 shadow-sm">
+                <!-- Price Box -->
+                <div class="border border-orange-200 bg-gradient-to-br from-orange-50/70 to-amber-50/40 rounded-xl p-3 sm:p-4 space-y-2.5 shadow-sm">
                     <h4 class="text-xs font-bold font-kanit text-kmitl-orange uppercase tracking-wider flex items-center">
                         <i class="fa-solid fa-tags mr-1.5"></i>ราคาจำหน่ายจริง (Actual Selling Prices)
                     </h4>
                     
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm text-center">
-                            <span class="text-[11px] text-emerald-700 block font-semibold flex items-center justify-center gap-1">
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-emerald-200 shadow-sm text-center">
+                            <span class="text-[10px] sm:text-[11px] text-emerald-700 block font-semibold flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-graduation-cap"></i> ราคาจริงนักศึกษา
                             </span>
-                            <span id="detailActualStudentPrice" class="text-2xl font-bold font-kanit text-emerald-600"></span>
+                            <span id="detailActualStudentPrice" class="text-xl sm:text-2xl font-bold font-kanit text-emerald-600 mt-0.5 block"></span>
                         </div>
-                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm text-center">
-                            <span class="text-[11px] text-slate-600 block font-semibold flex items-center justify-center gap-1">
+                        <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-slate-200 shadow-sm text-center">
+                            <span class="text-[10px] sm:text-[11px] text-slate-600 block font-semibold flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-users"></i> ราคาจริงบุคคลภายนอก
                             </span>
-                            <span id="detailActualPublicPrice" class="text-2xl font-bold font-kanit text-slate-900"></span>
+                            <span id="detailActualPublicPrice" class="text-xl sm:text-2xl font-bold font-kanit text-slate-900 mt-0.5 block"></span>
                         </div>
                     </div>
                 </div>
@@ -488,9 +487,9 @@
                 </div>
             </div>
 
-            <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
-                <span id="detailCreatedAt"></span>
-                <button onclick="closeModal('modalPublicDetail')" class="px-4 py-2 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition">
+            <div class="bg-slate-50 px-4 py-2.5 sm:px-6 sm:py-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400 shrink-0">
+                <span id="detailCreatedAt" class="text-[10px] sm:text-xs"></span>
+                <button onclick="closeModal('modalPublicDetail')" class="px-3.5 py-1.5 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition text-xs">
                     ปิดหน้าต่าง
                 </button>
             </div>
@@ -498,75 +497,75 @@
     </div>
 
     <!-- POPUP MODAL 2: ฟอร์ม เพิ่ม/แก้ไข ตำราเรียน -->
-    <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
+    <div id="modalAdminForm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto max-h-[92vh] flex flex-col">
             
-            <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
+            <div class="bg-slate-900 text-white p-4 sm:p-5 flex justify-between items-center shrink-0">
                 <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-pen-to-square text-orange-400"></i>
-                    <h3 id="formModalTitle" class="text-lg font-bold font-kanit">เพิ่มรายการตำราเรียนใหม่</h3>
+                    <i class="fa-solid fa-pen-to-square text-orange-400 text-sm"></i>
+                    <h3 id="formModalTitle" class="text-base sm:text-lg font-bold font-kanit">เพิ่มรายการตำราเรียนใหม่</h3>
                 </div>
-                <button onclick="closeModal('modalAdminForm')" class="text-slate-400 hover:text-white text-xl">
+                <button onclick="closeModal('modalAdminForm')" class="text-slate-400 hover:text-white text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="textbookForm" autocomplete="off" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scrollbar">
+            <form id="textbookForm" autocomplete="off" onsubmit="handleFormSubmit(event)" class="p-4 sm:p-6 space-y-3.5 overflow-y-auto custom-scrollbar flex-1">
                 <input type="hidden" id="formBookId">
 
                 <!-- Row 1: วันที่คำนวณ & ชื่อหนังสือ -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">วันที่คำนวณ <span class="text-rose-500">*</span></label>
-                        <input type="date" id="formCalcDate" autocomplete="off" required
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="date" id="formCalcDate" required
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
-                    <div class="md:col-span-2">
+                    <div class="sm:col-span-2">
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อหนังสือ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formTitle" autocomplete="off" required placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน"
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formTitle" required placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
 
                 <!-- Row 2: ตำแหน่ง & ชื่อผู้แต่ง & ภาควิชา -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ตำแหน่ง <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formAcademicTitle" autocomplete="off" required placeholder="ผศ.ดร. รศ. หรือ ศ."
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formAcademicTitle" required placeholder="ผศ.ดร. รศ. หรือ ศ."
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อผู้แต่ง <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formAuthor" autocomplete="off" required placeholder="ชื่อ-นามสกุล ผู้แต่ง"
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formAuthor" required placeholder="ชื่อ-นามสกุล ผู้แต่ง"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ภาควิชา <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formDepartment" autocomplete="off" required placeholder="วิศวกรรม...."
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formDepartment" required placeholder="วิศวกรรม...."
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
 
                 <!-- Row 3: Codes & Status -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสหนังสือ <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formBookCode" autocomplete="off" required placeholder="เช่น Text-024"
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formBookCode" required placeholder="เช่น Text-024"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">รหัส วศ.สจล. <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formKmitlCode" autocomplete="off" required placeholder="เลขรับ...."
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formKmitlCode" required placeholder="เลขรับ...."
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">เลข ISBN <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formIsbn" autocomplete="off" required placeholder="978-xxx-xxx-xxx-x"
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="text" id="formIsbn" required placeholder="978-xxx-xxx"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">สถานะ <span class="text-rose-500">*</span></label>
-                        <select id="formStatus" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange bg-white">
+                        <select id="formStatus" required class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange bg-white">
                             <option value="ร่าง">ร่าง</option>
                             <option value="รออนุมัติ">รออนุมัติ</option>
                             <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
@@ -577,105 +576,104 @@
                 </div>
 
                 <!-- Row 4: Quantity, Pages, Edition -->
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid grid-cols-3 gap-2.5">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">พิมพ์ครั้งที่ <span class="text-rose-500">*</span></label>
-                        <input type="number" id="formEdition" autocomplete="off" required min="1" value="" placeholder=""
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="number" id="formEdition" required min="1" placeholder="1"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนหน้า <span class="text-rose-500">*</span></label>
-                        <input type="number" id="formPages" autocomplete="off" required min="1" value="" placeholder=""
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <input type="number" id="formPages" required min="1" placeholder="100"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนพิมพ์ (เล่ม) <span class="text-rose-500">*</span></label>
-                        <input type="number" id="formPrintQuantity" autocomplete="off" required min="1" value="" placeholder="" oninput="calculatePricing()"
-                               class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold text-kmitl-orange focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">จำนวนพิมพ์ <span class="text-rose-500">*</span></label>
+                        <input type="number" id="formPrintQuantity" required min="1" placeholder="เล่ม" oninput="calculatePricing()"
+                               class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-semibold text-kmitl-orange focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                     </div>
                 </div>
 
                 <!-- Calculation Section Box -->
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 space-y-2.5">
                     <div class="flex justify-between items-center border-b border-slate-200 pb-2">
                         <span class="text-xs font-bold font-kanit text-slate-800 flex items-center">
-                            <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ (Auto-Calculator)
+                            <i class="fa-solid fa-calculator text-kmitl-orange mr-1.5"></i>ระบบคำนวณราคาอัตโนมัติ
                         </span>
-                        <span class="text-[10px] text-slate-400">คำนวณ VAT 7% และปัดเศษราคาขาย</span>
+                        <span class="text-[10px] text-slate-400">VAT 7% และปัดเศษราคาขาย</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">ต้นทุนต่อหน่วย (ก่อน VAT) <span class="text-rose-500">*</span></label>
-                            <input type="number" step="0.01" id="formUnitCost" autocomplete="off" required min="0" value="" placeholder="" oninput="calculatePricing()"
-                                   class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
+                            <input type="number" step="0.01" id="formUnitCost" required min="0" placeholder="0.00" oninput="calculatePricing()"
+                                   class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">ต้นทุนรวม (ก่อน VAT)</label>
                             <input type="text" id="formProductionCost" readonly
-                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600 font-mono">
+                                   class="w-full px-3 py-1.5 sm:py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-600 font-mono">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2.5">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">VAT 7% (บาท)</label>
                             <input type="text" id="formVatAmount" readonly
-                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-600 font-mono">
+                                   class="w-full px-3 py-1.5 sm:py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-600 font-mono">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1">ยอดรวมทั้งสิ้น (รวม VAT)</label>
                             <input type="text" id="formTotalCostWithVat" readonly
-                                   class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm font-bold text-slate-800 font-mono">
+                                   class="w-full px-3 py-1.5 sm:py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs sm:text-sm font-bold text-slate-800 font-mono">
                         </div>
                     </div>
 
                     <!-- Computed Standard Prices -->
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-xs">
                         <div>
-                            <label class="block font-medium text-slate-600 mb-1">ราคาส่งคณะ (บาท)</label>
+                            <label class="block text-[10px] sm:text-xs font-medium text-slate-600 mb-1">ส่งคณะ</label>
                             <input type="text" id="formWholesaleFaculty" readonly
-                                   class="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg font-bold text-slate-700 bg-slate-100">
+                                   class="w-full px-2 py-1 border border-slate-200 rounded-lg font-bold text-slate-700 bg-slate-100 text-xs">
                         </div>
                         <div>
-                            <label class="block font-medium text-emerald-700 mb-1">ราคาขายนักศึกษา (คำนวณ)</label>
+                            <label class="block text-[10px] sm:text-xs font-medium text-emerald-700 mb-1">ขาย นศ.</label>
                             <input type="text" id="formStudentPrice" readonly
-                                   class="w-full px-2.5 py-1.5 border border-emerald-200 rounded-lg font-bold text-emerald-700 bg-emerald-50/50">
+                                   class="w-full px-2 py-1 border border-emerald-200 rounded-lg font-bold text-emerald-700 bg-emerald-50/50 text-xs">
                         </div>
                         <div>
-                            <label class="block font-medium text-slate-800 mb-1">ราคาปกบุคคลนอก (คำนวณ)</label>
+                            <label class="block text-[10px] sm:text-xs font-medium text-slate-800 mb-1">ปกบุคคลนอก</label>
                             <input type="text" id="formExternalCover" readonly
-                                   class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg font-bold text-slate-900 bg-slate-100">
+                                   class="w-full px-2 py-1 border border-slate-300 rounded-lg font-bold text-slate-900 bg-slate-100 text-xs">
                         </div>
                     </div>
 
                     <!-- actual_student_price & actual_public_price -->
-                    <div class="pt-3 border-t border-orange-200/80 bg-orange-50/60 -mx-4 -mb-4 p-4 rounded-b-xl space-y-2">
-                        <div class="flex items-center space-x-1.5 text-xs font-bold text-kmitl-orange">
+                    <div class="pt-2.5 border-t border-orange-200/80 bg-orange-50/60 -mx-3 -mb-3 p-3 sm:-mx-4 sm:-mb-4 sm:p-4 rounded-b-xl space-y-2">
+                        <div class="flex items-center space-x-1 text-xs font-bold text-kmitl-orange">
                             <i class="fa-solid fa-tag"></i>
-                            <span>ราคาจริงที่กำหนดจำหน่าย (Actual Prices)</span>
-                            <span class="text-[10px] text-slate-500 font-normal leading-none">(สามารถปรับเปลี่ยนได้ตามที่อนุมัติขายจริง)</span>
+                            <span>ราคาจริงที่จำหน่าย (Actual Prices)</span>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             <div>
                                 <label class="block text-xs font-semibold text-emerald-800 mb-1">
-                                    ราคาขายจริงสำหรับนักศึกษา <span class="text-rose-500">*</span>
+                                    ราคาขายจริง นศ. <span class="text-rose-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <input type="number" step="0.01" id="formActualStudentPrice" autocomplete="off" required min="0" placeholder="เช่น 210.00"
-                                           class="w-full px-3 py-2 border-2 border-emerald-400 bg-white rounded-lg text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
-                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-emerald-600">บาท</span>
+                                    <input type="number" step="0.01" id="formActualStudentPrice" required min="0" placeholder="เช่น 210.00"
+                                           class="w-full px-3 py-1.5 sm:py-2 border-2 border-emerald-400 bg-white rounded-lg text-xs sm:text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                                    <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-emerald-600">฿</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-800 mb-1">
-                                    ราคาขายจริงหลังปก <span class="text-rose-500">*</span>
+                                    ราคาขายจริง บุคคลนอก <span class="text-rose-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <input type="number" step="0.01" id="formActualPublicPrice" autocomplete="off" required min="0" placeholder="เช่น 240.00"
-                                           class="w-full px-3 py-2 border-2 border-slate-400 bg-white rounded-lg text-sm font-bold text-slate-900 focus:ring-2 focus:ring-slate-400 focus:outline-none">
-                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-600">บาท</span>
+                                    <input type="number" step="0.01" id="formActualPublicPrice" required min="0" placeholder="เช่น 240.00"
+                                           class="w-full px-3 py-1.5 sm:py-2 border-2 border-slate-400 bg-white rounded-lg text-xs sm:text-sm font-bold text-slate-900 focus:ring-2 focus:ring-slate-400 focus:outline-none">
+                                    <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-600">฿</span>
                                 </div>
                             </div>
                         </div>
@@ -685,14 +683,14 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">หมายเหตุเพิ่มเติม</label>
                     <textarea id="formRemarks" rows="2" placeholder="ระบุรายละเอียดเพิ่มเติม (ถ้ามี)"
-                              class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange"></textarea>
+                              class="w-full px-3 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange"></textarea>
                 </div>
 
-                <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('modalAdminForm')" class="px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-200 transition">
+                <div class="flex justify-end space-x-2 pt-2.5 border-t border-slate-100 shrink-0">
+                    <button type="button" onclick="closeModal('modalAdminForm')" class="px-3.5 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-lg hover:bg-slate-200 transition">
                         ยกเลิก
                     </button>
-                    <button type="submit" id="btnSaveSubmit" class="px-6 py-2 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white text-sm font-kanit font-medium rounded-lg hover:shadow-lg transition">
+                    <button type="submit" id="btnSaveSubmit" class="px-5 py-1.5 bg-gradient-to-r from-kmitl-orangeDark to-kmitl-orange text-white text-xs font-kanit font-medium rounded-lg hover:shadow-md transition">
                         บันทึกข้อมูล
                     </button>
                 </div>
@@ -702,19 +700,19 @@
 
     <!-- POPUP MODAL 3: Delete Confirmation -->
     <div id="modalDeleteConfirm" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-slate-100 animate-fadeIn">
-            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full mx-auto flex items-center justify-center text-xl">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 text-center space-y-3.5 shadow-2xl border border-slate-100 animate-fadeIn my-auto">
+            <div class="w-10 h-10 bg-rose-100 text-rose-600 rounded-full mx-auto flex items-center justify-center text-lg">
                 <i class="fa-solid fa-trash-can"></i>
             </div>
             <div>
                 <h3 class="text-base font-bold font-kanit text-slate-900">ยืนยันการลบรายการ?</h3>
                 <p class="text-xs text-slate-500 mt-1" id="deleteTargetTitle">รายการนี้จะถูกลบออกจากฐานข้อมูลอย่างถาวร</p>
             </div>
-            <div class="flex justify-center space-x-2 pt-2">
-                <button onclick="closeModal('modalDeleteConfirm')" class="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-medium rounded-lg hover:bg-slate-200 transition">
+            <div class="flex justify-center space-x-2 pt-1">
+                <button onclick="closeModal('modalDeleteConfirm')" class="px-4 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-lg hover:bg-slate-200 transition">
                     ยกเลิก
                 </button>
-                <button id="btnConfirmDelete" class="px-5 py-2 bg-rose-600 text-white text-xs font-medium rounded-lg hover:bg-rose-700 transition">
+                <button id="btnConfirmDelete" class="px-4 py-1.5 bg-rose-600 text-white text-xs font-medium rounded-lg hover:bg-rose-700 transition">
                     ยืนยันลบข้อมูล
                 </button>
             </div>
@@ -724,55 +722,54 @@
     <!-- POPUP MODAL 4: กราฟแสดง 10 อันดับรายการที่มีค่าใช้จ่ายการผลิตสูงสุด -->
     <div id="modalTopCostChart" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
         <div class="bg-white rounded-2xl w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-100 animate-fadeIn my-auto">
-            <div class="bg-slate-900 text-white p-4 sm:p-5 flex justify-between items-center border-b border-slate-800 shrink-0">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base">
+            <div class="bg-slate-900 text-white p-3.5 sm:p-5 flex justify-between items-center border-b border-slate-800 shrink-0">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm sm:text-base">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
-                        <h3 class="text-base sm:text-lg font-bold font-kanit leading-snug">10 อันดับยอดรวมการผลิตสูงสุด</h3>
-                        <p class="text-xs text-slate-400">คำนวณจากยอดรวมทั้งสิ้น (รวม VAT)</p>
+                        <h3 class="text-sm sm:text-lg font-bold font-kanit leading-snug">10 อันดับยอดรวมการผลิตสูงสุด</h3>
+                        <p class="text-[10px] sm:text-xs text-slate-400">คำนวณจากยอดรวมทั้งสิ้น (รวม VAT)</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modalTopCostChart')" class="text-slate-400 hover:text-white text-xl p-1 transition">
+                <button onclick="closeModal('modalTopCostChart')" class="text-slate-400 hover:text-white text-lg p-1 transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <div class="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto custom-scrollbar flex-1">
+            <div class="p-3.5 sm:p-6 space-y-3.5 sm:space-y-5 overflow-y-auto custom-scrollbar flex-1">
                 <!-- Filter Dropdown Header inside modal -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-slate-50 p-2.5 sm:p-3.5 rounded-xl border border-slate-200">
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
-                        <i class="fa-solid fa-calendar-days text-amber-500 text-sm"></i>
-                        <span class="text-xs font-semibold text-slate-700 whitespace-nowrap">เลือกปีการศึกษา:</span>
-                        <select id="modalChartYearFilter" onchange="renderTopCostChart()" class="w-full sm:w-40 py-1.5 px-3 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <i class="fa-solid fa-calendar-days text-amber-500 text-xs sm:text-sm"></i>
+                        <select id="modalChartYearFilter" onchange="renderTopCostChart()" class="w-full sm:w-44 py-1.5 px-2.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500">
                             <option value="ALL">ทุกปีการศึกษา</option>
                         </select>
                     </div>
-                    <div class="text-xs text-slate-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 w-full sm:w-auto text-right">
-                        ยอดรวมผลิตปีที่เลือก: <span id="modalChartYearTotal" class="font-bold text-amber-700 font-kanit text-sm ml-1">0.00 ฿</span>
+                    <div class="text-xs text-slate-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 w-full sm:w-auto text-right">
+                        ยอดรวมผลิต: <span id="modalChartYearTotal" class="font-bold text-amber-700 font-kanit text-xs sm:text-sm ml-1">0.00 ฿</span>
                     </div>
                 </div>
 
                 <!-- Chart Container -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative min-h-[300px] flex items-center justify-center">
+                <div class="bg-white p-2.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm relative min-h-[260px] sm:min-h-[300px] flex items-center justify-center">
                     <canvas id="topCostChartCanvas"></canvas>
                 </div>
 
                 <!-- Top 10 Table Breakdown -->
                 <div class="space-y-2">
                     <h4 class="text-xs font-bold font-kanit text-slate-700 uppercase tracking-wider flex items-center">
-                        <i class="fa-solid fa-list-ol text-amber-500 mr-1.5"></i>รายละเอียด 10 อันดับยอดรวมการผลิตสูงสุด
+                        <i class="fa-solid fa-list-ol text-amber-500 mr-1.5"></i>รายละเอียด 10 อันดับแรก
                     </h4>
                     <div class="overflow-x-auto rounded-xl border border-slate-200">
                         <table class="w-full text-left text-xs text-slate-600">
                             <thead class="bg-slate-100 text-slate-700 font-kanit font-semibold">
                                 <tr>
-                                    <th class="py-2.5 px-3 text-center w-12">อันดับ</th>
-                                    <th class="py-2.5 px-3">รหัสหนังสือ / ชื่อตำราเรียน</th>
-                                    <th class="py-2.5 px-3 text-center whitespace-nowrap">พิมพ์ครั้งที่</th>
-                                    <th class="py-2.5 px-3 text-center whitespace-nowrap">จำนวนพิมพ์</th>
-                                    <th class="py-2.5 px-3 text-right whitespace-nowrap">ยอดรวม</th>
+                                    <th class="py-2 px-2.5 text-center w-10">#</th>
+                                    <th class="py-2 px-2.5">รหัส / ตำราเรียน</th>
+                                    <th class="py-2 px-2.5 text-center whitespace-nowrap">ครั้งที่</th>
+                                    <th class="py-2 px-2.5 text-center whitespace-nowrap">จำนวน</th>
+                                    <th class="py-2 px-2.5 text-right whitespace-nowrap">ยอดรวม</th>
                                 </tr>
                             </thead>
                             <tbody id="topCostTableBody" class="divide-y divide-slate-100">
@@ -783,8 +780,8 @@
                 </div>
             </div>
 
-            <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-end shrink-0">
-                <button onclick="closeModal('modalTopCostChart')" class="px-5 py-2 bg-slate-200 text-slate-700 font-medium text-xs rounded-lg hover:bg-slate-300 transition">
+            <div class="bg-slate-50 px-4 py-2.5 sm:px-6 sm:py-3 border-t border-slate-100 flex justify-end shrink-0">
+                <button onclick="closeModal('modalTopCostChart')" class="px-4 py-1.5 bg-slate-200 text-slate-700 font-medium text-xs rounded-lg hover:bg-slate-300 transition">
                     ปิดหน้าต่าง
                 </button>
             </div>
@@ -792,7 +789,7 @@
     </div>
 
     <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none max-w-xs w-full"></div>
 
     <script>
         const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
@@ -860,14 +857,14 @@
                 publicView.classList.remove('hidden');
                 adminView.classList.add('hidden');
 
-                btnTabPublic.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
-                btnTabAdmin.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
+                btnTabPublic.className = 'px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
+                btnTabAdmin.className = 'px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
             } else {
                 publicView.classList.add('hidden');
                 adminView.classList.remove('hidden');
 
-                btnTabAdmin.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
-                btnTabPublic.className = 'px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
+                btnTabAdmin.className = 'px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 bg-amber-500 text-slate-950 font-bold shadow-md text-xs sm:text-sm';
+                btnTabPublic.className = 'px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 flex items-center space-x-1.5 text-white hover:text-amber-400 text-xs sm:text-sm font-medium';
             }
         }
 
@@ -938,9 +935,9 @@
                     .filter(y => y.length > 0)
             )].sort((a, b) => b.localeCompare(a));
 
-            let html = '<option value="ALL">เลือกปี</option>';
+            let html = '<option value="ALL">📅 ทุกปี</option>';
             years.forEach(yr => {
-                html += `<option value="${escapeHtml(yr)}">${escapeHtml(yr)}</option>`;
+                html += `<option value="${escapeHtml(yr)}">ปี ${escapeHtml(yr)}</option>`;
             });
 
             if (publicYearSelect) {
@@ -967,7 +964,7 @@
                     .filter(d => d.length > 0)
             )].sort((a, b) => a.localeCompare(b, 'th'));
 
-            let html = '<option value="ALL">เลือกภาควิชา</option>';
+            let html = '<option value="ALL">🏢 ทุกภาควิชา</option>';
             departments.forEach(dept => {
                 html += `<option value="${escapeHtml(dept)}">${escapeHtml(dept)}</option>`;
             });
@@ -1034,7 +1031,7 @@
                     .filter(y => y.length > 0)
             )].sort((a, b) => b.localeCompare(a));
 
-            let html = '<option value="ALL">ทุกปีการศึกษา</option>';
+            let html = '<option value="ALL">📅 ทุกปีการศึกษา</option>';
             years.forEach(yr => {
                 html += `<option value="${escapeHtml(yr)}">ปีการศึกษา ${escapeHtml(yr)}</option>`;
             });
@@ -1073,21 +1070,21 @@
             if (tbody) {
                 tbody.innerHTML = '';
                 if (top10.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">ไม่พบข้อมูลในระบบ</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">ไม่พบข้อมูลในระบบ</td></tr>`;
                 } else {
                     top10.forEach((item, idx) => {
                         const tr = document.createElement('tr');
                         tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
                         const codeStr = item.book_code ? `${item.book_code} - ` : '';
                         tr.innerHTML = `
-                            <td class="py-2.5 px-3 text-center font-bold font-kanit text-slate-500">#${idx + 1}</td>
-                            <td class="py-2.5 px-3 font-semibold text-slate-800">
+                            <td class="py-2 px-2.5 text-center font-bold font-kanit text-slate-500">#${idx + 1}</td>
+                            <td class="py-2 px-2.5 font-semibold text-slate-800">
                                 ${escapeHtml(codeStr + item.title)}
-                                ${item.author ? `<span class="block text-[10px] font-normal text-slate-400">ผู้แต่ง: ${escapeHtml(item.author)}</span>` : ''}
+                                ${item.author ? `<span class="block text-[10px] font-normal text-slate-400">${escapeHtml(item.author)}</span>` : ''}
                             </td>
-                            <td class="py-2.5 px-3 text-center text-slate-600">${item.edition || 1}</td>
-                            <td class="py-2.5 px-3 text-center text-slate-600 font-mono">${(item.print_quantity || 0).toLocaleString()}</td>
-                            <td class="py-2.5 px-3 text-right font-bold text-amber-600 font-kanit whitespace-nowrap">
+                            <td class="py-2 px-2.5 text-center text-slate-600">${item.edition || 1}</td>
+                            <td class="py-2 px-2.5 text-center text-slate-600 font-mono">${(item.print_quantity || 0).toLocaleString()}</td>
+                            <td class="py-2 px-2.5 text-right font-bold text-amber-600 font-kanit whitespace-nowrap">
                                 ${item.computedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ฿
                             </td>
                         `;
@@ -1103,7 +1100,7 @@
                 topCostChartInstance.destroy();
             }
 
-            const chartLabels = top10.map((item, idx) => item.book_code ? item.book_code : `อันดับ ${idx + 1}`);
+            const chartLabels = top10.map((item, idx) => item.book_code ? item.book_code : `#${idx + 1}`);
             const chartData = top10.map(b => b.computedCost);
 
             topCostChartInstance = new Chart(ctx, {
@@ -1125,9 +1122,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
                             callbacks: {
                                 title: function(context) {
@@ -1146,16 +1141,14 @@
                         x: {
                             grid: { color: '#F1F5F9' },
                             ticks: {
-                                font: { family: 'Sarabun', size: 10 },
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
+                                font: { family: 'Sarabun', size: 9 },
+                                callback: function(value) { return value.toLocaleString(); }
                             }
                         },
                         y: {
                             grid: { display: false },
                             ticks: {
-                                font: { family: 'Sarabun', size: 11, weight: '600' },
+                                font: { family: 'Sarabun', size: 10, weight: '600' },
                                 color: '#334155'
                             }
                         }
@@ -1167,17 +1160,17 @@
         function getStatusBadge(status) {
             switch (status) {
                 case 'ร่าง':
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap"><i class="fa-regular fa-file-lines mr-1"></i>ร่าง</span>`;
+                    return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap"><i class="fa-regular fa-file-lines mr-1"></i>ร่าง</span>`;
                 case 'รออนุมัติ':
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 whitespace-nowrap"><i class="fa-regular fa-clock mr-1"></i>รออนุมัติ</span>`;
+                    return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 whitespace-nowrap"><i class="fa-regular fa-clock mr-1"></i>รออนุมัติ</span>`;
                 case 'อนุมัติแล้ว':
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap"><i class="fa-regular fa-circle-check mr-1"></i>อนุมัติแล้ว</span>`;
+                    return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap"><i class="fa-regular fa-circle-check mr-1"></i>อนุมัติแล้ว</span>`;
                 case 'อยู่ระหว่างจัดพิมพ์':
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"><i class="fa-solid fa-print mr-1"></i>อยู่ระหว่างพิมพ์</span>`;
+                    return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"><i class="fa-solid fa-print mr-1"></i>อยู่ระหว่างพิมพ์</span>`;
                 case 'จัดพิมพ์เสร็จสิ้น':
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200 whitespace-nowrap"><i class="fa-solid fa-check-double mr-1"></i>จัดพิมพ์เสร็จสิ้น</span>`;
+                    return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200 whitespace-nowrap"><i class="fa-solid fa-check-double mr-1"></i>เสร็จสิ้น</span>`;
                 default:
-                    return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">${escapeHtml(status)}</span>`;
+                    return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">${escapeHtml(status)}</span>`;
             }
         }
 
@@ -1203,7 +1196,7 @@
 
             pageBooks.forEach((book, index) => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50/80 transition cursor-pointer border-b border-slate-100';
+                tr.className = 'hover:bg-slate-50 transition cursor-pointer border-b border-slate-100';
                 
                 tr.onclick = () => openPublicDetailModal(book);
 
@@ -1219,17 +1212,17 @@
                 const displayCode = book.book_code ? book.book_code : `#${books.length - (startIndex + index)}`;
 
                 tr.innerHTML = `
-                    <td class="py-3.5 px-4 text-center font-mono text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
-                    <td class="py-3.5 px-4 whitespace-nowrap">${getStatusBadge(book.status)}</td>
-                    <td class="py-3.5 px-4">
-                        <div class="font-bold text-slate-900 font-kanit text-base">${escapeHtml(book.title)}</div>
-                        ${book.department ? `<div class="text-xs text-slate-400 font-normal mt-0.5">${escapeHtml(book.department)}</div>` : ''}
+                    <td class="py-3 px-3 text-center font-mono text-[11px] sm:text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
+                    <td class="py-3 px-3 whitespace-nowrap">${getStatusBadge(book.status)}</td>
+                    <td class="py-3 px-3">
+                        <div class="font-bold text-slate-900 font-kanit text-xs sm:text-sm leading-snug">${escapeHtml(book.title)}</div>
+                        ${book.department ? `<div class="text-[10px] sm:text-xs text-slate-400 font-normal mt-0.5">${escapeHtml(book.department)}</div>` : ''}
                     </td>
-                    <td class="py-3.5 px-4 font-medium text-slate-700 whitespace-nowrap">${escapeHtml(academicPrefix + book.author)}</td>
-                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-base whitespace-nowrap">
+                    <td class="py-3 px-3 font-medium text-slate-700 whitespace-nowrap text-xs">${escapeHtml(academicPrefix + book.author)}</td>
+                    <td class="py-3 px-3 text-center font-bold font-kanit text-emerald-600 text-xs sm:text-sm whitespace-nowrap">
                         ${actualStudent ? `${Number(actualStudent).toLocaleString()}` : '-'}
                     </td>
-                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-slate-900 text-base whitespace-nowrap">
+                    <td class="py-3 px-3 text-center font-bold font-kanit text-slate-900 text-xs sm:text-sm whitespace-nowrap">
                         ${actualPublic ? `${Number(actualPublic).toLocaleString()}` : '-'}
                     </td>
                 `;
@@ -1275,28 +1268,28 @@
                 const displayCode = book.book_code ? book.book_code : `#${books.length - (startIndex + index)}`;
 
                 tr.innerHTML = `
-                    <td class="py-3.5 px-4 text-center font-mono text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
-                    <td class="py-3.5 px-4">${getStatusBadge(book.status)}</td>
-                    <td class="py-3.5 px-4">
-                        <div class="font-bold text-slate-900 font-kanit text-sm">${escapeHtml(book.title)}</div>
-                        ${book.department ? `<div class="text-[11px] text-slate-400 font-normal mt-0.5">${escapeHtml(book.department)}</div>` : ''}
+                    <td class="py-3 px-3 text-center font-mono text-[11px] sm:text-xs font-bold text-amber-600 whitespace-nowrap">${escapeHtml(displayCode)}</td>
+                    <td class="py-3 px-3 whitespace-nowrap">${getStatusBadge(book.status)}</td>
+                    <td class="py-3 px-3">
+                        <div class="font-bold text-slate-900 font-kanit text-xs sm:text-sm leading-snug">${escapeHtml(book.title)}</div>
+                        ${book.department ? `<div class="text-[10px] sm:text-xs text-slate-400 font-normal mt-0.5">${escapeHtml(book.department)}</div>` : ''}
                     </td>
-                    <td class="py-3.5 px-4 font-medium text-slate-700 text-xs">${escapeHtml(academicPrefix + book.author)}</td>
-                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-emerald-600 text-sm">
+                    <td class="py-3 px-3 font-medium text-slate-700 text-xs whitespace-nowrap">${escapeHtml(academicPrefix + book.author)}</td>
+                    <td class="py-3 px-3 text-center font-bold font-kanit text-emerald-600 text-xs sm:text-sm">
                         ${actualStudent ? `${Number(actualStudent).toLocaleString()}` : '-'}
                     </td>
-                    <td class="py-3.5 px-4 text-center font-bold font-kanit text-slate-900 text-sm">
+                    <td class="py-3 px-3 text-center font-bold font-kanit text-slate-900 text-xs sm:text-sm">
                         ${actualPublic ? `${Number(actualPublic).toLocaleString()}` : '-'}
                     </td>
-                    <td class="py-3.5 px-4 text-center">
+                    <td class="py-3 px-3 text-center">
                         <div class="flex items-center justify-center space-x-1">
                             <button onclick="openFormModalById('${escapeJsAttr(book.id)}')" title="แก้ไข" 
-                                    class="w-8 h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition flex items-center justify-center">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition flex items-center justify-center">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
                             </button>
                             <button onclick="confirmDeleteById('${escapeJsAttr(book.id)}')" title="ลบ" 
-                                    class="w-8 h-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition flex items-center justify-center">
-                                <i class="fa-solid fa-trash-can"></i>
+                                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition flex items-center justify-center">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </div>
                     </td>
@@ -1332,35 +1325,35 @@
             const nextDisabled = currentPage === totalPages;
 
             const prevClass = prevDisabled
-                ? 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200 font-medium'
-                : 'px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer';
+                ? 'px-2.5 py-1 rounded-lg bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200 font-medium'
+                : 'px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer';
 
             const nextClass = nextDisabled
-                ? 'px-3 py-1.5 rounded-lg bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200 font-medium'
-                : 'px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer';
+                ? 'px-2.5 py-1 rounded-lg bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200 font-medium'
+                : 'px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer';
 
             let pageBtns = '';
             for (let i = 1; i <= totalPages; i++) {
                 if (i === currentPage) {
-                    pageBtns += `<button class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-bold shadow-sm transition">${i}</button>`;
+                    pageBtns += `<button class="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 font-bold shadow-sm transition text-xs">${i}</button>`;
                 } else {
-                    pageBtns += `<button onclick="${handlerName}(${i})" class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer">${i}</button>`;
+                    pageBtns += `<button onclick="${handlerName}(${i})" class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium transition cursor-pointer text-xs">${i}</button>`;
                 }
             }
 
             container.innerHTML = `
-                <div class="text-slate-500 font-sarabun">
-                    แสดง <span class="font-semibold text-slate-800 font-mono">${fromNum}</span> ถึง <span class="font-semibold text-slate-800 font-mono">${toNum}</span> จากทั้งหมด <span class="font-semibold text-amber-600 font-mono">${totalItems}</span> รายการ
+                <div class="text-slate-500 font-sarabun text-[11px] sm:text-xs">
+                    แสดง <span class="font-semibold text-slate-800 font-mono">${fromNum}</span> - <span class="font-semibold text-slate-800 font-mono">${toNum}</span> จาก <span class="font-semibold text-amber-600 font-mono">${totalItems}</span> รายการ
                 </div>
-                <div class="flex items-center space-x-1.5">
+                <div class="flex items-center space-x-1">
                     <button ${prevDisabled ? 'disabled' : `onclick="${handlerName}(${currentPage - 1})"`} class="${prevClass}">
-                        <i class="fa-solid fa-chevron-left mr-1 text-[10px]"></i>ก่อนหน้า
+                        <i class="fa-solid fa-chevron-left text-[9px]"></i>
                     </button>
                     <div class="flex items-center space-x-1">
                         ${pageBtns}
                     </div>
                     <button ${nextDisabled ? 'disabled' : `onclick="${handlerName}(${currentPage + 1})"`} class="${nextClass}">
-                        ถัดไป<i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+                        <i class="fa-solid fa-chevron-right text-[9px]"></i>
                     </button>
                 </div>
             `;
@@ -1451,8 +1444,8 @@
                                  ? book.actual_public_price 
                                  : book.external_cover_rounded;
 
-            document.getElementById('detailActualStudentPrice').innerText = actualStudent ? `${Number(actualStudent).toLocaleString()} บาท` : '-';
-            document.getElementById('detailActualPublicPrice').innerText = actualPublic ? `${Number(actualPublic).toLocaleString()} บาท` : '-';
+            document.getElementById('detailActualStudentPrice').innerText = actualStudent ? `${Number(actualStudent).toLocaleString()} ฿` : '-';
+            document.getElementById('detailActualPublicPrice').innerText = actualPublic ? `${Number(actualPublic).toLocaleString()} ฿` : '-';
 
             const remarksContainer = document.getElementById('detailRemarksContainer');
             if (book.remarks) {
@@ -1462,8 +1455,8 @@
                 remarksContainer.classList.add('hidden');
             }
 
-            const createdDate = book.created_at ? new Date(book.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
-            document.getElementById('detailCreatedAt').innerText = `สร้างรายการเมื่อ: ${createdDate}`;
+            const createdDate = book.created_at ? new Date(book.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+            document.getElementById('detailCreatedAt').innerText = `สร้างเมื่อ: ${createdDate}`;
 
             openModal('modalPublicDetail');
         }
@@ -1635,7 +1628,7 @@
 
                 if (error) throw error;
 
-                showToast(bookId ? 'บันทึกการแก้ไขสำเร็จ' : 'เพิ่มรายการตำราเรียนใหม่สำเร็จ', 'success');
+                showToast(bookId ? 'บันทึกการแก้ไขสำเร็จ' : 'เพิ่มรายการใหม่สำเร็จ', 'success');
                 closeModal('modalAdminForm');
                 await loadTextbooksData();
 
@@ -1751,8 +1744,8 @@
                 iconClass = 'fa-circle-exclamation text-rose-500';
             }
 
-            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 text-sm font-medium ${bgBorder}`;
-            toast.innerHTML = `<i class="fa-solid ${iconClass} text-lg"></i><span>${escapeHtml(message)}</span>`;
+            toast.className = `pointer-events-auto flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 text-xs font-medium ${bgBorder}`;
+            toast.innerHTML = `<i class="fa-solid ${iconClass} text-base shrink-0"></i><span>${escapeHtml(message)}</span>`;
 
             container.appendChild(toast);
 

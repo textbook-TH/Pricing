@@ -243,37 +243,37 @@
             <table class="info-table">
                 <tr>
                     <td class="info-label">ชื่อหนังสือ:</td>
-                    <td class="info-value font-bold" colspan="3">{{TITLE}}</td>
+                    <td class="info-value font-bold" colspan="3" id="val-TITLE"></td>
                 </tr>
                 <tr>
                     <td class="info-label">ผู้แต่ง / อาจารย์:</td>
-                    <td class="info-value">{{AUTHOR}}</td>
+                    <td class="info-value" id="val-AUTHOR"></td>
                     <td class="info-label">ภาควิชา:</td>
-                    <td class="info-value">{{DEPARTMENT}}</td>
+                    <td class="info-value" id="val-DEPARTMENT"></td>
                 </tr>
                 <tr>
                     <td class="info-label">รหัสหนังสือ:</td>
-                    <td class="info-value">{{BOOK_CODE}}</td>
+                    <td class="info-value" id="val-BOOK_CODE"></td>
                     <td class="info-label">พิมพ์ครั้งที่:</td>
-                    <td class="info-value">{{EDITION}}</td>
+                    <td class="info-value" id="val-EDITION"></td>
                 </tr>
                 <tr>
                     <td class="info-label">เลข ISBN:</td>
-                    <td class="info-value">{{ISBN}}</td>
+                    <td class="info-value" id="val-ISBN"></td>
                     <td class="info-label">รหัส วศ.สจล.:</td>
-                    <td class="info-value">{{KMITL_CODE}}</td>
+                    <td class="info-value" id="val-KMITL_CODE"></td>
                 </tr>
                 <tr>
                     <td class="info-label">จำนวนหน้า:</td>
-                    <td class="info-value">{{PAGES}} หน้า</td>
+                    <td class="info-value"><span id="val-PAGES"></span> หน้า</td>
                     <td class="info-label">จำนวนพิมพ์:</td>
-                    <td class="info-value">{{PRINT_QTY}} เล่ม</td>
+                    <td class="info-value"><span id="val-PRINT_QTY_INFO"></span> เล่ม</td>
                 </tr>
                 <tr>
                     <td class="info-label">วันที่คำนวณ:</td>
-                    <td class="info-value">{{CALC_DATE}}</td>
+                    <td class="info-value" id="val-CALC_DATE"></td>
                     <td class="info-label">สถานะ:</td>
-                    <td class="info-value font-bold" style="color: #15803d;">{{STATUS}}</td>
+                    <td class="info-value font-bold" style="color: #15803d;" id="val-STATUS"></td>
                 </tr>
             </table>
 
@@ -289,19 +289,19 @@
                 <tbody>
                     <tr>
                         <td>ต้นทุนต่อหน่วย (ก่อน VAT)</td>
-                        <td class="text-right">{{UNIT_COST_BEFORE_VAT}}</td>
+                        <td class="text-right" id="val-UNIT_COST_BEFORE_VAT"></td>
                     </tr>
                     <tr>
                         <td>ต้นทุนรวม (ก่อน VAT)</td>
-                        <td class="text-right">{{TOTAL_COST_BEFORE_VAT}}</td>
+                        <td class="text-right" id="val-TOTAL_COST_BEFORE_VAT"></td>
                     </tr>
                     <tr>
                         <td>ภาษีมูลค่าเพิ่ม VAT 7%</td>
-                        <td class="text-right">{{VAT_AMOUNT}}</td>
+                        <td class="text-right" id="val-VAT_AMOUNT"></td>
                     </tr>
                     <tr class="highlight-orange font-bold">
                         <td>ยอดรวมทั้งสิ้น (รวม VAT)</td>
-                        <td class="text-right">{{TOTAL_COST_WITH_VAT}}</td>
+                        <td class="text-right" id="val-TOTAL_COST_WITH_VAT"></td>
                     </tr>
                 </tbody>
             </table>
@@ -317,20 +317,20 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>ราคาต้นทุน (ต่อเล่ม/{{PRINT_QTY}})</td>
-                        <td class="text-right">{{COST_PER_BOOK}}</td>
+                        <td>ราคาต้นทุน (ต่อเล่ม/<span id="val-PRINT_QTY_COST"></span>)</td>
+                        <td class="text-right" id="val-COST_PER_BOOK"></td>
                     </tr>
                     <tr>
                         <td>ราคาส่งจากคณะ (+35%)</td>
-                        <td class="text-right">{{FACULTY_SEND_PRICE}}</td>
+                        <td class="text-right" id="val-FACULTY_SEND_PRICE"></td>
                     </tr>
                     <tr>
                         <td>รวมราคาส่งจากคณะ (ปัดเศษ)</td>
-                        <td class="text-right font-bold">{{FACULTY_ROUNDED_PRICE}}</td>
+                        <td class="text-right font-bold" id="val-FACULTY_ROUNDED_PRICE"></td>
                     </tr>
                     <tr class="highlight-green font-bold">
                         <td>ราคาขายนักศึกษา (+20%)</td>
-                        <td class="text-right">{{STUDENT_PRICE}}</td>
+                        <td class="text-right" id="val-STUDENT_PRICE"></td>
                     </tr>
                 </tbody>
             </table>
@@ -347,15 +347,15 @@
                 <tbody>
                     <tr>
                         <td>ราคาส่งบุคคลภายนอก (+50%)</td>
-                        <td class="text-right">{{EXTERNAL_SEND_PRICE}}</td>
+                        <td class="text-right" id="val-EXTERNAL_SEND_PRICE"></td>
                     </tr>
                     <tr>
                         <td>บวกส่วนลดร้านค้า (40%)</td>
-                        <td class="text-right">{{STORE_DISCOUNT}}</td>
+                        <td class="text-right" id="val-STORE_DISCOUNT"></td>
                     </tr>
                     <tr class="highlight-blue font-bold">
                         <td>ราคาปกตั้งขาย</td>
-                        <td class="text-right">{{COVER_PRICE}}</td>
+                        <td class="text-right" id="val-COVER_PRICE"></td>
                     </tr>
                 </tbody>
             </table>
@@ -366,15 +366,15 @@
                 <tr>
                     <td style="width: 33.33%;">
                         <div class="summary-card-title">ราคาคำนวณส่งคณะ</div>
-                        <div class="summary-card-value">{{SUMMARY_FACULTY_SEND}} ฿</div>
+                        <div class="summary-card-value"><span id="val-SUMMARY_FACULTY_SEND"></span> ฿</div>
                     </td>
                     <td style="width: 33.33%;">
                         <div class="summary-card-title">ราคาคำนวณขาย นศ.</div>
-                        <div class="summary-card-value">{{SUMMARY_STUDENT_CALC}} ฿</div>
+                        <div class="summary-card-value"><span id="val-SUMMARY_STUDENT_CALC"></span> ฿</div>
                     </td>
                     <td style="width: 33.33%;">
                         <div class="summary-card-title">ราคาคำนวณปกบุคคลนอก</div>
-                        <div class="summary-card-value">{{SUMMARY_EXT_COVER_CALC}} ฿</div>
+                        <div class="summary-card-value"><span id="val-SUMMARY_EXT_COVER_CALC"></span> ฿</div>
                     </td>
                 </tr>
             </table>
@@ -382,11 +382,11 @@
                 <tr>
                     <td class="card-green" style="width: 50%;">
                         <div class="summary-card-title">ราคาขายจริง นศ.</div>
-                        <div class="summary-card-value">{{SUMMARY_STUDENT_ACTUAL}} ฿</div>
+                        <div class="summary-card-value"><span id="val-SUMMARY_STUDENT_ACTUAL"></span> ฿</div>
                     </td>
                     <td class="card-blue" style="width: 50%;">
                         <div class="summary-card-title">ราคาขายจริงบุคคลภายนอก</div>
-                        <div class="summary-card-value">{{SUMMARY_EXT_ACTUAL}} ฿</div>
+                        <div class="summary-card-value"><span id="val-SUMMARY_EXT_ACTUAL"></span> ฿</div>
                     </td>
                 </tr>
             </table>
@@ -397,9 +397,90 @@
         <!-- Footer ล่างสุด -->
         <div class="footer-bar">
             <span>พิมพ์จากระบบ TextCalc Engine</span>
-            <span>วันที่พิมพ์เอกสาร: {{PRINT_DATE}}</span>
+            <span>วันที่พิมพ์เอกสาร: <span id="val-PRINT_DATE"></span></span>
         </div>
     </div>
 
+    <script>
+        // ข้อมูลตัวอย่างสำหรับผูกเข้ากับตาราง 100% ครบทุกตำแหน่ง
+        const bookData = {
+            TITLE: "การวิเคราะห์และออกแบบระบบวงจรดิจิทัล",
+            AUTHOR: "รศ.ดร.สมชาย ใจดี",
+            DEPARTMENT: "วิศวกรรมคอมพิวเตอร์",
+            BOOK_CODE: "ENG-CP-2026-001",
+            EDITION: "1",
+            ISBN: "978-616-1234-56-7",
+            KMITL_CODE: "KMITL-ENG-69",
+            PAGES: "350",
+            PRINT_QTY: "1,000",
+            CALC_DATE: "19 กันยายน 2026",
+            STATUS: "อนุมัติเรียบร้อย",
+            
+            UNIT_COST_BEFORE_VAT: "120.00",
+            TOTAL_COST_BEFORE_VAT: "120,000.00",
+            VAT_AMOUNT: "8,400.00",
+            TOTAL_COST_WITH_VAT: "128,400.00",
+            
+            COST_PER_BOOK: "128.40",
+            FACULTY_SEND_PRICE: "173.34",
+            FACULTY_ROUNDED_PRICE: "174.00",
+            STUDENT_PRICE: "208.80",
+            
+            EXTERNAL_SEND_PRICE: "192.60",
+            STORE_DISCOUNT: "128.40",
+            COVER_PRICE: "321.00",
+            
+            SUMMARY_FACULTY_SEND: "174.00",
+            SUMMARY_STUDENT_CALC: "208.80",
+            SUMMARY_EXT_COVER_CALC: "321.00",
+            SUMMARY_STUDENT_ACTUAL: "210.00",
+            SUMMARY_EXT_ACTUAL: "320.00",
+            
+            PRINT_DATE: "19/09/2026 12:14"
+        };
+
+        // ฟังก์ชันในการนำ Data Object ไปลงใน Element HTML
+        function renderData(data) {
+            document.getElementById('val-TITLE').innerText = data.TITLE;
+            document.getElementById('val-AUTHOR').innerText = data.AUTHOR;
+            document.getElementById('val-DEPARTMENT').innerText = data.DEPARTMENT;
+            document.getElementById('val-BOOK_CODE').innerText = data.BOOK_CODE;
+            document.getElementById('val-EDITION').innerText = data.EDITION;
+            document.getElementById('val-ISBN').innerText = data.ISBN;
+            document.getElementById('val-KMITL_CODE').innerText = data.KMITL_CODE;
+            document.getElementById('val-PAGES').innerText = data.PAGES;
+            document.getElementById('val-PRINT_QTY_INFO').innerText = data.PRINT_QTY;
+            document.getElementById('val-CALC_DATE').innerText = data.CALC_DATE;
+            document.getElementById('val-STATUS').innerText = data.STATUS;
+
+            document.getElementById('val-UNIT_COST_BEFORE_VAT').innerText = data.UNIT_COST_BEFORE_VAT;
+            document.getElementById('val-TOTAL_COST_BEFORE_VAT').innerText = data.TOTAL_COST_BEFORE_VAT;
+            document.getElementById('val-VAT_AMOUNT').innerText = data.VAT_AMOUNT;
+            document.getElementById('val-TOTAL_COST_WITH_VAT').innerText = data.TOTAL_COST_WITH_VAT;
+
+            document.getElementById('val-PRINT_QTY_COST').innerText = data.PRINT_QTY;
+            document.getElementById('val-COST_PER_BOOK').innerText = data.COST_PER_BOOK;
+            document.getElementById('val-FACULTY_SEND_PRICE').innerText = data.FACULTY_SEND_PRICE;
+            document.getElementById('val-FACULTY_ROUNDED_PRICE').innerText = data.FACULTY_ROUNDED_PRICE;
+            document.getElementById('val-STUDENT_PRICE').innerText = data.STUDENT_PRICE;
+
+            document.getElementById('val-EXTERNAL_SEND_PRICE').innerText = data.EXTERNAL_SEND_PRICE;
+            document.getElementById('val-STORE_DISCOUNT').innerText = data.STORE_DISCOUNT;
+            document.getElementById('val-COVER_PRICE').innerText = data.COVER_PRICE;
+
+            document.getElementById('val-SUMMARY_FACULTY_SEND').innerText = data.SUMMARY_FACULTY_SEND;
+            document.getElementById('val-SUMMARY_STUDENT_CALC').innerText = data.SUMMARY_STUDENT_CALC;
+            document.getElementById('val-SUMMARY_EXT_COVER_CALC').innerText = data.SUMMARY_EXT_COVER_CALC;
+            document.getElementById('val-SUMMARY_STUDENT_ACTUAL').innerText = data.SUMMARY_STUDENT_ACTUAL;
+            document.getElementById('val-SUMMARY_EXT_ACTUAL').innerText = data.SUMMARY_EXT_ACTUAL;
+
+            document.getElementById('val-PRINT_DATE').innerText = data.PRINT_DATE;
+        }
+
+        // สั่งทำงาน Render ทันทีที่โหลดหน้าเว็บ
+        window.addEventListener('DOMContentLoaded', () => {
+            renderData(bookData);
+        });
+    </script>
 </body>
 </html>

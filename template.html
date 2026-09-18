@@ -403,7 +403,7 @@
         </div>
     </div>
 
-    <!-- Script ดึงข้อมูลและจัดการการแทนค่าแบบสมบูรณ์ 100% -->
+    <!-- Script ปรับแก้ไขให้ดึงข้อมูลได้อย่างสมบูรณ์ 100% -->
     <script>
         const SUPABASE_URL = 'https://glalypgckngfhyoobagk.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_4aW41o5Q_C3Y91gJz_G0Ww';
@@ -418,43 +418,52 @@
             try {
                 let data = null;
 
-                // 1. ตรวจสอบข้อมูลจาก window.printData หรือ SessionStorage/LocalStorage
+                // 1. ลองดึงข้อมูลจาก Memory (ผ่าน window หรือ Local/Session Storage)
                 if (window.printData) {
                     data = window.printData;
                 } else {
-                    const sessionData = sessionStorage.getItem('currentPrintBook');
-                    const localData = localStorage.getItem('currentPrintBook');
-                    if (sessionData) data = JSON.parse(sessionData);
-                    else if (localData) data = JSON.parse(localData);
+                    try {
+                        const sessionData = sessionStorage.getItem('currentPrintBook');
+                        const localData = localStorage.getItem('currentPrintBook');
+                        if (sessionData) data = JSON.parse(sessionData);
+                        else if (localData) data = JSON.parse(localData);
+                    } catch (e) {
+                        console.warn('Cannot parse storage data', e);
+                    }
                 }
 
-                // 2. ถ้าไม่มีข้อมูลใน Memory ให้ดึงจาก Supabase ด้วย URL Query Parameter
+                // 2. หากยังไม่มีข้อมูลใน Storage ให้ยิง Direct Fetch ไปที่ Supabase REST API โดยตรง (ไม่ผ่าน JS SDK เพื่อเลี่ยงปัญหา Key)
                 if (!data) {
                     const urlParams = new URLSearchParams(window.location.search);
                     const bookId = urlParams.get('id');
                     const bookCode = urlParams.get('book_code');
 
                     if (bookId || bookCode) {
-                        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                        const queryParam = bookId ? `id=eq.${bookId}` : `book_code=eq.${bookCode}`;
                         
-                        // ปรับชื่อตารางให้ค้นหาจากทั้ง 'books' และ 'textbooks' เพื่อความปลอดภัย
-                        let query = _supabase.from('books').select('*');
-                        if (bookId) query = query.eq('id', bookId);
-                        else if (bookCode) query = query.eq('book_code', bookCode);
+                        // ลองดึงจากตาราง books ก่อน
+                        let response = await fetch(`${SUPABASE_URL}/rest/v1/books?${queryParam}`, {
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`
+                            }
+                        });
 
-                        let { data: fetchRes, error } = await query.single();
-                        
-                        // Fallback ลองหาในตาราง textbooks หากตารางแรกไม่เจอ
-                        if (error || !fetchRes) {
-                            let fallbackQuery = _supabase.from('textbooks').select('*');
-                            if (bookId) fallbackQuery = fallbackQuery.eq('id', bookId);
-                            else if (bookCode) fallbackQuery = fallbackQuery.eq('book_code', bookCode);
-                            const res2 = await fallbackQuery.single();
-                            if (res2.data) fetchRes = res2.data;
+                        let resData = await response.json();
+
+                        // หากหาในตาราง books ไม่เจอ ให้ลองดึงจากตาราง textbooks
+                        if (!Array.isArray(resData) || resData.length === 0) {
+                            response = await fetch(`${SUPABASE_URL}/rest/v1/textbooks?${queryParam}`, {
+                                headers: {
+                                    'apikey': SUPABASE_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                                }
+                            });
+                            resData = await response.json();
                         }
 
-                        if (fetchRes) {
-                            data = fetchRes;
+                        if (Array.isArray(resData) && resData.length > 0) {
+                            data = resData[0];
                         }
                     }
                 }
@@ -464,7 +473,7 @@
                     return;
                 }
 
-                // 3. คิดคำนวณและแปลงค่ารองรับ Key ทุกรูปแบบ
+                // 3. คิดคำนวณและแปลงค่าให้รองรับ Key ทุกรูปแบบ
                 const unitCost = parseFloat(data.unit_cost || data.unitCost) || 0;
                 const printQty = parseInt(data.print_quantity || data.printQty || data.quantity) || 1;
                 const totalCostBeforeVat = parseFloat(data.production_cost || data.totalCostBeforeVat) || (unitCost * printQty);
@@ -516,14 +525,13 @@
                     '{{PRINT_DATE}}': dateStr
                 };
 
-                // 4. วนลูปแทนค่าตัวแปรด้วย Regular Expression เพื่อให้แทนที่ได้ครบถ้วน
+                // 4. แทนค่าข้อความลงใน DOM ตรงๆ โดยไม่อิงกับ regex replacement เพื่อความแม่นยำสูงสุด
                 const targetArea = document.getElementById('printable-area');
                 if (targetArea) {
                     let htmlContent = targetArea.innerHTML;
-                    for (const [key, value] of Object.entries(mapping)) {
-                        const regex = new RegExp(key.replace(/\[/g, '\\[').replace(/\]/g, '\\]'), 'g');
-                        htmlContent = htmlContent.replace(regex, value);
-                    }
+                    Object.keys(mapping).forEach(key => {
+                        htmlContent = htmlContent.split(key).join(mapping[key]);
+                    });
                     targetArea.innerHTML = htmlContent;
                 }
 

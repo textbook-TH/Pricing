@@ -148,7 +148,7 @@
                             <span id="pdfDepartment" class="font-medium text-slate-900 flex-1 text-left">-</span>
                         </div>
                         <div class="flex items-center border-b border-slate-100 pb-1.5">
-                            <span class="w-28 text-slate-600 font-semibold shrink-0">ผู้แต่ง / อาจารย์:</span>
+                            <span class="w-28 text-slate-600 font-semibold shrink-0">ผู้แต่ง:</span>
                             <span id="pdfAuthor" class="font-medium text-slate-900 flex-1 text-left">-</span>
                         </div>
 
@@ -180,7 +180,7 @@
                         </div>
                     </div>
 
-                    <!-- สถานะสิ่งพิมพ์ (ปรับชิดซ้ายตรงแนวคอลัมน์) -->
+                    <!-- สถานะสิ่งพิมพ์ -->
                     <div class="flex items-center text-xs pt-1">
                         <span class="w-28 text-slate-600 font-semibold shrink-0">สถานะการจัดพิมพ์:</span>
                         <div class="flex-1 text-left">
@@ -303,15 +303,15 @@
                     <!-- แถวบน: 3 กล่อง -->
                     <div class="grid grid-cols-3 gap-2 text-center">
                         <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
-                            <span class="text-[11px] text-slate-600 block font-kanit font-medium">ส่งคณะ</span>
+                            <span class="text-[11px] text-slate-600 block font-kanit font-medium">คำนวณราคาส่งจากคณะ</span>
                             <span id="pdfSummaryFaculty" class="text-xs font-bold font-mono text-slate-800 mt-0.5 block">-</span>
                         </div>
                         <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
-                            <span class="text-[11px] text-slate-600 block font-kanit font-medium">คำนวณขาย นศ.</span>
+                            <span class="text-[11px] text-slate-600 block font-kanit font-medium">คำนวณราคาขาย นศ.</span>
                             <span id="pdfSummaryStudentCalc" class="text-xs font-bold font-mono text-slate-800 mt-0.5 block">-</span>
                         </div>
                         <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
-                            <span class="text-[11px] text-slate-600 block font-kanit font-medium">คำนวณปกภายนอก</span>
+                            <span class="text-[11px] text-slate-600 block font-kanit font-medium">คำนวณราคาขาย หลังปก</span>
                             <span id="pdfSummaryPublicCalc" class="text-xs font-bold font-mono text-slate-800 mt-0.5 block">-</span>
                         </div>
                     </div>
@@ -319,11 +319,11 @@
                     <!-- แถวล่าง: 2 กล่อง แบ่ง 50:50 เท่ากัน -->
                     <div class="grid grid-cols-2 gap-2 text-center">
                         <div class="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/30">
-                            <span class="text-[11px] text-emerald-800 block font-kanit font-bold">ขายจริง นศ.</span>
+                            <span class="text-[11px] text-emerald-800 block font-kanit font-bold">ราคาขายจริง นศ.</span>
                             <span id="pdfSummaryStudentActual" class="text-sm font-bold font-mono text-emerald-600 mt-0.5 block">-</span>
                         </div>
                         <div class="bg-orange-500/10 p-2 rounded-lg border border-orange-500/30">
-                            <span class="text-[11px] text-orange-800 block font-kanit font-bold">ขายจริง ภายนอก</span>
+                            <span class="text-[11px] text-orange-800 block font-kanit font-bold">ราคาขายจริงหลังปก</span>
                             <span id="pdfSummaryPublicActual" class="text-sm font-bold font-mono text-orange-600 mt-0.5 block">-</span>
                         </div>
                     </div>

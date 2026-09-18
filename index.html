@@ -1389,13 +1389,24 @@
         }
 
         // ==========================================
-        // ฟังก์ชันดาวน์โหลด PDF (เคลียร์โค้ดเดิมออกทั้งหมดตามข้อตกลง คงไว้เฉพาะโครงสร้างฟังก์ชันปุ่มกด)
+        // ฟังก์ชันเชื่อมต่อไปยัง temple.html เพื่อดาวน์โหลดเป็น PDF
         // ==========================================
         function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
-            if (!book) return;
+            if (!book) {
+                showToast('ไม่พบข้อมูลรายการที่เลือก', 'error');
+                return;
+            }
 
-            // TODO: สามารถเพิ่มการสร้าง PDF ใหม่ได้ที่นี่
+            showToast('กำลังเตรียมข้อมูลเอกสาร PDF...', 'info');
+
+            // เปิด temple.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
+            const printWindow = window.open(`temple.html?id=${encodeURIComponent(book.id)}`, '_blank');
+            if (printWindow) {
+                printWindow.focus();
+            } else {
+                showToast('กรุณาอนุญาต Pop-up บนเบราว์เซอร์เพื่อเปิด PDF', 'error');
+            }
         }
 
         function changePublicPage(page) {

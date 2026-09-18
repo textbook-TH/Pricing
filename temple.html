@@ -1,171 +1,402 @@
-<div style="padding: 14px 20px; font-family: 'Sarabun', sans-serif; color: #1e293b; background-color: #ffffff; box-sizing: border-box; max-height: 275mm; page-break-inside: avoid;">
-    <!-- ส่วนหัวโลโก้และชื่อเอกสาร -->
-    <div style="text-align: center; margin-bottom: 10px;">
-        <img src="https://raw.githubusercontent.com/textbook-TH/TextCalc-System/main/logoSchool.png" 
-             crossorigin="anonymous" 
-             alt="Logo" 
-             style="height: 75px; width: auto; margin: 0 auto 6px auto; display: block;" />
-        <h2 style="font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: bold; margin: 0; color: #1e293b; line-height: 1.2;">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h2>
-        <h3 style="font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 500; margin: 2px 0 15px 0; color: #475569;">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h3>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบคำนวณต้นทุนและราคาจำหน่ายหนังสือ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #1f2937;
+            font-size: 11.5px;
+            line-height: 1.2;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ล็อคขนาด A4 หน้าเดียวเป๊ะ */
+        .page-container {
+            width: 210mm;
+            height: 297mm;
+            max-height: 297mm;
+            padding: 7mm 10mm;
+            margin: 0 auto;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Header Layout */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        .header-logo {
+            width: 60px;
+            vertical-align: top;
+        }
+
+        .header-logo img {
+            width: 55px;
+            height: auto;
+            display: block;
+        }
+
+        .header-title {
+            vertical-align: middle;
+            text-align: left;
+            padding-left: 8px;
+        }
+
+        .header-title h1 {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 2px;
+        }
+
+        .header-title h2 {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        /* ตารางทั่วไป */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 3.5px 6px;
+            text-align: left;
+            font-size: 10.5px;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .bg-gray-50 { background-color: #f9fafb; }
+
+        /* คลาสสีไฮไลต์ (ส้ม, เขียว, ฟ้า) */
+        .highlight-orange {
+            background-color: #fff7ed !important;
+            color: #c2410c !important;
+        }
+
+        .highlight-green {
+            background-color: #f0fdf4 !important;
+            color: #15803d !important;
+        }
+
+        .highlight-blue {
+            background-color: #f0f9ff !important;
+            color: #0369a1 !important;
+        }
+
+        /* ตารางข้อมูลหนังสือ */
+        .info-table td {
+            padding: 3px 6px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            background-color: #f9fafb;
+            width: 16%;
+        }
+
+        .info-value {
+            width: 34%;
+        }
+
+        /* หัวข้อส่วน */
+        .section-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            padding-bottom: 1px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        /* ตารางสรุปราคาจำหน่าย */
+        .summary-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            table-layout: fixed;
+        }
+
+        .summary-table td {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 5px 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .summary-card-title {
+            font-size: 10px;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .summary-card-value {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        /* การ์ดไฮไลต์สรุปราคา */
+        .card-green {
+            background-color: #f0fdf4 !important;
+            border-color: #86efac !important;
+        }
+        .card-green .summary-card-title,
+        .card-green .summary-card-value {
+            color: #15803d !important;
+        }
+
+        .card-blue {
+            background-color: #f0f9ff !important;
+            border-color: #7dd3fc !important;
+        }
+        .card-blue .summary-card-title,
+        .card-blue .summary-card-value {
+            color: #0369a1 !important;
+        }
+
+        /* Footer */
+        .note-text {
+            font-size: 9.5px;
+            color: #6b7280;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .footer-bar {
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed #d1d5db;
+            font-size: 9.5px;
+            color: #9ca3af;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <div>
+            <!-- หัวเอกสาร + โลโก้ -->
+            <table class="header-table">
+                <tr>
+                    <td class="header-logo" style="border: none;">
+                        <img id="pdf-logo" src="https://raw.githubusercontent.com/textbook-TH/TextCalc-System/35b44d009813b83023814773f8148d1a80c337c9/logoSchool.png" alt="KMITL Logo">
+                    </td>
+                    <td class="header-title" style="border: none;">
+                        <h1>ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h1>
+                        <h2>คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h2>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ข้อมูลหนังสือ -->
+            <table class="info-table">
+                <tr>
+                    <td class="info-label">ชื่อหนังสือ:</td>
+                    <td class="info-value font-bold" colspan="3">{{TITLE}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">ผู้แต่ง / อาจารย์:</td>
+                    <td class="info-value">{{AUTHOR}}</td>
+                    <td class="info-label">ภาควิชา:</td>
+                    <td class="info-value">{{DEPARTMENT}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">รหัสหนังสือ:</td>
+                    <td class="info-value">{{BOOK_CODE}}</td>
+                    <td class="info-label">พิมพ์ครั้งที่:</td>
+                    <td class="info-value">{{EDITION}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">เลข ISBN:</td>
+                    <td class="info-value">{{ISBN}}</td>
+                    <td class="info-label">รหัส วศ.สจล.:</td>
+                    <td class="info-value">{{KMITL_CODE}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">จำนวนหน้า:</td>
+                    <td class="info-value">{{PAGES}} หน้า</td>
+                    <td class="info-label">จำนวนพิมพ์:</td>
+                    <td class="info-value">{{PRINT_QTY}} เล่ม</td>
+                </tr>
+                <tr>
+                    <td class="info-label">วันที่คำนวณ:</td>
+                    <td class="info-value">{{CALC_DATE}}</td>
+                    <td class="info-label">สถานะ:</td>
+                    <td class="info-value font-bold" style="color: #15803d;">{{STATUS}}</td>
+                </tr>
+            </table>
+
+            <!-- รายละเอียดต้นทุนและการคำนวณราคา -->
+            <div class="section-title">รายละเอียดต้นทุนและการคำนวณราคา</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>รายการ</th>
+                        <th class="text-right" style="width: 30%;">จำนวนเงิน (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ต้นทุนต่อหน่วย (ก่อน VAT)</td>
+                        <td class="text-right">{{UNIT_COST_BEFORE_VAT}}</td>
+                    </tr>
+                    <tr>
+                        <td>ต้นทุนรวม (ก่อน VAT)</td>
+                        <td class="text-right">{{TOTAL_COST_BEFORE_VAT}}</td>
+                    </tr>
+                    <tr>
+                        <td>ภาษีมูลค่าเพิ่ม VAT 7%</td>
+                        <td class="text-right">{{VAT_AMOUNT}}</td>
+                    </tr>
+                    <tr class="highlight-orange font-bold">
+                        <td>ยอดรวมทั้งสิ้น (รวม VAT)</td>
+                        <td class="text-right">{{TOTAL_COST_WITH_VAT}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา -->
+            <div class="section-title">การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>รายการ</th>
+                        <th class="text-right" style="width: 30%;">จำนวนเงิน (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ราคาต้นทุน (ต่อเล่ม/{{PRINT_QTY}})</td>
+                        <td class="text-right">{{COST_PER_BOOK}}</td>
+                    </tr>
+                    <tr>
+                        <td>ราคาส่งจากคณะ (+35%)</td>
+                        <td class="text-right">{{FACULTY_SEND_PRICE}}</td>
+                    </tr>
+                    <tr>
+                        <td>รวมราคาส่งจากคณะ (ปัดเศษ)</td>
+                        <td class="text-right font-bold">{{FACULTY_ROUNDED_PRICE}}</td>
+                    </tr>
+                    <tr class="highlight-green font-bold">
+                        <td>ราคาขายนักศึกษา (+20%)</td>
+                        <td class="text-right">{{STUDENT_PRICE}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก -->
+            <div class="section-title">การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>รายการ</th>
+                        <th class="text-right" style="width: 30%;">จำนวนเงิน (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ราคาส่งบุคคลภายนอก (+50%)</td>
+                        <td class="text-right">{{EXTERNAL_SEND_PRICE}}</td>
+                    </tr>
+                    <tr>
+                        <td>บวกส่วนลดร้านค้า (40%)</td>
+                        <td class="text-right">{{STORE_DISCOUNT}}</td>
+                    </tr>
+                    <tr class="highlight-blue font-bold">
+                        <td>ราคาปกตั้งขาย</td>
+                        <td class="text-right">{{COVER_PRICE}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- สรุปราคาจำหน่าย -->
+            <div class="section-title">สรุปราคาจำหน่าย</div>
+            <table class="summary-table">
+                <tr>
+                    <td style="width: 33.33%;">
+                        <div class="summary-card-title">ราคาคำนวณส่งคณะ</div>
+                        <div class="summary-card-value">{{SUMMARY_FACULTY_SEND}} ฿</div>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <div class="summary-card-title">ราคาคำนวณขาย นศ.</div>
+                        <div class="summary-card-value">{{SUMMARY_STUDENT_CALC}} ฿</div>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <div class="summary-card-title">ราคาคำนวณปกบุคคลนอก</div>
+                        <div class="summary-card-value">{{SUMMARY_EXT_COVER_CALC}} ฿</div>
+                    </td>
+                </tr>
+            </table>
+            <table class="summary-table">
+                <tr>
+                    <td class="card-green" style="width: 50%;">
+                        <div class="summary-card-title">ราคาขายจริง นศ.</div>
+                        <div class="summary-card-value">{{SUMMARY_STUDENT_ACTUAL}} ฿</div>
+                    </td>
+                    <td class="card-blue" style="width: 50%;">
+                        <div class="summary-card-title">ราคาขายจริงบุคคลภายนอก</div>
+                        <div class="summary-card-value">{{SUMMARY_EXT_ACTUAL}} ฿</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="note-text">* ราคาขายจริง นศ. และ ราคาขายจริงบุคคลภายนอก บางกรณีอาจปัดเศษ เพื่อให้ง่ายต่อการจัดจำหน่าย</div>
+        </div>
+
+        <!-- Footer ล่างสุด -->
+        <div class="footer-bar">
+            <span>พิมพ์จากระบบ TextCalc Engine</span>
+            <span>วันที่พิมพ์เอกสาร: {{PRINT_DATE}}</span>
+        </div>
     </div>
 
-    <!-- ตารางที่ 1: ข้อมูลทั่วไปหนังสือ -->
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10.5px; table-layout: fixed;">
-        <tr>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ชื่อหนังสือ:</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155; width: 80%; font-weight: bold; color: #0f172a;" colspan="3">{{title}}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ผู้แต่ง / อาจารย์</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155; width: 30%;">{{author}}</td>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ภาควิชา</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155; width: 30%;">{{department}}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัสหนังสือ</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">{{book_code}}</td>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">พิมพ์ครั้งที่</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">ครั้งที่ {{edition}}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">เลข ISBN</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">{{isbn}}</td>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัส วศ.สจล.</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">{{kmitl_code}}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จำนวนหน้า</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">{{pages}} หน้า</td>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จํานวนพิมพ์</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">{{print_quantity}} เล่ม</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">วันที่คำนวณ</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155;">{{calc_date}}</td>
-            <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">สถานะ:</td>
-            <td style="padding: 4px 6px; border: 1px solid #334155; font-weight: 600; color: #e05a10;">{{status}}</td>
-        </tr>
-    </table>
-
-    <!-- ตารางที่ 2: รายละเอียดต้นทุนและการคำนวณราคา -->
-    <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
-        รายละเอียดต้นทุนและการคำนวณราคา
-    </div>
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
-        <thead>
-            <tr style="background-color: #f1f5f9; text-align: left;">
-                <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
-                <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{unit_cost}}</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">ต้นทุนรวม (ก่อน VAT)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{production_cost}}</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">ภาษีมูลค่าเพิ่ม VAT 7%</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{vat_amount}}</td>
-            </tr>
-            <tr style="background-color: #fff7ed; font-weight: bold;">
-                <td style="padding: 4px 6px; border: 1px solid #334155; color: #c2410c;">ยอดรวมทั้งสิ้น (รวม VAT)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #c2410c;">{{total_cost_with_vat}}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- ตารางที่ 3: การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา -->
-    <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
-        การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา
-    </div>
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
-        <thead>
-            <tr style="background-color: #f1f5f9; text-align: left;">
-                <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
-                <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาต้นทุน (ต่อเล่ม/{{print_quantity}})</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{cost_per_book}}</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาส่งจากคณะ (+35%)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{faculty_wholesale_calc}}</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">รวมราคาส่งจากคณะ (ปัดเศษ)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{faculty_wholesale_rounded}}</td>
-            </tr>
-            <tr style="background-color: #ecfdf5; font-weight: bold;">
-                <td style="padding: 4px 6px; border: 1px solid #334155; color: #047857;">ราคาขายนักศึกษา (+20%)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #047857;">{{student_price_calc}}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- ตารางที่ 4: การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก -->
-    <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
-        การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก
-    </div>
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
-        <thead>
-            <tr style="background-color: #f1f5f9; text-align: left;">
-                <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
-                <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาส่งบุคคลภายนอก (+50%)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{external_wholesale_calc}}</td>
-            </tr>
-            <tr>
-                <td style="padding: 4px 6px; border: 1px solid #334155;">บวกส่วนลดร้านค้า (40%)</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">{{external_discount_calc}}</td>
-            </tr>
-            <tr style="background-color: #e0f2fe; font-weight: bold;">
-                <td style="padding: 4px 6px; border: 1px solid #334155; color: #0369a1;">ราคาปกตั้งขาย</td>
-                <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #0369a1;">{{external_cover_calc}}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- ตารางที่ 5: สรุปราคาจำหน่าย -->
-    <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
-        สรุปราคาจําหน่าย
-    </div>
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px; text-align: center; table-layout: fixed;">
-        <thead>
-            <tr style="background-color: #f1f5f9; font-weight: bold;">
-                <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%;">ราคาคำนวณส่งคณะ</th>
-                <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%;">ราคาคำนวณขาย นศ.</th>
-                <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%;">ราคาคำนวณปกบุคคลนอก</th>
-                <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%; background-color: #d1fae5; color: #065f46;">ราคาขายจริง นศ.</th>
-                <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%; background-color: #e0f2fe; color: #075985;">ราคาขายจริงบุคคลภายนอก</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="font-weight: bold; font-size: 10.5px;">
-                <td style="padding: 5px 3px; border: 1px solid #334155;">{{summary_faculty_wholesale}}</td>
-                <td style="padding: 5px 3px; border: 1px solid #334155;">{{summary_student_price}}</td>
-                <td style="padding: 5px 3px; border: 1px solid #334155;">{{summary_external_cover}}</td>
-                <td style="padding: 5px 3px; border: 1px solid #334155; color: #047857; background-color: #ecfdf5;">{{summary_actual_student}}</td>
-                <td style="padding: 5px 3px; border: 1px solid #334155; color: #0369a1; background-color: #f0f9ff;">{{summary_actual_public}}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div style="font-size: 8.5px; color: #64748b; margin-top: 3px; margin-bottom: 8px;">
-        * ราคาขายจริง นศ. และ ราคาขายจริงบุคคลภานออก บางกรณีอาจปัดเศษเป็นจำนวนเต็ม เพื่อให้ง่ายต่อการจัดจำหน่าย
-    </div>
-
-    <div style="margin-top: 8px; text-align: left; font-size: 8.5px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 3px;">
-        พิมพ์จากระบบ TextCalc Engine | วันที่พิมพ์เอกสาร: {{print_date}}
-    </div>
-</div>
+</body>
+</html>

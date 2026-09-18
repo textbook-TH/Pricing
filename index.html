@@ -1389,7 +1389,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันเชื่อมต่อไปยัง template.html เพื่อเปิดหน้าเทมเพลตสำหรับพิมพ์ PDF
+        // ฟังก์ชันเชื่อมต่อไปยัง template.html เพื่อดาวน์โหลดเป็น PDF
         // ==========================================
         function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
@@ -1398,9 +1398,16 @@
                 return;
             }
 
+            // บันทึกข้อมูลรายการหนังสือลง sessionStorage ก่อนเปิดหน้า template.html
+            try {
+                sessionStorage.setItem('selectedBookData', JSON.stringify(book));
+            } catch (err) {
+                console.error('Error saving to sessionStorage:', err);
+            }
+
             showToast('กำลังเตรียมข้อมูลเอกสาร PDF...', 'info');
 
-            // เปิด template.html โดยส่ง id ผ่าน Query Parameter
+            // เปิด template.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
             const printWindow = window.open(`template.html?id=${encodeURIComponent(book.id)}`, '_blank');
             if (printWindow) {
                 printWindow.focus();

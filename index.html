@@ -170,7 +170,7 @@
                 </div>
                 
                 <!-- Filter Dropdowns Grid -->
-                <div class="grid grid-cols-2 sm:flex sm:items-center sm:gap-2 gap-1.5">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:flex sm:items-center sm:gap-2">
                     <select id="publicYearFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">📅 ทุกปี</option>
@@ -191,6 +191,7 @@
                         <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
                     </select>
 
+                    <!-- เพิ่มตัวกรองค้นหา ต่อจาก ทุกสถานะ -->
                     <select id="publicSortFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">📌 ทุกรายการ</option>
@@ -348,7 +349,7 @@
                         </div>
 
                         <!-- Filters Grid -->
-                        <div class="grid grid-cols-2 sm:flex sm:items-center sm:gap-2 gap-1.5">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:flex sm:items-center sm:gap-2">
                             <select id="adminYearFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                                 <option value="ALL">📅 ทุกปี</option>
                             </select>
@@ -366,6 +367,7 @@
                                 <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
                             </select>
 
+                            <!-- เพิ่มตัวกรองค้นหา ต่อจาก ทุกสถานะ -->
                             <select id="adminSortFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                                 <option value="ALL">📌 ทุกรายการ</option>
                                 <option value="LATEST_PRINT">พิมพ์ล่าสุด</option>
@@ -724,7 +726,7 @@
                 <button onclick="closeModal('modalDeleteConfirm')" class="px-4 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-lg hover:bg-slate-200 transition">
                     ยกเลิก
                 </button>
-                <button id="btnConfirmDelete" onclick="handleDelete()" class="px-4 py-1.5 bg-rose-600 text-white text-xs font-medium rounded-lg hover:bg-rose-700 transition">
+                <button id="btnConfirmDelete" class="px-4 py-1.5 bg-rose-600 text-white text-xs font-medium rounded-lg hover:bg-rose-700 transition">
                     ยืนยันลบข้อมูล
                 </button>
             </div>
@@ -906,32 +908,6 @@
                 if (codeB) return 1;
                 return new Date(b.created_at || 0) - new Date(a.created_at || 0);
             });
-        }
-
-        /**
-         * ฟังก์ชันเรียงลำดับตามตัวกรอง (ทุกรายการ, พิมพ์ล่าสุด, แก้ไขล่าสุด)
-         */
-        function applySortFilter(books, sortType) {
-            if (sortType === 'LATEST_PRINT') {
-                return books.sort((a, b) => {
-                    const dateA = new Date(a.calc_date || a.created_at || 0).getTime();
-                    const dateB = new Date(b.calc_date || b.created_at || 0).getTime();
-                    if (dateA !== dateB) return dateB - dateA;
-                    const edA = parseInt(a.edition) || 0;
-                    const edB = parseInt(b.edition) || 0;
-                    if (edA !== edB) return edB - edA;
-                    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-                });
-            } else if (sortType === 'LATEST_EDIT') {
-                return books.sort((a, b) => {
-                    const timeA = new Date(a.updated_at || a.created_at || 0).getTime();
-                    const timeB = new Date(b.updated_at || b.created_at || 0).getTime();
-                    if (timeA !== timeB) return timeB - timeA;
-                    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-                });
-            } else {
-                return sortBooksByCodeDesc(books);
-            }
         }
 
         function escapeHtml(str) {
@@ -1193,7 +1169,22 @@
                 return matchSearch && matchYear && matchDept && matchStatus;
             });
 
-            applySortFilter(publicFilteredBooks, sort);
+            if (sort === 'LATEST_PRINT') {
+                publicFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.calc_date || a.created_at || 0).getTime();
+                    const dateB = new Date(b.calc_date || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else if (sort === 'LATEST_EDIT') {
+                publicFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.updated_at || a.created_at || 0).getTime();
+                    const dateB = new Date(b.updated_at || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else {
+                sortBooksByCodeDesc(publicFilteredBooks);
+            }
+
             renderPublicTable(publicFilteredBooks);
         }
 
@@ -1219,7 +1210,22 @@
                 return matchSearch && matchYear && matchDept && matchStatus;
             });
 
-            applySortFilter(adminFilteredBooks, sort);
+            if (sort === 'LATEST_PRINT') {
+                adminFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.calc_date || a.created_at || 0).getTime();
+                    const dateB = new Date(b.calc_date || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else if (sort === 'LATEST_EDIT') {
+                adminFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.updated_at || a.created_at || 0).getTime();
+                    const dateB = new Date(b.updated_at || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else {
+                sortBooksByCodeDesc(adminFilteredBooks);
+            }
+
             renderAdminTable(adminFilteredBooks);
         }
 
@@ -1547,69 +1553,258 @@
             renderPaginationControls(paginationContainer, adminCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changeAdminPage');
         }
 
-        function renderPaginationControls(container, currentPage, totalPages, totalItems, startIndex, pageCount, changePageFuncName) {
+        function renderPaginationControls(container, currentPage, totalPages, totalItems, startIndex, pageItemCount, pageChangeFuncName) {
             if (!container) return;
+
             if (totalItems <= ITEMS_PER_PAGE) {
                 container.classList.add('hidden');
                 return;
             }
+
             container.classList.remove('hidden');
 
             const startNum = startIndex + 1;
-            const endNum = startIndex + pageCount;
+            const endNum = startIndex + pageItemCount;
 
-            let pageBtns = '';
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === currentPage) {
-                    pageBtns += `<button class="w-7 h-7 sm:w-8 sm:h-8 bg-amber-500 text-slate-950 font-bold rounded-lg text-xs shadow-sm">${i}</button>`;
-                } else {
-                    pageBtns += `<button onclick="${changePageFuncName}(${i})" class="w-7 h-7 sm:w-8 sm:h-8 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg text-xs transition">${i}</button>`;
+            let paginationHtml = `
+                <div class="text-slate-500 text-xs font-medium">
+                    แสดง <span class="font-bold text-slate-800">${startNum}</span> ถึง <span class="font-bold text-slate-800">${endNum}</span> จากทั้งหมด <span class="font-bold text-slate-800">${totalItems}</span> รายการ
+                </div>
+                <div class="flex items-center space-x-1">
+                    <button onclick="${pageChangeFuncName}(1)" ${currentPage === 1 ? 'disabled class="px-2 py-1 rounded bg-slate-100 text-slate-300 cursor-not-allowed"' : 'class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition"'} title="หน้าแรก">
+                        <i class="fa-solid fa-angles-left text-xs"></i>
+                    </button>
+                    <button onclick="${pageChangeFuncName}(${currentPage - 1})" ${currentPage === 1 ? 'disabled class="px-2 py-1 rounded bg-slate-100 text-slate-300 cursor-not-allowed"' : 'class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition"'} title="หน้าก่อนหน้า">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+            `;
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                paginationHtml += `<button onclick="${pageChangeFuncName}(1)" class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-xs font-medium">1</button>`;
+                if (startPage > 2) {
+                    paginationHtml += `<span class="px-1 text-slate-400">...</span>`;
                 }
             }
 
-            const prevDisabled = currentPage === 1 ? 'disabled class="opacity-50 cursor-not-allowed text-slate-400"' : `onclick="${changePageFuncName}(${currentPage - 1})" class="text-slate-700 hover:text-amber-600"`;
-            const nextDisabled = currentPage === totalPages ? 'disabled class="opacity-50 cursor-not-allowed text-slate-400"' : `onclick="${changePageFuncName}(${currentPage + 1})" class="text-slate-700 hover:text-amber-600"`;
+            for (let p = startPage; p <= endPage; p++) {
+                if (p === currentPage) {
+                    paginationHtml += `<button class="px-2.5 py-1 rounded bg-kmitl-orange text-white font-bold text-xs shadow-sm">${p}</button>`;
+                } else {
+                    paginationHtml += `<button onclick="${pageChangeFuncName}(${p})" class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-xs font-medium">${p}</button>`;
+                }
+            }
 
-            container.innerHTML = `
-                <div class="text-slate-500 text-xs">
-                    แสดง <span class="font-medium text-slate-800">${startNum}</span> ถึง <span class="font-medium text-slate-800">${endNum}</span> จาก <span class="font-medium text-slate-800">${totalItems}</span> รายการ
-                </div>
-                <div class="flex items-center space-x-1.5">
-                    <button ${prevDisabled} class="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs transition flex items-center gap-1">
-                        <i class="fa-solid fa-chevron-left text-[10px]"></i> ก่อนหน้า
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHtml += `<span class="px-1 text-slate-400">...</span>`;
+                }
+                paginationHtml += `<button onclick="${pageChangeFuncName}(${totalPages})" class="px-2.5 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-xs font-medium">${totalPages}</button>`;
+            }
+
+            paginationHtml += `
+                    <button onclick="${pageChangeFuncName}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled class="px-2 py-1 rounded bg-slate-100 text-slate-300 cursor-not-allowed"' : 'class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition"'} title="หน้าถัดไป">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
                     </button>
-                    <div class="flex space-x-1">${pageBtns}</div>
-                    <button ${nextDisabled} class="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs transition flex items-center gap-1">
-                        ถัดไป <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <button onclick="${pageChangeFuncName}(${totalPages})" ${currentPage === totalPages ? 'disabled class="px-2 py-1 rounded bg-slate-100 text-slate-300 cursor-not-allowed"' : 'class="px-2 py-1 rounded bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition"'} title="หน้าสุดท้าย">
+                        <i class="fa-solid fa-angles-right text-xs"></i>
                     </button>
                 </div>
             `;
+
+            container.innerHTML = paginationHtml;
         }
 
         function changePublicPage(page) {
             publicCurrentPage = page;
             renderPublicTable(publicFilteredBooks);
+            window.scrollTo({ top: 300, behavior: 'smooth' });
         }
 
         function changeAdminPage(page) {
             adminCurrentPage = page;
             renderAdminTable(adminFilteredBooks);
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+
+        function downloadPDFById(id) {
+            const book = allBooks.find(b => String(b.id) === String(id));
+            if (!book) return;
+
+            const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
+            const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
+                                  ? book.actual_student_price 
+                                  : book.student_price_rounded;
+            const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
+                                 ? book.actual_public_price 
+                                 : book.external_cover_rounded;
+
+            const printQty = parseFloat(book.print_quantity) || 0;
+            const unitCost = parseFloat(book.unit_cost) || 0;
+            const prodCost = book.production_cost || (printQty * unitCost);
+            const vatAmt = book.vat_amount || (prodCost * 0.07);
+            const totalCostVat = book.total_cost_with_vat || (prodCost + vatAmt);
+
+            const costPerBook = printQty > 0 ? (totalCostVat / printQty) : 0;
+            const facultyWholesaleCalc = costPerBook * 1.35;
+            const facultyWholesaleRounded = book.wholesale_faculty_rounded || Math.ceil((facultyWholesaleCalc) / 5) * 5;
+            const studentPriceCalc = facultyWholesaleRounded * 1.20;
+
+            const externalWholesaleCalc = facultyWholesaleRounded * 1.50;
+            const externalDiscountCalc = externalWholesaleCalc * 0.40;
+            const externalCoverCalc = book.external_cover_rounded || Math.ceil((externalWholesaleCalc * 1.40) / 5) * 5;
+
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.padding = '14px 20px';
+            pdfContainer.style.fontFamily = "'Sarabun', sans-serif";
+            pdfContainer.style.color = '#1e293b';
+            pdfContainer.style.backgroundColor = '#ffffff';
+            pdfContainer.style.boxSizing = 'border-box';
+            pdfContainer.style.maxHeight = '275mm';
+            pdfContainer.style.pageBreakInside = 'avoid';
+
+            pdfContainer.innerHTML = `
+                <!-- ส่วนหัวโลโก้ -->
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <img src="https://raw.githubusercontent.com/textbook-TH/TextCalc-System/main/logoSchool.png" 
+                         crossorigin="anonymous" 
+                         alt="Logo" 
+                         style="height: 75px; width: auto; margin: 0 auto 6px auto; display: block;" />
+                    <h2 style="font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: bold; margin: 0; color: #1e293b; line-height: 1.2;">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h2>
+                    <h3 style="font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 500; margin: 2px 0 0 0; color: #475569;">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h3>
+                </div>
+
+                <!-- ตารางที่ 1: ข้อมูลทั่วไปหนังสือ -->
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10.5px; table-layout: fixed;">
+                    <tr>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ชื่อหนังสือ:</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; width: 80%; font-weight: bold; color: #0f172a;" colspan="3">${escapeHtml(book.title || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ผู้แต่ง / อาจารย์</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; width: 30%;">${escapeHtml(academicPrefix + (book.author || '-'))}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ภาควิชา</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; width: 30%;">${escapeHtml(book.department || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัสหนังสือ</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.book_code || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">พิมพ์ครั้งที่</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">ครั้งที่ ${book.edition || 1}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">เลข ISBN</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.isbn || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัส วศ.สจล.</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.kmitl_code || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จำนวนหน้า</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${book.pages || 0} หน้า</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จํานวนพิมพ์</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${(book.print_quantity || 0).toLocaleString()} เล่ม</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">วันที่คำนวณ</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.calc_date || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">สถานะ:</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; font-weight: 600; color: #e05a10;">${escapeHtml(book.status || '-')}</td>
+                    </tr>
+                </table>
+
+                <!-- ตารางที่ 2: รายละเอียดต้นทุนและการคำนวณราคา -->
+                <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
+                    รายละเอียดต้นทุนและการคำนวณราคา
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9; text-align: left;">
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(unitCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ต้นทุนรวม (ก่อน VAT)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(prodCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ภาษีมูลค่าเพิ่ม VAT 7%</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(vatAmt).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr style="background-color: #fff7ed; font-weight: bold;">
+                            <td style="padding: 4px 6px; border: 1px solid #334155; color: #c2410c;">ยอดรวมทั้งสิ้น (รวม VAT)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #c2410c;">${Number(totalCostVat).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ตารางที่ 3: สรุปราคาจำหน่าย -->
+                <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
+                    สรุปราคาจำหน่าย
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9; text-align: left;">
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">ประเภทราคา</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">ราคาต่อเล่ม (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาส่งคณะ (บวกกำไร 35% ปัดเศษ 5 บาท)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleRounded).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาคำนวณสำหรับนักศึกษา (ส่งคณะ + 20%)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(studentPriceCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr style="background-color: #ecfdf5; font-weight: bold; color: #047857;">
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาขายจริง สำหรับนักศึกษา</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(actualStudent).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาปกสำหรับบุคคลภายนอก (ส่วนลด 40%)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(externalCoverCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr style="background-color: #f8fafc; font-weight: bold; color: #0f172a;">
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาขายจริง สำหรับบุคคลภายนอก</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(actualPublic).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                ${book.remarks ? `
+                <div style="margin-top: 6px; font-size: 10px; color: #475569; border: 1px border-dashed #cbd5e1; padding: 4px 8px; border-radius: 4px;">
+                    <strong>หมายเหตุ:</strong> ${escapeHtml(book.remarks)}
+                </div>` : ''}
+            `;
+
+            const opt = {
+                margin: [8, 8, 8, 8],
+                filename: `Textbook_Costing_${book.book_code || book.id}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(pdfContainer).save();
         }
 
         function openPublicDetailModal(book) {
-            if (!book) return;
-            const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
-            
             document.getElementById('detailTitle').innerText = book.title || '-';
-            document.getElementById('detailAuthor').innerText = (academicPrefix + (book.author || '-'));
+            document.getElementById('detailAuthor').innerText = (book.academic_title ? book.academic_title + ' ' : '') + (book.author || '-');
             document.getElementById('detailDepartment').innerText = book.department || '-';
             document.getElementById('detailBookCode').innerText = book.book_code || '-';
-            document.getElementById('detailEditionPages').innerText = `พิมพ์ครั้งที่ ${book.edition || 1} (${book.pages || 0} หน้า)`;
+            document.getElementById('detailEditionPages').innerText = `พิมพ์ครั้งที่ ${book.edition || 1} / ${book.pages || 0} หน้า`;
             document.getElementById('detailIsbn').innerText = book.isbn || '-';
             document.getElementById('detailKmitlCode').innerText = book.kmitl_code || '-';
-
-            const badgeContainer = document.getElementById('detailStatusBadge');
-            badgeContainer.innerHTML = getStatusBadge(book.status);
 
             const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
                                   ? book.actual_student_price 
@@ -1618,131 +1813,114 @@
                                  ? book.actual_public_price 
                                  : book.external_cover_rounded;
 
-            document.getElementById('detailActualStudentPrice').innerText = actualStudent ? `${Number(actualStudent).toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿` : '-';
-            document.getElementById('detailActualPublicPrice').innerText = actualPublic ? `${Number(actualPublic).toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿` : '-';
+            document.getElementById('detailActualStudentPrice').innerText = actualStudent ? `${Number(actualStudent).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ฿` : '-';
+            document.getElementById('detailActualPublicPrice').innerText = actualPublic ? `${Number(actualPublic).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ฿` : '-';
 
-            const remarksBox = document.getElementById('detailRemarksContainer');
-            if (book.remarks && book.remarks.trim().length > 0) {
-                document.getElementById('detailRemarks').innerText = book.remarks;
-                remarksBox.classList.remove('hidden');
-            } else {
-                remarksBox.classList.add('hidden');
+            const badge = document.getElementById('detailStatusBadge');
+            if (badge) {
+                badge.innerHTML = getStatusBadge(book.status);
             }
 
-            const createdDateStr = book.created_at ? new Date(book.created_at).toLocaleDateString('th-TH') : '';
-            document.getElementById('detailCreatedAt').innerText = createdDateStr ? `วันที่บันทึก: ${createdDateStr}` : '';
+            const remarksContainer = document.getElementById('detailRemarksContainer');
+            const remarksText = document.getElementById('detailRemarks');
+            if (book.remarks && book.remarks.trim()) {
+                remarksText.innerText = book.remarks;
+                remarksContainer.classList.remove('hidden');
+            } else {
+                remarksContainer.classList.add('hidden');
+            }
+
+            const createdAtText = document.getElementById('detailCreatedAt');
+            if (createdAtText) {
+                const dt = book.created_at ? new Date(book.created_at).toLocaleDateString('th-TH') : '-';
+                createdAtText.innerText = `วันที่บันทึก: ${dt}`;
+            }
 
             openModal('modalPublicDetail');
         }
 
-        function openFormModal(book = null) {
+        function openFormModal() {
+            document.getElementById('textbookForm').reset();
+            document.getElementById('formBookId').value = '';
+            document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
             isManualActualPriceEdit = false;
-            const form = document.getElementById('textbookForm');
-            form.reset();
 
-            if (book) {
-                document.getElementById('formModalTitle').innerText = 'แก้ไขรายการตำราเรียน';
-                document.getElementById('formBookId').value = book.id || '';
-                document.getElementById('formCalcDate').value = book.calc_date || '';
-                document.getElementById('formTitle').value = book.title || '';
-                document.getElementById('formAcademicTitle').value = book.academic_title || '';
-                document.getElementById('formAuthor').value = book.author || '';
-                document.getElementById('formDepartment').value = book.department || '';
-                document.getElementById('formBookCode').value = book.book_code || '';
-                document.getElementById('formKmitlCode').value = book.kmitl_code || '';
-                document.getElementById('formIsbn').value = book.isbn || '';
-                document.getElementById('formStatus').value = book.status || 'ร่าง';
-                document.getElementById('formEdition').value = book.edition || 1;
-                document.getElementById('formPages').value = book.pages || 100;
-                document.getElementById('formPrintQuantity').value = book.print_quantity || 100;
-                document.getElementById('formUnitCost').value = book.unit_cost || 0;
-                document.getElementById('formRemarks').value = book.remarks || '';
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('formCalcDate').value = today;
 
-                calculatePricing();
-
-                if (book.actual_student_price !== null && book.actual_student_price !== undefined) {
-                    document.getElementById('formActualStudentPrice').value = Number(book.actual_student_price).toFixed(2);
-                }
-                if (book.actual_public_price !== null && book.actual_public_price !== undefined) {
-                    document.getElementById('formActualPublicPrice').value = Number(book.actual_public_price).toFixed(2);
-                }
-                isManualActualPriceEdit = true;
-            } else {
-                document.getElementById('formModalTitle').innerText = 'เพิ่มรายการตำราเรียนใหม่';
-                document.getElementById('formBookId').value = '';
-                document.getElementById('formCalcDate').value = new Date().toISOString().split('T')[0];
-                document.getElementById('formEdition').value = 1;
-                document.getElementById('formPages').value = 100;
-                document.getElementById('formPrintQuantity').value = 100;
-                document.getElementById('formUnitCost').value = '';
-                document.getElementById('formProductionCost').value = '0.00';
-                document.getElementById('formVatAmount').value = '0.00';
-                document.getElementById('formTotalCostWithVat').value = '0.00';
-                document.getElementById('formWholesaleFaculty').value = '0.00';
-                document.getElementById('formStudentPrice').value = '0.00';
-                document.getElementById('formExternalCover').value = '0.00';
-                document.getElementById('formActualStudentPrice').value = '';
-                document.getElementById('formActualPublicPrice').value = '';
-            }
-
+            calculatePricing();
             openModal('modalAdminForm');
         }
 
         function openFormModalById(id) {
-            const book = allBooks.find(b => b.id === id);
-            if (book) openFormModal(book);
+            const book = allBooks.find(b => String(b.id) === String(id));
+            if (!book) return;
+
+            document.getElementById('textbookForm').reset();
+            document.getElementById('formBookId').value = book.id;
+            document.getElementById('formModalTitle').innerText = 'แก้ไขรายการตำราเรียน';
+
+            document.getElementById('formCalcDate').value = book.calc_date || '';
+            document.getElementById('formTitle').value = book.title || '';
+            document.getElementById('formAcademicTitle').value = book.academic_title || '';
+            document.getElementById('formAuthor').value = book.author || '';
+            document.getElementById('formDepartment').value = book.department || '';
+            document.getElementById('formBookCode').value = book.book_code || '';
+            document.getElementById('formKmitlCode').value = book.kmitl_code || '';
+            document.getElementById('formIsbn').value = book.isbn || '';
+            document.getElementById('formStatus').value = book.status || 'ร่าง';
+            document.getElementById('formEdition').value = book.edition || 1;
+            document.getElementById('formPages').value = book.pages || 0;
+            document.getElementById('formPrintQuantity').value = book.print_quantity || '';
+            document.getElementById('formUnitCost').value = book.unit_cost || '';
+
+            isManualActualPriceEdit = true;
+            document.getElementById('formActualStudentPrice').value = book.actual_student_price !== null && book.actual_student_price !== undefined ? book.actual_student_price : '';
+            document.getElementById('formActualPublicPrice').value = book.actual_public_price !== null && book.actual_public_price !== undefined ? book.actual_public_price : '';
+
+            document.getElementById('formRemarks').value = book.remarks || '';
+
+            calculatePricing();
+            openModal('modalAdminForm');
         }
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const saveBtn = document.getElementById('btnSaveSubmit');
-            saveBtn.disabled = true;
-            saveBtn.innerText = 'กำลังบันทึก...';
+            const btnSubmit = document.getElementById('btnSaveSubmit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = 'กำลังบันทึก...';
 
             try {
                 const bookId = document.getElementById('formBookId').value;
-                const calcDate = document.getElementById('formCalcDate').value;
-                const title = document.getElementById('formTitle').value.trim();
-                const academicTitle = document.getElementById('formAcademicTitle').value.trim();
-                const author = document.getElementById('formAuthor').value.trim();
-                const department = document.getElementById('formDepartment').value.trim();
-                const bookCode = document.getElementById('formBookCode').value.trim();
-                const kmitlCode = document.getElementById('formKmitlCode').value.trim();
-                const isbn = document.getElementById('formIsbn').value.trim();
-                const status = document.getElementById('formStatus').value;
-                const edition = parseInt(document.getElementById('formEdition').value) || 1;
-                const pages = parseInt(document.getElementById('formPages').value) || 1;
                 const printQty = parseFloat(document.getElementById('formPrintQuantity').value) || 0;
                 const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
-                const remarks = document.getElementById('formRemarks').value.trim();
-
-                const actualStudentPrice = parseFloat(document.getElementById('formActualStudentPrice').value) || 0;
-                const actualPublicPrice = parseFloat(document.getElementById('formActualPublicPrice').value) || 0;
 
                 const productionCost = printQty * unitCost;
                 const vatAmount = productionCost * 0.07;
                 const totalCostWithVat = productionCost + vatAmount;
 
-                const costPerBook = totalCostWithVat / printQty;
+                const costPerBook = printQty > 0 ? (totalCostWithVat / printQty) : 0;
                 const wholesaleFacultyCalc = costPerBook * 1.35;
                 const wholesaleFacultyRounded = Math.ceil(wholesaleFacultyCalc / 5) * 5;
+
                 const studentPriceCalc = wholesaleFacultyRounded * 1.20;
                 const studentPriceRounded = Math.ceil(studentPriceCalc / 5) * 5;
+
                 const externalWholesaleCalc = wholesaleFacultyRounded * 1.50;
                 const externalCoverRounded = Math.ceil((externalWholesaleCalc * 1.40) / 5) * 5;
 
                 const payload = {
-                    calc_date: calcDate,
-                    title,
-                    academic_title: academicTitle,
-                    author,
-                    department,
-                    book_code: bookCode,
-                    kmitl_code: kmitlCode,
-                    isbn,
-                    status,
-                    edition,
-                    pages,
+                    calc_date: document.getElementById('formCalcDate').value,
+                    title: document.getElementById('formTitle').value.trim(),
+                    academic_title: document.getElementById('formAcademicTitle').value.trim(),
+                    author: document.getElementById('formAuthor').value.trim(),
+                    department: document.getElementById('formDepartment').value.trim(),
+                    book_code: document.getElementById('formBookCode').value.trim(),
+                    kmitl_code: document.getElementById('formKmitlCode').value.trim(),
+                    isbn: document.getElementById('formIsbn').value.trim(),
+                    status: document.getElementById('formStatus').value,
+                    edition: parseInt(document.getElementById('formEdition').value) || 1,
+                    pages: parseInt(document.getElementById('formPages').value) || 0,
                     print_quantity: printQty,
                     unit_cost: unitCost,
                     production_cost: productionCost,
@@ -1751,219 +1929,67 @@
                     wholesale_faculty_rounded: wholesaleFacultyRounded,
                     student_price_rounded: studentPriceRounded,
                     external_cover_rounded: externalCoverRounded,
-                    actual_student_price: actualStudentPrice,
-                    actual_public_price: actualPublicPrice,
-                    remarks,
+                    actual_student_price: parseFloat(document.getElementById('formActualStudentPrice').value) || 0,
+                    actual_public_price: parseFloat(document.getElementById('formActualPublicPrice').value) || 0,
+                    remarks: document.getElementById('formRemarks').value.trim(),
                     updated_at: new Date().toISOString()
                 };
 
-                let res;
                 if (bookId) {
-                    res = await supabaseClient.from('textbooks').update(payload).eq('id', bookId);
+                    const { error } = await supabaseClient
+                        .from('textbooks')
+                        .update(payload)
+                        .eq('id', bookId);
+                    if (error) throw error;
+                    showToast('บันทึกการแก้ไขเรียบร้อยแล้ว', 'success');
                 } else {
-                    res = await supabaseClient.from('textbooks').insert([payload]);
+                    const { error } = await supabaseClient
+                        .from('textbooks')
+                        .insert([payload]);
+                    if (error) throw error;
+                    showToast('เพิ่มรายการตำราเรียนเรียบร้อยแล้ว', 'success');
                 }
 
-                if (res.error) throw res.error;
-
                 closeModal('modalAdminForm');
-                showToast('บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
                 await loadTextbooksData();
+
             } catch (err) {
-                console.error('Save error:', err);
-                showToast('เกิดข้อผิดพลาดในการบันทึก: ' + err.message, 'error');
+                showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
             } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerText = 'บันทึกข้อมูล';
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = 'บันทึกข้อมูล';
             }
         }
 
         function confirmDeleteById(id) {
             deleteTargetId = id;
-            const book = allBooks.find(b => b.id === id);
+            const book = allBooks.find(b => String(b.id) === String(id));
             const titleElem = document.getElementById('deleteTargetTitle');
-            if (book && titleElem) {
-                titleElem.innerText = `ต้องการลบ "${book.title}" หรือไม่?`;
+            if (titleElem && book) {
+                titleElem.innerText = `คุณต้องการลบ "${book.title}" ออกจากระบบหรือไม่?`;
+            }
+            const btnConfirm = document.getElementById('btnConfirmDelete');
+            if (btnConfirm) {
+                btnConfirm.onclick = () => deleteBook(id);
             }
             openModal('modalDeleteConfirm');
         }
 
-        async function handleDelete() {
-            if (!deleteTargetId) return;
-            const btn = document.getElementById('btnConfirmDelete');
-            btn.disabled = true;
-
+        async function deleteBook(id) {
             try {
-                const { error } = await supabaseClient.from('textbooks').delete().eq('id', deleteTargetId);
+                const { error } = await supabaseClient
+                    .from('textbooks')
+                    .delete()
+                    .eq('id', id);
+
                 if (error) throw error;
 
+                showToast('ลบรายการสำเร็จ', 'success');
                 closeModal('modalDeleteConfirm');
-                showToast('ลบข้อมูลเรียบร้อยแล้ว', 'success');
-                deleteTargetId = null;
                 await loadTextbooksData();
             } catch (err) {
-                showToast('ไม่สามารถลบข้อมูลได้: ' + err.message, 'error');
-            } finally {
-                btn.disabled = false;
+                showToast('ไม่สามารถลบรายการได้: ' + err.message, 'error');
             }
-        }
-
-        function downloadPDFById(id) {
-            const book = allBooks.find(b => b.id === id);
-            if (!book) {
-                showToast('ไม่พบข้อมูลตำราเรียนที่ต้องการดาวน์โหลด', 'error');
-                return;
-            }
-
-            const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
-            const printQty = parseFloat(book.print_quantity) || 0;
-            const unitCost = parseFloat(book.unit_cost) || 0;
-            const productionCost = printQty * unitCost;
-            const vatAmount = productionCost * 0.07;
-            const totalCostWithVat = productionCost + vatAmount;
-
-            const wholesaleFaculty = book.wholesale_faculty_rounded || 0;
-            const studentPrice = book.student_price_rounded || 0;
-            const externalCover = book.external_cover_rounded || 0;
-
-            const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
-                                  ? book.actual_student_price 
-                                  : studentPrice;
-            const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
-                                 ? book.actual_public_price 
-                                 : externalCover;
-
-            const pdfContainer = document.createElement('div');
-            pdfContainer.style.padding = '20px';
-            pdfContainer.style.fontFamily = "'Sarabun', sans-serif";
-            pdfContainer.style.color = '#1e293b';
-            pdfContainer.style.backgroundColor = '#ffffff';
-
-            pdfContainer.innerHTML = `
-                <div style="border: 2px solid #E05A10; padding: 24px; border-radius: 12px; max-w: 800px; margin: 0 auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #E05A10; padding-bottom: 16px; margin-bottom: 20px;">
-                        <div>
-                            <h2 style="font-family: 'Kanit', sans-serif; color: #E05A10; margin: 0; font-size: 22px; font-weight: bold;">TextCalc Engine</h2>
-                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">ใบคำนวณราคาและต้นทุนสิ่งพิมพ์ คณะวิศวกรรมศาสตร์ สจล.</p>
-                        </div>
-                        <div style="text-align: right; font-size: 12px; color: #475569;">
-                            <p style="margin: 0;"><b>รหัสเอกสาร:</b> ${escapeHtml(book.book_code || '-')}</p>
-                            <p style="margin: 4px 0 0 0;"><b>วันที่คำนวณ:</b> ${escapeHtml(book.calc_date || '-')}</p>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 20px; background-color: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <h3 style="font-family: 'Kanit', sans-serif; font-size: 16px; margin: 0 0 12px 0; color: #0f172a; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;">รายละเอียดตำราเรียน</h3>
-                        <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 4px 0; font-weight: bold; width: 130px; color: #475569;">ชื่อหนังสือ:</td>
-                                <td style="padding: 4px 0; font-weight: bold; color: #0f172a;" colspan="3">${escapeHtml(book.title || '-')}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 4px 0; font-weight: bold; color: #475569;">ผู้แต่ง / อาจารย์:</td>
-                                <td style="padding: 4px 0; color: #1e293b;">${escapeHtml(academicPrefix + (book.author || '-'))}</td>
-                                <td style="padding: 4px 0; font-weight: bold; width: 110px; color: #475569;">ภาควิชา:</td>
-                                <td style="padding: 4px 0; color: #1e293b;">${escapeHtml(book.department || '-')}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 4px 0; font-weight: bold; color: #475569;">รหัส วศ.สจล.:</td>
-                                <td style="padding: 4px 0; color: #1e293b;">${escapeHtml(book.kmitl_code || '-')}</td>
-                                <td style="padding: 4px 0; font-weight: bold; color: #475569;">เลข ISBN:</td>
-                                <td style="padding: 4px 0; color: #1e293b;">${escapeHtml(book.isbn || '-')}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 4px 0; font-weight: bold; color: #475569;">พิมพ์ครั้งที่ / หน้า:</td>
-                                <td style="padding: 4px 0; color: #1e293b;">ครั้งที่ ${book.edition || 1} (${book.pages || 0} หน้า)</td>
-                                <td style="padding: 4px 0; font-weight: bold; color: #475569;">สถานะ:</td>
-                                <td style="padding: 4px 0; color: #1e293b;">${escapeHtml(book.status || '-')}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div style="margin-bottom: 20px;">
-                        <h3 style="font-family: 'Kanit', sans-serif; font-size: 16px; margin: 0 0 10px 0; color: #0f172a;">สรุปต้นทุนและการผลิต</h3>
-                        <table style="width: 100%; font-size: 13px; border-collapse: collapse; border: 1px solid #cbd5e1;">
-                            <thead style="background-color: #f1f5f9; font-family: 'Kanit', sans-serif;">
-                                <tr>
-                                    <th style="padding: 8px; border: 1px solid #cbd5e1; text-align: left;">รายการ</th>
-                                    <th style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">จำนวน / ราคา</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">จำนวนพิมพ์ (เล่ม)</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">${printQty.toLocaleString()} เล่ม</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">${unitCost.toLocaleString('en-US', { minimumFractionDigits: 2 })} บาท</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">ต้นทุนรวม (ก่อน VAT)</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">${productionCost.toLocaleString('en-US', { minimumFractionDigits: 2 })} บาท</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">ภาษีมูลค่าเพิ่ม VAT 7%</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">${vatAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} บาท</td>
-                                </tr>
-                                <tr style="background-color: #f8fafc; font-weight: bold;">
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; color: #0f172a;">ยอดรวมทั้งสิ้น (รวม VAT)</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; text-align: right; color: #E05A10;">${totalCostWithVat.toLocaleString('en-US', { minimumFractionDigits: 2 })} บาท</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div style="margin-bottom: 20px; background-color: #fff7ed; padding: 16px; border-radius: 8px; border: 1px solid #ffedd5;">
-                        <h3 style="font-family: 'Kanit', sans-serif; font-size: 16px; margin: 0 0 10px 0; color: #c44b07;">สรุปราคาจำหน่าย</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
-                            <div style="background-color: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #fed7aa;">
-                                <span style="color: #475569; display: block; font-size: 11px;">ราคาขายส่งส่งคณะ</span>
-                                <span style="font-weight: bold; font-size: 15px; color: #1e293b;">${Number(wholesaleFaculty).toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿</span>
-                            </div>
-                            <div style="background-color: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #bbf7d0;">
-                                <span style="color: #166534; display: block; font-size: 11px; font-weight: bold;">ราคาจำหน่ายจริง นักศึกษา</span>
-                                <span style="font-weight: bold; font-size: 15px; color: #15803d;">${Number(actualStudent).toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿</span>
-                            </div>
-                            <div style="background-color: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #fed7aa;">
-                                <span style="color: #475569; display: block; font-size: 11px;">ราคาตั้งปกบุคคลภายนอก</span>
-                                <span style="font-weight: bold; font-size: 15px; color: #1e293b;">${Number(externalCover).toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿</span>
-                            </div>
-                            <div style="background-color: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
-                                <span style="color: #0f172a; display: block; font-size: 11px; font-weight: bold;">ราคาจำหน่ายจริง บุคคลภายนอก</span>
-                                <span style="font-weight: bold; font-size: 15px; color: #0f172a;">${Number(actualPublic).toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    ${book.remarks ? `
-                    <div style="margin-bottom: 20px; font-size: 12px; color: #475569; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                        <b>หมายเหตุ:</b> ${escapeHtml(book.remarks)}
-                    </div>
-                    ` : ''}
-
-                    <div style="margin-top: 40px; display: flex; justify-content: space-between; text-align: center; font-size: 12px; color: #475569;">
-                        <div style="width: 45%;">
-                            <p style="margin-bottom: 50px;">ลงชื่อ..........................................................<br>(ผู้เสนอคำนวณราคา)</p>
-                            <p>วันที่........./................./............</p>
-                        </div>
-                        <div style="width: 45%;">
-                            <p style="margin-bottom: 50px;">ลงชื่อ..........................................................<br>(ผู้อนุมัติการจัดพิมพ์)</p>
-                            <p>วันที่........./................./............</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            const opt = {
-                margin:       8,
-                filename:     `TextCalc_${book.book_code || 'Document'}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(pdfContainer).save();
         }
     </script>
 </body>

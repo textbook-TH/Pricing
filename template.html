@@ -223,7 +223,7 @@
 </head>
 <body>
 
-    <div class="page-container">
+    <div class="page-container" id="printable-area">
         <div>
             <!-- หัวเอกสาร + โลโก้ -->
             <table class="header-table">
@@ -403,74 +403,89 @@
         </div>
     </div>
 
-    <!-- Script ดึงข้อมูลแบบทำงานอัตโนมัติ -->
+    <!-- Script ดึงข้อมูลและจัดการการแทนค่าแบบสมบูรณ์ 100% -->
     <script>
         const SUPABASE_URL = 'https://glalypgckngfhyoobagk.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_4aW41o5Q_C3Y91gJz_G0Ww';
         
         function formatNum(val) {
+            if (val === null || val === undefined || val === '') return '-';
             const num = parseFloat(val);
             return isNaN(num) ? '-' : num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         async function initTemplate() {
             try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const bookId = urlParams.get('id');
-                const bookCode = urlParams.get('book_code');
+                let data = null;
 
-                if (!bookId && !bookCode) {
-                    console.warn('ไม่พบ ID หรือ Book Code ใน URL');
+                // 1. ตรวจสอบข้อมูลจาก window.printData หรือ SessionStorage (ส่งข้ามจาก index)
+                if (window.printData) {
+                    data = window.printData;
+                } else {
+                    const sessionData = sessionStorage.getItem('currentPrintBook');
+                    const localData = localStorage.getItem('currentPrintBook');
+                    if (sessionData) data = JSON.parse(sessionData);
+                    else if (localData) data = JSON.parse(localData);
+                }
+
+                // 2. ถ้าไม่มีข้อมูลใน Memory ให้ดึงจาก Supabase ด้วย URL Query Parameter
+                if (!data) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const bookId = urlParams.get('id');
+                    const bookCode = urlParams.get('book_code');
+
+                    if (bookId || bookCode) {
+                        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                        let query = _supabase.from('textbooks').select('*');
+
+                        if (bookId) query = query.eq('id', bookId);
+                        else if (bookCode) query = query.eq('book_code', bookCode);
+
+                        const { data: fetchRes, error } = await query.single();
+                        if (!error && fetchRes) {
+                            data = fetchRes;
+                        }
+                    }
+                }
+
+                if (!data) {
+                    console.warn('ไม่พบข้อมูลสำหรับนำมาแสดงผลใน Template');
                     return;
                 }
 
-                const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                let query = _supabase.from('textbooks').select('*');
-
-                if (bookId) {
-                    query = query.eq('id', bookId);
-                } else if (bookCode) {
-                    query = query.eq('book_code', bookCode);
-                }
-
-                const { data, error } = await query.single();
-
-                if (error || !data) {
-                    console.error('ไม่สามารถดึงข้อมูลจาก Supabase ได้:', error);
-                    return;
-                }
-
-                // คำนวณค่าต่างๆ
-                const unitCost = parseFloat(data.unit_cost) || 0;
-                const printQty = parseInt(data.print_quantity) || 1;
-                const totalCostBeforeVat = parseFloat(data.production_cost) || (unitCost * printQty);
-                const vatAmount = parseFloat(data.vat_amount) || (totalCostBeforeVat * 0.07);
-                const totalWithVat = parseFloat(data.total_cost_with_vat) || (totalCostBeforeVat + vatAmount);
+                // การคิดคำนวณและแปลงค่ารองรับ Key ทุกรูปแบบจาก index
+                const unitCost = parseFloat(data.unit_cost || data.unitCost) || 0;
+                const printQty = parseInt(data.print_quantity || data.printQty || data.quantity) || 1;
+                const totalCostBeforeVat = parseFloat(data.production_cost || data.totalCostBeforeVat) || (unitCost * printQty);
+                const vatAmount = parseFloat(data.vat_amount || data.vatAmount) || (totalCostBeforeVat * 0.07);
+                const totalWithVat = parseFloat(data.total_cost_with_vat || data.totalWithVat) || (totalCostBeforeVat + vatAmount);
                 const costPerBook = totalWithVat / printQty;
 
-                const facultySend = parseFloat(data.wholesale_faculty) || (costPerBook * 1.35);
-                const facultyRounded = Math.ceil(facultySend);
-                const studentPrice = parseFloat(data.student_price_rounded) || Math.ceil(costPerBook * 1.20);
+                const facultySend = parseFloat(data.wholesale_faculty || data.facultySend) || (costPerBook * 1.35);
+                const facultyRounded = parseFloat(data.wholesale_faculty_rounded || data.facultyRounded) || Math.ceil(facultySend);
+                const studentPrice = parseFloat(data.student_price_rounded || data.studentPrice) || Math.ceil(costPerBook * 1.20);
 
-                const externalSend = parseFloat(data.external_wholesale) || (costPerBook * 1.50);
-                const storeDiscount = externalSend * 0.40;
-                const coverPrice = parseFloat(data.external_cover_rounded) || Math.ceil(externalSend + storeDiscount);
+                const externalSend = parseFloat(data.external_wholesale || data.externalSend) || (costPerBook * 1.50);
+                const storeDiscount = parseFloat(data.store_discount || data.storeDiscount) || (externalSend * 0.40);
+                const coverPrice = parseFloat(data.external_cover_rounded || data.coverPrice) || Math.ceil(externalSend + storeDiscount);
 
                 const now = new Date();
                 const dateStr = now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
 
+                const authorName = (data.academic_title || data.academicTitle || '') + ' ' + (data.author || data.authorName || '');
+
                 const mapping = {
-                    '{{TITLE}}': data.title || '-',
-                    '{{AUTHOR}}': ((data.academic_title || '') + ' ' + (data.author || '')).trim() || '-',
+                    '{{TITLE}}': data.title || data.bookTitle || '-',
+                    '{{AUTHOR}}': authorName.trim() || '-',
                     '{{DEPARTMENT}}': data.department || '-',
-                    '{{BOOK_CODE}}': data.book_code || '-',
-                    '{{EDITION}}': data.edition || '-',
+                    '{{BOOK_CODE}}': data.book_code || data.bookCode || '-',
+                    '{{EDITION}}': data.edition || '1',
                     '{{ISBN}}': data.isbn || '-',
-                    '{{KMITL_CODE}}': data.kmitl_code || '-',
-                    '{{PAGES}}': data.pages || '-',
+                    '{{KMITL_CODE}}': data.kmitl_code || data.kmitlCode || '-',
+                    '{{PAGES}}': data.pages || data.pageCount || '-',
                     '{{PRINT_QTY}}': printQty.toLocaleString(),
-                    '{{CALC_DATE}}': data.calc_date || '-',
-                    '{{STATUS}}': data.status || 'สมบูรณ์',
+                    '{{CALC_DATE}}': data.calc_date || data.calcDate || dateStr.split(' ')[0],
+                    '{{STATUS}}': data.status || 'อนุมัติ/คำนวณแล้ว',
                     '{{UNIT_COST_BEFORE_VAT}}': formatNum(unitCost),
                     '{{TOTAL_COST_BEFORE_VAT}}': formatNum(totalCostBeforeVat),
                     '{{VAT_AMOUNT}}': formatNum(vatAmount),
@@ -485,20 +500,23 @@
                     '{{SUMMARY_FACULTY_SEND}}': formatNum(facultyRounded),
                     '{{SUMMARY_STUDENT_CALC}}': formatNum(studentPrice),
                     '{{SUMMARY_EXT_COVER_CALC}}': formatNum(coverPrice),
-                    '{{SUMMARY_STUDENT_ACTUAL}}': formatNum(data.actual_student_price || studentPrice),
-                    '{{SUMMARY_EXT_ACTUAL}}': formatNum(data.actual_public_price || coverPrice),
+                    '{{SUMMARY_STUDENT_ACTUAL}}': formatNum(data.actual_student_price || data.actualStudentPrice || studentPrice),
+                    '{{SUMMARY_EXT_ACTUAL}}': formatNum(data.actual_public_price || data.actualPublicPrice || coverPrice),
                     '{{PRINT_DATE}}': dateStr
                 };
 
-                // วนลูปแทนค่าตัวแปรในหน้าเอกสาร
-                let htmlContent = document.body.innerHTML;
-                for (const [key, value] of Object.entries(mapping)) {
-                    htmlContent = htmlContent.replaceAll(key, value);
+                // วนลูปแทนค่าเฉพาะภายในพื้นที่ printable-area
+                const targetArea = document.getElementById('printable-area');
+                if (targetArea) {
+                    let htmlContent = targetArea.innerHTML;
+                    for (const [key, value] of Object.entries(mapping)) {
+                        htmlContent = htmlContent.replaceAll(key, value);
+                    }
+                    targetArea.innerHTML = htmlContent;
                 }
-                document.body.innerHTML = htmlContent;
 
             } catch (err) {
-                console.error(' เกิดข้อผิดพลาด:', err);
+                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูลเอกสาร:', err);
             }
         }
 

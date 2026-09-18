@@ -1389,7 +1389,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันเชื่อมต่อไปยัง temple.html เพื่อดาวน์โหลดเป็น PDF
+        // ฟังก์ชันเชื่อมต่อไปยัง temple_4.html เพื่อดาวน์โหลดเป็น PDF
         // ==========================================
         function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
@@ -1400,8 +1400,8 @@
 
             showToast('กำลังเตรียมข้อมูลเอกสาร PDF...', 'info');
 
-            // เปิด temple.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
-            const printWindow = window.open(`temple.html?id=${encodeURIComponent(book.id)}`, '_blank');
+            // เปิด temple_4.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
+            const printWindow = window.open(`temple_4.html?id=${encodeURIComponent(book.id)}`, '_blank');
             if (printWindow) {
                 printWindow.focus();
             } else {

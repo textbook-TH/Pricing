@@ -1389,7 +1389,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันเชื่อมต่อไปยัง template.html เพื่อดาวน์โหลดเป็น PDF
+        // ฟังก์ชันเชื่อมต่อไปยัง template.html เพื่อเปิดหน้าเทมเพลตสำหรับพิมพ์ PDF
         // ==========================================
         function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
@@ -1400,7 +1400,7 @@
 
             showToast('กำลังเตรียมข้อมูลเอกสาร PDF...', 'info');
 
-            // เปิด template.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
+            // เปิด template.html โดยส่ง id ผ่าน Query Parameter
             const printWindow = window.open(`template.html?id=${encodeURIComponent(book.id)}`, '_blank');
             if (printWindow) {
                 printWindow.focus();

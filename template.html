@@ -32,7 +32,7 @@
     <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Supabase JS Client -->
@@ -48,18 +48,18 @@
             font-family: 'Kanit', sans-serif; 
         }
 
-        /* ตารางสไตล์มินิมอลสะอาดตา */
+        /* ตารางสไตล์ Clean Executive Report */
         .custom-table th {
             background-color: #f8fafc;
             color: #334155;
             font-family: 'Kanit', sans-serif;
             font-weight: 600;
-            border-bottom: 2px solid #cbd5e1;
-            padding: 10px 16px;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 12px 18px;
         }
         .custom-table td {
-            padding: 10px 16px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 18px;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         /* สำหรับการพิมพ์ A4 ให้เต็มหน้า */
@@ -74,7 +74,7 @@
                 box-shadow: none !important;
                 border: none !important;
                 border-radius: 0 !important;
-                padding: 10mm 12mm !important;
+                padding: 15mm 15mm !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 min-height: 297mm;
@@ -98,188 +98,188 @@
         </button>
     </div>
 
-    <!-- Paper Container (A4 Proportional: 210mm min-height 297mm) -->
-    <main class="page-container max-w-[210mm] mx-auto bg-white p-10 rounded-2xl shadow-xl border border-slate-200 flex flex-col justify-between min-h-[297mm]">
+    <!-- Paper Container (A4 Proportional: 210mm x 297mm) -->
+    <main class="page-container max-w-[210mm] mx-auto bg-white p-10 sm:p-12 rounded-2xl shadow-xl border border-slate-200 flex flex-col justify-between min-h-[297mm]">
         
-        <div class="space-y-6">
+        <div class="space-y-7">
             
             <!-- Header Section -->
-            <div class="border-b-2 border-orange-500 pb-5 flex justify-between items-start">
+            <div class="border-b-2 border-orange-500 pb-6 flex justify-between items-start">
                 <div class="flex items-center gap-4">
                     <img src="logo.png" alt="KMITL Logo" class="h-16 w-auto object-contain" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/KMITL_Logo.svg/1200px-KMITL_Logo.svg.png'">
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold font-kanit text-slate-900 tracking-tight leading-snug">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h1>
-                        <p class="text-xs sm:text-sm text-slate-600 font-medium">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</p>
+                        <h1 class="text-2xl font-bold font-kanit text-slate-900 tracking-tight leading-snug">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h1>
+                        <p class="text-sm text-slate-600 font-medium mt-0.5">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <span class="inline-block px-3 py-1 bg-orange-50 text-orange-600 border border-orange-200 rounded-lg text-xs font-bold font-mono">
+                    <span class="inline-block px-3.5 py-1.5 bg-orange-50 text-orange-600 border border-orange-200 rounded-xl text-xs font-bold font-mono">
                         TextCalc System
                     </span>
                 </div>
             </div>
 
-            <!-- Section 1: ข้อมูลสิ่งพิมพ์ (4 Columns Grid Layout) -->
-            <div class="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 space-y-3">
-                <div class="flex items-center gap-2 text-orange-600 font-kanit font-bold text-sm border-b border-slate-200/80 pb-2">
+            <!-- Section 1: ข้อมูลสิ่งพิมพ์ -->
+            <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200/80 space-y-4">
+                <div class="flex items-center gap-2 text-orange-600 font-kanit font-bold text-base border-b border-slate-200/80 pb-2.5">
                     <i class="fa-solid fa-book-bookmark"></i>
                     <span>ข้อมูลสิ่งพิมพ์ (Publication Details)</span>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-y-3 gap-x-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-y-4 gap-x-6 text-xs sm:text-sm">
                     <div class="md:col-span-2">
-                        <span class="text-slate-400 block text-[11px]">ชื่อหนังสือ</span>
-                        <span id="pdfTitle" class="font-bold text-slate-900 text-sm block mt-0.5 leading-snug">-</span>
+                        <span class="text-slate-400 block text-xs">ชื่อหนังสือ</span>
+                        <span id="pdfTitle" class="font-bold text-slate-900 text-base block mt-0.5 leading-snug">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">ภาควิชา</span>
+                        <span class="text-slate-400 block text-xs">ภาควิชา</span>
                         <span id="pdfDepartment" class="font-semibold text-slate-800 block mt-0.5">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">วันที่คำนวณ</span>
+                        <span class="text-slate-400 block text-xs">วันที่คำนวณ</span>
                         <span id="pdfCalcDate" class="font-semibold text-slate-800 block mt-0.5 font-mono">-</span>
                     </div>
 
                     <div>
-                        <span class="text-slate-400 block text-[11px]">ผู้แต่ง / อาจารย์</span>
+                        <span class="text-slate-400 block text-xs">ผู้แต่ง / อาจารย์</span>
                         <span id="pdfAuthor" class="font-semibold text-slate-800 block mt-0.5">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">พิมพ์ครั้งที่</span>
+                        <span class="text-slate-400 block text-xs">พิมพ์ครั้งที่</span>
                         <span id="pdfEdition" class="font-semibold text-slate-800 block mt-0.5">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">รหัสหนังสือ</span>
-                        <span id="pdfBookCode" class="font-bold text-orange-600 block mt-0.5 font-mono">-</span>
+                        <span class="text-slate-400 block text-xs">รหัสหนังสือ</span>
+                        <span id="pdfBookCode" class="font-bold text-orange-600 block mt-0.5 font-mono text-sm">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">รหัส วศ.สจล.</span>
+                        <span class="text-slate-400 block text-xs">รหัส วศ.สจล.</span>
                         <span id="pdfKmitlCode" class="font-semibold text-slate-800 block mt-0.5 font-mono">-</span>
                     </div>
 
                     <div>
-                        <span class="text-slate-400 block text-[11px]">เลข ISBN</span>
+                        <span class="text-slate-400 block text-xs">เลข ISBN</span>
                         <span id="pdfIsbn" class="font-semibold text-slate-800 block mt-0.5 font-mono">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">จำนวนหน้า</span>
+                        <span class="text-slate-400 block text-xs">จำนวนหน้า</span>
                         <span id="pdfPages" class="font-semibold text-slate-800 block mt-0.5">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">จำนวนพิมพ์</span>
-                        <span id="pdfPrintQuantity" class="font-bold text-slate-900 block mt-0.5 font-mono">-</span>
+                        <span class="text-slate-400 block text-xs">จำนวนพิมพ์</span>
+                        <span id="pdfPrintQuantity" class="font-bold text-slate-900 block mt-0.5 font-mono text-sm">-</span>
                     </div>
                     <div>
-                        <span class="text-slate-400 block text-[11px]">สถานะ</span>
-                        <span id="pdfStatus" class="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[11px] font-semibold mt-0.5">-</span>
+                        <span class="text-slate-400 block text-xs">สถานะ</span>
+                        <span id="pdfStatus" class="inline-block px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-md text-xs font-semibold mt-0.5">-</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 2: รายละเอียดต้นทุนและการคำนวณราคา (Table + Grid Layout) -->
-            <div class="space-y-4">
-                <div class="flex items-center gap-2 text-slate-800 font-kanit font-bold text-sm border-b border-slate-200 pb-2">
+            <!-- Section 2: รายละเอียดต้นทุนและการคำนวณราคา -->
+            <div class="space-y-5">
+                <div class="flex items-center gap-2 text-slate-800 font-kanit font-bold text-base border-b border-slate-200 pb-2">
                     <i class="fa-solid fa-calculator text-orange-500"></i>
                     <span>รายละเอียดต้นทุนและการคำนวณราคา</span>
                 </div>
 
-                <!-- 1. ต้นทุนผลิต -->
-                <div class="border border-slate-200 rounded-xl overflow-hidden">
-                    <div class="bg-slate-100/70 px-4 py-2 font-kanit font-semibold text-xs text-slate-700 border-b border-slate-200">
+                <!-- 1. รายละเอียดต้นทุนการผลิต -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+                    <div class="bg-slate-100/80 px-5 py-2.5 font-kanit font-semibold text-xs sm:text-sm text-slate-700 border-b border-slate-200">
                         1. รายละเอียดต้นทุนการผลิต
                     </div>
-                    <table class="w-full text-xs custom-table">
+                    <table class="w-full text-xs sm:text-sm custom-table">
                         <thead>
                             <tr>
                                 <th class="text-left">รายการ</th>
-                                <th class="text-right w-44">จำนวนเงิน (บาท)</th>
+                                <th class="text-right w-48">จำนวนเงิน (บาท)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="text-slate-700">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
-                                <td id="pdfUnitCost" class="text-right font-mono text-slate-900">-</td>
+                                <td id="pdfUnitCost" class="text-right font-mono text-slate-900 font-semibold">-</td>
                             </tr>
                             <tr>
                                 <td class="text-slate-700">ต้นทุนรวม (ก่อน VAT)</td>
-                                <td id="pdfProductionCost" class="text-right font-mono text-slate-900">-</td>
+                                <td id="pdfProductionCost" class="text-right font-mono text-slate-900 font-semibold">-</td>
                             </tr>
                             <tr>
                                 <td class="text-slate-700">ภาษีมูลค่าเพิ่ม VAT 7%</td>
-                                <td id="pdfVatAmount" class="text-right font-mono text-slate-900">-</td>
+                                <td id="pdfVatAmount" class="text-right font-mono text-slate-900 font-semibold">-</td>
                             </tr>
                             <tr class="bg-orange-50/50 font-bold">
-                                <td class="text-slate-900">ยอดรวมทั้งสิ้น (รวม VAT)</td>
-                                <td id="pdfTotalCostWithVat" class="text-right font-mono text-orange-600 text-sm">-</td>
+                                <td class="text-slate-900 font-kanit">ยอดรวมทั้งสิ้น (รวม VAT)</td>
+                                <td id="pdfTotalCostWithVat" class="text-right font-mono text-orange-600 text-base">-</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- 2 & 3. Side by side tables -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <!-- การคิดราคาจำหน่ายนักศึกษา -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <div class="bg-blue-50/70 px-4 py-2 font-kanit font-semibold text-xs text-blue-900 border-b border-slate-200 flex justify-between items-center">
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+                        <div class="bg-blue-50/80 px-5 py-2.5 font-kanit font-semibold text-xs sm:text-sm text-blue-900 border-b border-slate-200 flex justify-between items-center">
                             <span>2. ราคาต้นทุนและจำหน่ายนักศึกษา</span>
-                            <i class="fa-solid fa-graduation-cap text-blue-500"></i>
+                            <i class="fa-solid fa-graduation-cap text-blue-500 text-base"></i>
                         </div>
-                        <table class="w-full text-xs custom-table">
+                        <table class="w-full text-xs sm:text-sm custom-table">
                             <thead>
                                 <tr>
                                     <th class="text-left">รายการ</th>
-                                    <th class="text-right w-32">จำนวนเงิน (บาท)</th>
+                                    <th class="text-right w-36">จำนวนเงิน (บาท)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td class="text-slate-600">ราคาต้นทุน (ต่อเล่ม)</td>
-                                    <td id="pdfCostPerBook" class="text-right font-mono text-slate-800">-</td>
+                                    <td id="pdfCostPerBook" class="text-right font-mono text-slate-800 font-semibold">-</td>
                                 </tr>
                                 <tr>
                                     <td class="text-slate-600">ราคาส่งจากคณะ (+35%)</td>
-                                    <td id="pdfWholesaleFaculty" class="text-right font-mono text-slate-800">-</td>
+                                    <td id="pdfWholesaleFaculty" class="text-right font-mono text-slate-800 font-semibold">-</td>
                                 </tr>
                                 <tr>
                                     <td class="text-slate-600">รวมราคาส่งจากคณะ (ปัดเศษ)</td>
-                                    <td id="pdfStudentPriceRounded" class="text-right font-mono text-slate-800">-</td>
+                                    <td id="pdfStudentWholesaleRounded" class="text-right font-mono text-slate-800 font-semibold">-</td>
                                 </tr>
-                                <tr class="bg-blue-50/30 font-bold">
-                                    <td class="text-blue-900">ราคาขายนักศึกษา (+20%)</td>
-                                    <td id="pdfStudentPrice" class="text-right font-mono text-blue-700">-</td>
+                                <tr class="bg-blue-50/40 font-bold">
+                                    <td class="text-blue-900 font-kanit">ราคาขายนักศึกษา (+20%)</td>
+                                    <td id="pdfStudentPrice" class="text-right font-mono text-blue-700 text-base">-</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- การคิดราคาจำหน่ายบุคคลภายนอก -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <div class="bg-indigo-50/70 px-4 py-2 font-kanit font-semibold text-xs text-indigo-900 border-b border-slate-200 flex justify-between items-center">
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+                        <div class="bg-indigo-50/80 px-5 py-2.5 font-kanit font-semibold text-xs sm:text-sm text-indigo-900 border-b border-slate-200 flex justify-between items-center">
                             <span>3. ราคาจำหน่ายบุคคลภายนอก</span>
-                            <i class="fa-solid fa-store text-indigo-500"></i>
+                            <i class="fa-solid fa-store text-indigo-500 text-base"></i>
                         </div>
-                        <table class="w-full text-xs custom-table">
+                        <table class="w-full text-xs sm:text-sm custom-table">
                             <thead>
                                 <tr>
                                     <th class="text-left">รายการ</th>
-                                    <th class="text-right w-32">จำนวนเงิน (บาท)</th>
+                                    <th class="text-right w-36">จำนวนเงิน (บาท)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td class="text-slate-600">ราคาส่งบุคคลภายนอก (+50%)</td>
-                                    <td id="pdfExternalWholesale" class="text-right font-mono text-slate-800">-</td>
+                                    <td id="pdfExternalWholesale" class="text-right font-mono text-slate-800 font-semibold">-</td>
                                 </tr>
                                 <tr>
                                     <td class="text-slate-600">บวกส่วนลดร้านค้า (40%)</td>
-                                    <td id="pdfDiscountAmount" class="text-right font-mono text-slate-800">-</td>
+                                    <td id="pdfDiscountAmount" class="text-right font-mono text-slate-800 font-semibold">-</td>
                                 </tr>
-                                <tr class="bg-indigo-50/30 font-bold">
-                                    <td class="text-indigo-900">ราคาปกตั้งขาย</td>
-                                    <td id="pdfExternalCover" class="text-right font-mono text-indigo-700">-</td>
+                                <tr class="bg-indigo-50/40 font-bold">
+                                    <td class="text-indigo-900 font-kanit">ราคาปกตั้งขาย</td>
+                                    <td id="pdfExternalCover" class="text-right font-mono text-indigo-700 text-base">-</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-slate-400 italic text-[11px]" colspan="2">* คำนวณตามเกณฑ์มาตรฐานคณะฯ</td>
+                                    <td class="text-slate-400 italic text-xs py-2.5" colspan="2">* คำนวณตามเกณฑ์มาตรฐานคณะฯ</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -288,46 +288,46 @@
 
             </div>
 
-            <!-- Section 3: สรุปราคาจำหน่าย (Highlight Section) -->
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 text-white space-y-3 shadow-sm">
-                <div class="flex items-center justify-between border-b border-slate-700 pb-2">
-                    <span class="font-kanit font-bold text-sm text-orange-400 flex items-center gap-2">
+            <!-- Section 3: สรุปราคาจำหน่าย -->
+            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-6 text-white space-y-4 shadow-md">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                    <span class="font-kanit font-bold text-base text-orange-400 flex items-center gap-2">
                         <i class="fa-solid fa-tags"></i> สรุปราคาจำหน่าย (Price Summary)
                     </span>
-                    <span class="text-[11px] text-slate-400 font-light">หน่วย: บาท (THB)</span>
+                    <span class="text-xs text-slate-400 font-light">หน่วย: บาท (THB)</span>
                 </div>
                 
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
-                    <div class="bg-white/5 p-3 rounded-xl border border-white/10">
-                        <span class="text-[11px] text-slate-400 block font-kanit">ราคาคำนวณส่งคณะ</span>
-                        <span id="pdfSummaryFaculty" class="text-base font-bold font-mono text-slate-200 mt-1 block">-</span>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3.5 text-center">
+                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                        <span class="text-xs text-slate-400 block font-kanit">ราคาคำนวณส่งคณะ</span>
+                        <span id="pdfSummaryFaculty" class="text-base font-bold font-mono text-slate-100 mt-1 block">-</span>
                     </div>
-                    <div class="bg-white/5 p-3 rounded-xl border border-white/10">
-                        <span class="text-[11px] text-slate-400 block font-kanit">ราคาคำนวณขาย นศ.</span>
-                        <span id="pdfSummaryStudentCalc" class="text-base font-bold font-mono text-slate-200 mt-1 block">-</span>
+                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                        <span class="text-xs text-slate-400 block font-kanit">ราคาคำนวณขาย นศ.</span>
+                        <span id="pdfSummaryStudentCalc" class="text-base font-bold font-mono text-slate-100 mt-1 block">-</span>
                     </div>
-                    <div class="bg-white/5 p-3 rounded-xl border border-white/10">
-                        <span class="text-[11px] text-slate-400 block font-kanit">ราคาคำนวณปกบุคคลนอก</span>
-                        <span id="pdfSummaryPublicCalc" class="text-base font-bold font-mono text-slate-200 mt-1 block">-</span>
+                    <div class="bg-white/5 p-3.5 rounded-xl border border-white/10">
+                        <span class="text-xs text-slate-400 block font-kanit">ราคาคำนวณปกบุคคลนอก</span>
+                        <span id="pdfSummaryPublicCalc" class="text-base font-bold font-mono text-slate-100 mt-1 block">-</span>
                     </div>
-                    <div class="bg-emerald-500/20 p-3 rounded-xl border border-emerald-500/40">
-                        <span class="text-[11px] text-emerald-300 block font-kanit font-medium">ราคาขายจริง นศ.</span>
-                        <span id="pdfSummaryStudentActual" class="text-lg font-bold font-mono text-emerald-400 mt-0.5 block">-</span>
+                    <div class="bg-emerald-500/20 p-3.5 rounded-xl border border-emerald-500/40">
+                        <span class="text-xs text-emerald-300 block font-kanit font-semibold">ราคาขายจริง นศ.</span>
+                        <span id="pdfSummaryStudentActual" class="text-xl font-bold font-mono text-emerald-400 mt-1 block">-</span>
                     </div>
-                    <div class="bg-orange-500/20 p-3 rounded-xl border border-orange-500/40 col-span-2 md:col-span-1">
-                        <span class="text-[11px] text-orange-300 block font-kanit font-medium">ราคาขายจริง บุคคลภายนอก</span>
-                        <span id="pdfSummaryPublicActual" class="text-lg font-bold font-mono text-orange-400 mt-0.5 block">-</span>
+                    <div class="bg-orange-500/20 p-3.5 rounded-xl border border-orange-500/40 col-span-2 md:col-span-1">
+                        <span class="text-xs text-orange-300 block font-kanit font-semibold">ราคาขายจริง บุคคลภายนอก</span>
+                        <span id="pdfSummaryPublicActual" class="text-xl font-bold font-mono text-orange-400 mt-1 block">-</span>
                     </div>
                 </div>
 
-                <p class="text-[11px] text-slate-400 italic pt-1 flex items-center gap-1.5">
+                <p class="text-xs text-slate-400 italic pt-1 flex items-center gap-2">
                     <i class="fa-solid fa-circle-info text-orange-400"></i>
                     <span>* ราคาขายจริง นศ. และ ราคาขายจริงบุคคลภายนอก บางกรณีอาจปัดเศษ เพื่อให้ง่ายต่อการจัดจำหน่าย</span>
                 </p>
             </div>
 
-            <!-- หมายเหตุเพิ่มเติม (แสดงเฉพาะเมื่อมีข้อมูล) -->
-            <div id="pdfRemarksBox" class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1 hidden">
+            <!-- หมายเหตุเพิ่มเติม -->
+            <div id="pdfRemarksBox" class="bg-amber-50 p-4 rounded-xl border border-amber-200 text-xs sm:text-sm text-amber-900 space-y-1 hidden">
                 <span class="font-bold font-kanit flex items-center gap-1.5 text-amber-800">
                     <i class="fa-solid fa-note-sticky"></i> หมายเหตุ:
                 </span>
@@ -337,8 +337,8 @@
         </div>
 
         <!-- Footer -->
-        <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-2">
-            <span>พิมพ์จากระบบ TextCalc Engine</span>
+        <div class="pt-6 mt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2">
+            <span>พิมพ์จากระบบ TextCalc Engine | คณะวิศวกรรมศาสตร์ สจล.</span>
             <span id="pdfPrintDate">วันที่พิมพ์เอกสาร: -</span>
         </div>
 
@@ -349,7 +349,7 @@
         const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
 
         function formatCurrency(val) {
-            if (val === null || val === undefined || isNaN(val) || val === '') return '-';
+            if (val === null || val === undefined || isNaN(val) || val === '' || val === 0) return '-';
             return Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
@@ -378,33 +378,50 @@
             document.getElementById('pdfStatus').innerText = book.status || 'จัดพิมพ์เสร็จสิ้น';
 
             // 2. Production Cost Breakdown
+            const totalWithVat = book.total_cost_with_vat || (book.production_cost ? book.production_cost * 1.07 : 0);
             document.getElementById('pdfUnitCost').innerText = formatCurrency(book.unit_cost);
             document.getElementById('pdfProductionCost').innerText = formatCurrency(book.production_cost);
-            document.getElementById('pdfVatAmount').innerText = formatCurrency(book.vat_amount);
-            document.getElementById('pdfTotalCostWithVat').innerText = formatCurrency(book.total_cost_with_vat);
+            document.getElementById('pdfVatAmount').innerText = formatCurrency(book.vat_amount || (book.production_cost * 0.07));
+            document.getElementById('pdfTotalCostWithVat').innerText = formatCurrency(totalWithVat);
 
             // 3. Student Price Calculation
-            const costPerBook = book.print_quantity ? (book.total_cost_with_vat / book.print_quantity) : (book.unit_cost * 1.07);
+            // ราคาต้นทุนต่อเล่ม (รวม VAT)
+            const costPerBook = book.cost_per_book || (book.print_quantity ? (totalWithVat / book.print_quantity) : 0);
             document.getElementById('pdfCostPerBook').innerText = formatCurrency(costPerBook);
-            document.getElementById('pdfWholesaleFaculty').innerText = formatCurrency(book.wholesale_faculty);
-            document.getElementById('pdfStudentPriceRounded').innerText = formatCurrency(book.wholesale_faculty); // รวมราคาส่งคณะ
-            document.getElementById('pdfStudentPrice').innerText = formatCurrency(book.student_price_rounded);
+            
+            // ราคาส่งจากคณะ (+35%)
+            const wholesaleFac = book.wholesale_faculty || (costPerBook ? costPerBook * 1.35 : 0);
+            document.getElementById('pdfWholesaleFaculty').innerText = formatCurrency(wholesaleFac);
+            
+            // รวมราคาส่งคณะ (ปัดเศษ)
+            const wholesaleFacRounded = book.wholesale_faculty_rounded || book.wholesale_faculty || Math.ceil(wholesaleFac);
+            document.getElementById('pdfStudentWholesaleRounded').innerText = formatCurrency(wholesaleFacRounded);
+            
+            // ราคาขายนักศึกษา (+20%)
+            const studentPrice = book.student_price_rounded || book.student_price || (wholesaleFacRounded ? wholesaleFacRounded * 1.20 : 0);
+            document.getElementById('pdfStudentPrice').innerText = formatCurrency(studentPrice);
 
             // 4. External Price Calculation
-            document.getElementById('pdfExternalWholesale').innerText = formatCurrency(book.external_wholesale);
-            const discountAmt = (book.external_cover_rounded && book.external_wholesale) 
-                ? (book.external_cover_rounded - book.external_wholesale) 
-                : (book.external_wholesale * 0.40);
+            // ราคาส่งบุคคลภายนอก (+50%)
+            const extWholesale = book.external_wholesale || (costPerBook ? costPerBook * 1.50 : 0);
+            document.getElementById('pdfExternalWholesale').innerText = formatCurrency(extWholesale);
+            
+            // บวกส่วนลดร้านค้า (40%)
+            const extCover = book.external_cover_rounded || book.external_cover || 0;
+            const discountAmt = book.discount_amount || (extCover && extWholesale ? (extCover - extWholesale) : (extWholesale * 0.40));
             document.getElementById('pdfDiscountAmount').innerText = formatCurrency(discountAmt);
-            document.getElementById('pdfExternalCover').innerText = formatCurrency(book.external_cover_rounded);
+            
+            // ราคาปกตั้งขาย
+            document.getElementById('pdfExternalCover').innerText = formatCurrency(extCover);
 
             // 5. Price Summary Section
-            document.getElementById('pdfSummaryFaculty').innerText = formatCurrency(book.wholesale_faculty) + ' ฿';
-            document.getElementById('pdfSummaryStudentCalc').innerText = formatCurrency(book.student_price_rounded) + ' ฿';
-            document.getElementById('pdfSummaryPublicCalc').innerText = formatCurrency(book.external_cover_rounded) + ' ฿';
+            document.getElementById('pdfSummaryFaculty').innerText = formatCurrency(wholesaleFacRounded) + ' ฿';
+            document.getElementById('pdfSummaryStudentCalc').innerText = formatCurrency(studentPrice) + ' ฿';
+            document.getElementById('pdfSummaryPublicCalc').innerText = formatCurrency(extCover) + ' ฿';
 
-            const actualStudent = book.actual_student_price ?? book.student_price_rounded;
-            const actualPublic = book.actual_public_price ?? book.external_cover_rounded;
+            // ราคาขายจริง (อนุมัติ)
+            const actualStudent = book.actual_student_price || studentPrice;
+            const actualPublic = book.actual_public_price || extCover;
             document.getElementById('pdfSummaryStudentActual').innerText = formatCurrency(actualStudent) + ' ฿';
             document.getElementById('pdfSummaryPublicActual').innerText = formatCurrency(actualPublic) + ' ฿';
 

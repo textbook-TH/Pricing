@@ -170,7 +170,7 @@
                 </div>
                 
                 <!-- Filter Dropdowns Grid -->
-                <div class="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:gap-2">
+                <div class="grid grid-cols-2 sm:flex sm:items-center sm:gap-2 gap-1.5">
                     <select id="publicYearFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">📅 ทุกปี</option>
@@ -189,6 +189,13 @@
                         <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
                         <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
                         <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
+                    </select>
+
+                    <select id="publicSortFilter" onchange="filterPublicData()" 
+                            class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                        <option value="ALL">📌 ทุกรายการ</option>
+                        <option value="PRINT_LATEST">พิมพ์ล่าสุด</option>
+                        <option value="UPDATED_LATEST">แก้ไขล่าสุด</option>
                     </select>
                 </div>
             </div>
@@ -341,7 +348,7 @@
                         </div>
 
                         <!-- Filters Grid -->
-                        <div class="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:gap-2">
+                        <div class="grid grid-cols-2 sm:flex sm:items-center sm:gap-2 gap-1.5">
                             <select id="adminYearFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                                 <option value="ALL">📅 ทุกปี</option>
                             </select>
@@ -357,6 +364,12 @@
                                 <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
                                 <option value="อยู่ระหว่างจัดพิมพ์">อยู่ระหว่างจัดพิมพ์</option>
                                 <option value="จัดพิมพ์เสร็จสิ้น">จัดพิมพ์เสร็จสิ้น</option>
+                            </select>
+
+                            <select id="adminSortFilter" onchange="filterAdminData()" class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
+                                <option value="ALL">📌 ทุกรายการ</option>
+                                <option value="PRINT_LATEST">พิมพ์ล่าสุด</option>
+                                <option value="UPDATED_LATEST">แก้ไขล่าสุด</option>
                             </select>
                         </div>
                     </div>
@@ -951,6 +964,15 @@
             return '';
         }
 
+        // ฟังก์ชันช่วยเรียงลำดับรายการตาม รหัสหนังสือ จากมากไปหาน้อย
+        function sortBooksByBookCodeDesc(booksList) {
+            return booksList.sort((a, b) => {
+                const codeA = (a.book_code || '').trim();
+                const codeB = (b.book_code || '').trim();
+                return codeB.localeCompare(codeA, undefined, { numeric: true, sensitivity: 'base' });
+            });
+        }
+
         async function loadTextbooksData() {
             try {
                 document.getElementById('publicLoading').classList.remove('hidden');
@@ -960,12 +982,13 @@
 
                 const { data, error } = await supabaseClient
                     .from('textbooks')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                    .select('*');
 
                 if (error) throw error;
 
                 allBooks = data || [];
+                sortBooksByBookCodeDesc(allBooks);
+
                 publicFilteredBooks = [...allBooks];
                 adminFilteredBooks = [...allBooks];
                 
@@ -1411,7 +1434,7 @@
                          alt="Logo" 
                          style="height: 75px; width: auto; margin: 0 auto 6px auto; display: block;" />
                     <h2 style="font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: bold; margin: 0; color: #1e293b; line-height: 1.2;">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h2>
-                    <h3 style="font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 500; margin: 2px 0 15px 0; color: #475569;">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h3>
+                    <h3 style="font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 500; margin: 2px 0 0 0; color: #475569;">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h3>
                 </div>
 
                 <!-- ตารางที่ 1: ข้อมูลทั่วไปหนังสือ -->
@@ -1698,6 +1721,7 @@
             const status = document.getElementById('publicStatusFilter').value;
             const department = document.getElementById('publicDepartmentFilter') ? document.getElementById('publicDepartmentFilter').value : 'ALL';
             const yearFilter = document.getElementById('publicYearFilter') ? document.getElementById('publicYearFilter').value : 'ALL';
+            const sortFilter = document.getElementById('publicSortFilter') ? document.getElementById('publicSortFilter').value : 'ALL';
 
             publicFilteredBooks = allBooks.filter(book => {
                 const bookYear = getYearFromCalcDate(book);
@@ -1715,6 +1739,23 @@
                 return matchSearch && matchStatus && matchDepartment && matchYear;
             });
 
+            // การจัดการเรียงลำดับตามการเลือกในตัวกรอง
+            if (sortFilter === 'PRINT_LATEST') {
+                publicFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.calc_date || a.created_at || 0).getTime();
+                    const dateB = new Date(b.calc_date || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else if (sortFilter === 'UPDATED_LATEST') {
+                publicFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.updated_at || a.created_at || 0).getTime();
+                    const dateB = new Date(b.updated_at || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else {
+                sortBooksByBookCodeDesc(publicFilteredBooks);
+            }
+
             renderPublicTable(publicFilteredBooks);
         }
 
@@ -1724,6 +1765,7 @@
             const status = document.getElementById('adminStatusFilter').value;
             const department = document.getElementById('adminDepartmentFilter') ? document.getElementById('adminDepartmentFilter').value : 'ALL';
             const yearFilter = document.getElementById('adminYearFilter') ? document.getElementById('adminYearFilter').value : 'ALL';
+            const sortFilter = document.getElementById('adminSortFilter') ? document.getElementById('adminSortFilter').value : 'ALL';
 
             adminFilteredBooks = allBooks.filter(book => {
                 const bookYear = getYearFromCalcDate(book);
@@ -1740,6 +1782,23 @@
 
                 return matchSearch && matchStatus && matchDepartment && matchYear;
             });
+
+            // การจัดการเรียงลำดับตามการเลือกในตัวกรอง
+            if (sortFilter === 'PRINT_LATEST') {
+                adminFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.calc_date || a.created_at || 0).getTime();
+                    const dateB = new Date(b.calc_date || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else if (sortFilter === 'UPDATED_LATEST') {
+                adminFilteredBooks.sort((a, b) => {
+                    const dateA = new Date(a.updated_at || a.created_at || 0).getTime();
+                    const dateB = new Date(b.updated_at || b.created_at || 0).getTime();
+                    return dateB - dateA;
+                });
+            } else {
+                sortBooksByBookCodeDesc(adminFilteredBooks);
+            }
 
             renderAdminTable(adminFilteredBooks);
         }

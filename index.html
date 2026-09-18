@@ -40,6 +40,9 @@
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- html2pdf.js for Exporting PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         h1, h2, h3, h4, .font-kanit { font-family: 'Kanit', sans-serif; }
@@ -52,7 +55,6 @@
             to { opacity: 1; transform: scale(1); }
         }
         .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
-        /* Smooth horizontal scrolling for stats on mobile */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -126,7 +128,7 @@
                     </div>
                 </div>
 
-                <!-- สรุปสถานะ 6 รายการ: แสดงเป็น Horizontal Scroll Ribbon บนมือถือเพื่อประหยัดพื้นที่แนวตั้ง -->
+                <!-- สรุปสถานะ 6 รายการ -->
                 <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/10">
                     <div class="flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory py-1 -mx-1 px-1">
                         <div class="snap-start shrink-0 min-w-[100px] sm:min-w-0 bg-white/5 backdrop-blur-sm rounded-xl p-2 sm:p-2.5 border border-white/5 flex flex-col justify-center items-center">
@@ -157,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- Toolbar: Search & Filter (ตัดข้อความกำกับออกและกระชับพื้นที่) -->
+            <!-- Toolbar: Search & Filter -->
             <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5 sm:space-y-0 sm:flex sm:gap-3 sm:items-center">
                 
                 <!-- Search Box -->
@@ -167,21 +169,18 @@
                            class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition">
                 </div>
                 
-                <!-- Mobile Filter Dropdowns Grid (ไม่มีข้อความกำกับด้านหน้า) -->
+                <!-- Filter Dropdowns Grid -->
                 <div class="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:gap-2">
-                    <!-- Dropdown เลือกปีการศึกษา -->
                     <select id="publicYearFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">📅 ทุกปี</option>
                     </select>
 
-                    <!-- Dropdown เลือกภาควิชา -->
                     <select id="publicDepartmentFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">🏢 ทุกภาควิชา</option>
                     </select>
 
-                    <!-- Dropdown เลือกสถานะ -->
                     <select id="publicStatusFilter" onchange="filterPublicData()" 
                             class="w-full py-2 px-2 sm:px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange transition truncate">
                         <option value="ALL">🏷️ ทุกสถานะ</option>
@@ -380,7 +379,7 @@
                                     <th scope="col" class="py-3 px-3 whitespace-nowrap">ผู้แต่ง</th>
                                     <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคา นศ.</th>
                                     <th scope="col" class="py-3 px-3 text-center whitespace-nowrap">ราคาปก</th>
-                                    <th scope="col" class="py-3 px-3 text-center w-20 whitespace-nowrap">จัดการ</th>
+                                    <th scope="col" class="py-3 px-3 text-center w-28 whitespace-nowrap">จัดการ</th>
                                 </tr>
                             </thead>
                             <tbody id="adminTableBody" class="divide-y divide-slate-100">
@@ -738,7 +737,6 @@
             </div>
 
             <div class="p-3.5 sm:p-6 space-y-3.5 sm:space-y-5 overflow-y-auto custom-scrollbar flex-1">
-                <!-- Filter Dropdown Header inside modal -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-slate-50 p-2.5 sm:p-3.5 rounded-xl border border-slate-200">
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
                         <i class="fa-solid fa-calendar-days text-amber-500 text-xs sm:text-sm"></i>
@@ -751,12 +749,10 @@
                     </div>
                 </div>
 
-                <!-- Chart Container -->
                 <div class="bg-white p-2.5 sm:p-4 rounded-xl border border-slate-200 shadow-sm relative min-h-[260px] sm:min-h-[300px] flex items-center justify-center">
                     <canvas id="topCostChartCanvas"></canvas>
                 </div>
 
-                <!-- Top 10 Table Breakdown -->
                 <div class="space-y-2">
                     <h4 class="text-xs font-bold font-kanit text-slate-700 uppercase tracking-wider flex items-center">
                         <i class="fa-solid fa-list-ol text-amber-500 mr-1.5"></i>รายละเอียด 10 อันดับแรก
@@ -773,7 +769,6 @@
                                 </tr>
                             </thead>
                             <tbody id="topCostTableBody" class="divide-y divide-slate-100">
-                                <!-- Dynamic rows -->
                             </tbody>
                         </table>
                     </div>
@@ -811,6 +806,53 @@
         let isManualActualPriceEdit = false;
         let topCostChartInstance = null;
 
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeJsAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-xl shadow-lg border text-xs font-medium flex items-center justify-between space-x-2 pointer-events-auto transition-all transform translate-y-2 opacity-0 animate-fadeIn ${
+                type === 'success' ? 'bg-emerald-900 text-emerald-100 border-emerald-700' :
+                type === 'error' ? 'bg-rose-900 text-rose-100 border-rose-700' :
+                'bg-slate-900 text-slate-100 border-slate-700'
+            }`;
+
+            toast.innerHTML = `
+                <span>${escapeHtml(message)}</span>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xs"></i></button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+            }, 3500);
+        }
+
+        function openModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.add('hidden');
+        }
+
         window.onload = async function() {
             switchTab('public');
             
@@ -846,6 +888,32 @@
             }
         }
 
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+
+                currentUser = data.user;
+                updateUserUI(true);
+                showToast('เข้าสู่ระบบสำเร็จ', 'success');
+            } catch (err) {
+                showToast('เข้าสู่ระบบไม่สำเร็จ: ' + err.message, 'error');
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (err) {}
+            currentUser = null;
+            updateUserUI(false);
+            showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
+        }
+
         function switchTab(tab) {
             currentTab = tab;
             const publicView = document.getElementById('publicView');
@@ -873,19 +941,13 @@
             if (!rawDate) return '';
             
             const str = String(rawDate).trim();
-            if (/^\d{4}$/.test(str)) {
-                return str;
-            }
+            if (/^\d{4}$/.test(str)) return str;
             
             const match = str.match(/^(\d{4})/);
-            if (match) {
-                return match[1];
-            }
+            if (match) return match[1];
             
             const d = new Date(str);
-            if (!isNaN(d.getTime())) {
-                return String(d.getFullYear());
-            }
+            if (!isNaN(d.getTime())) return String(d.getFullYear());
             return '';
         }
 
@@ -1283,6 +1345,10 @@
                     </td>
                     <td class="py-3 px-3 text-center">
                         <div class="flex items-center justify-center space-x-1">
+                            <button onclick="downloadPDFById('${escapeJsAttr(book.id)}')" title="ดาวน์โหลด PDF" 
+                                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition flex items-center justify-center">
+                                <i class="fa-solid fa-file-pdf text-xs"></i>
+                            </button>
                             <button onclick="openFormModalById('${escapeJsAttr(book.id)}')" title="แก้ไข" 
                                     class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-pen-to-square text-xs"></i>
@@ -1298,6 +1364,229 @@
             });
 
             renderPaginationControls(paginationContainer, adminCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changeAdminPage');
+        }
+
+        // ฟังก์ชันดาวน์โหลด PDF สวยงาม มีระเบียบ สมดุล และเส้นตารางตรงกันเป๊ะ 100%
+        function downloadPDFById(id) {
+            const book = allBooks.find(b => String(b.id) === String(id));
+            if (!book) return;
+
+            const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
+            const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
+                                  ? book.actual_student_price 
+                                  : book.student_price_rounded;
+            const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
+                                 ? book.actual_public_price 
+                                 : book.external_cover_rounded;
+
+            const printQty = parseFloat(book.print_quantity) || 0;
+            const unitCost = parseFloat(book.unit_cost) || 0;
+            const prodCost = book.production_cost || (printQty * unitCost);
+            const vatAmt = book.vat_amount || (prodCost * 0.07);
+            const totalCostVat = book.total_cost_with_vat || (prodCost + vatAmt);
+
+            const costPerBook = printQty > 0 ? (totalCostVat / printQty) : 0;
+            const facultyWholesaleCalc = costPerBook * 1.35;
+            const facultyWholesaleRounded = book.wholesale_faculty_rounded || Math.ceil((facultyWholesaleCalc) / 5) * 5;
+            const studentPriceCalc = facultyWholesaleRounded * 1.20;
+
+            const externalWholesaleCalc = facultyWholesaleRounded * 1.50;
+            const externalDiscountCalc = externalWholesaleCalc * 0.40;
+            const externalCoverCalc = book.external_cover_rounded || Math.ceil((externalWholesaleCalc * 1.40) / 5) * 5;
+
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.padding = '18px 22px';
+            pdfContainer.style.fontFamily = "'Sarabun', sans-serif";
+            pdfContainer.style.color = '#1e293b';
+            pdfContainer.style.backgroundColor = '#ffffff';
+
+            pdfContainer.innerHTML = `
+                <!-- ส่วนหัวโลโก้และชื่อมหาวิทยาลัย -->
+                <div style="text-align: center; margin-bottom: 14px;">
+                    <img src="https://raw.githubusercontent.com/textbook-TH/TextCalc-System/main/logoSchool.png" 
+                         crossorigin="anonymous" 
+                         alt="Logo" 
+                         style="height: 52px; width: auto; margin: 0 auto 6px auto; display: block;" />
+                    <h2 style="font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: bold; margin: 0; color: #1e293b; line-height: 1.2;">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h2>
+                    <h3 style="font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 500; margin: 2px 0 0 0; color: #475569;">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h3>
+                </div>
+
+                <!-- ตารางที่ 1: ข้อมูลทั่วไปหนังสือ -->
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11px; table-layout: fixed;">
+                    <tr>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ชื่อหนังสือ:</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155; width: 80%; font-weight: bold; color: #0f172a;" colspan="3">${escapeHtml(book.title || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ผู้แต่ง / อาจารย์</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155; width: 30%;">${escapeHtml(academicPrefix + (book.author || '-'))}</td>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ภาควิชา</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155; width: 30%;">${escapeHtml(book.department || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัสหนังสือ</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.book_code || '-')}</td>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">พิมพ์ครั้งที่</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">ครั้งที่ ${book.edition || 1}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">เลข ISBN</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.isbn || '-')}</td>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัส วศ.สจล.</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.kmitl_code || '-')}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จำนวนหน้า</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">${book.pages || 0} หน้า</td>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จํานวนพิมพ์</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">${(book.print_quantity || 0).toLocaleString()} เล่ม</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">วันที่คำนวณ</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.calc_date || '-')}</td>
+                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">สถานะ:</td>
+                        <td style="padding: 5px 8px; border: 1px solid #334155; font-weight: 600; color: #e05a10;">${escapeHtml(book.status || '-')}</td>
+                    </tr>
+                </table>
+
+                <!-- ตารางที่ 2: รายละเอียดต้นทุนและการคำนวณราคา -->
+                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                    รายละเอียดต้นทุนและการคำนวณราคา
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9; text-align: left;">
+                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(unitCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">ต้นทุนรวม (ก่อน VAT)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(prodCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">ภาษีมูลค่าเพิ่ม VAT 7%</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(vatAmt).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr style="background-color: #fff7ed; font-weight: bold;">
+                            <td style="padding: 5px 8px; border: 1px solid #334155; color: #c2410c;">ยอดรวมทั้งสิ้น (รวม VAT)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right; color: #c2410c;">${Number(totalCostVat).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ตารางที่ 3: การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา -->
+                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                    การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9; text-align: left;">
+                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">ราคาต้นทุน (ต่อเล่ม/${printQty})</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(costPerBook).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">ราคาส่งจากคณะ (+35%)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">รวมราคาส่งจากคณะ (ปัดเศษ)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleRounded).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr style="background-color: #ecfdf5; font-weight: bold;">
+                            <td style="padding: 5px 8px; border: 1px solid #334155; color: #047857;">ราคาขายนักศึกษา (+20%)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right; color: #047857;">${Number(book.student_price_rounded || studentPriceCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ตารางที่ 4: การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก -->
+                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                    การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9; text-align: left;">
+                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">ราคาส่งบุคคลภายนอก (+50%)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(externalWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 8px; border: 1px solid #334155;">บวกส่วนลดร้านค้า (40%)</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(externalDiscountCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                        <tr style="background-color: #f8fafc; font-weight: bold;">
+                            <td style="padding: 5px 8px; border: 1px solid #334155; color: #0f172a;">ราคาปกตั้งขาย</td>
+                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right; color: #0f172a;">${Number(externalCoverCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ตารางที่ 5: สรุปราคาจำหน่าย -->
+                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                    สรุปราคาจําหน่าย
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; text-align: center; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f1f5f9; font-weight: bold;">
+                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%;">ราคาคำนวณส่งคณะ</th>
+                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%;">ราคาคำนวณขาย นศ.</th>
+                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%;">ราคาคำนวณปกบุคคลนอก</th>
+                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%; background-color: #d1fae5; color: #065f46;">ราคาขายจริง นศ.</th>
+                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%; background-color: #e0f2fe; color: #075985;">ราคาขายจริงบุคคลภายนอก</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="font-weight: bold; font-size: 11px;">
+                            <td style="padding: 6px 4px; border: 1px solid #334155;">${facultyWholesaleRounded ? Number(facultyWholesaleRounded).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 6px 4px; border: 1px solid #334155;">${book.student_price_rounded ? Number(book.student_price_rounded).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 6px 4px; border: 1px solid #334155;">${externalCoverCalc ? Number(externalCoverCalc).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 6px 4px; border: 1px solid #334155; color: #047857; background-color: #ecfdf5;">${actualStudent ? Number(actualStudent).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 6px 4px; border: 1px solid #334155; color: #0369a1; background-color: #f0f9ff;">${actualPublic ? Number(actualPublic).toLocaleString() + ' B' : '-'}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="font-size: 9px; color: #64748b; margin-top: 4px; margin-bottom: 12px;">
+                    * ราคาขายจริง นศ. และ ราคาขายจริงบุคคลภานออก บางกรณีอาจปัดเศษ เพื่อให้ง่ายต่อการจัดจำหน่าย
+                </div>
+
+                <div style="margin-top: 14px; text-align: left; font-size: 9px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 4px;">
+                    พิมพ์จากระบบ TextCalc Engine | วันที่พิมพ์เอกสาร: ${new Date().toLocaleDateString('th-TH')}
+                </div>
+            `;
+
+            const opt = {
+                margin:       8,
+                filename:     `TextCalc_${book.book_code || 'Doc'}_${new Date().toISOString().slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            showToast('กำลังสร้างไฟล์ PDF...', 'info');
+            html2pdf().set(opt).from(pdfContainer).save().then(() => {
+                showToast('ดาวน์โหลด PDF เรียบร้อยแล้ว', 'success');
+            }).catch(err => {
+                console.error('PDF error:', err);
+                showToast('เกิดข้อผิดพลาดในการดาวน์โหลด PDF', 'error');
+            });
         }
 
         function changePublicPage(page) {
@@ -1371,6 +1660,33 @@
             if (book) {
                 confirmDelete(book.id, book.title);
             }
+        }
+
+        function confirmDelete(id, title) {
+            deleteTargetId = id;
+            document.getElementById('deleteTargetTitle').innerText = title ? `"${title}"` : 'รายการนี้จะถูกลบออกจากฐานข้อมูลอย่างถาวร';
+            
+            const btn = document.getElementById('btnConfirmDelete');
+            btn.onclick = async () => {
+                try {
+                    btn.disabled = true;
+                    btn.innerText = 'กำลังลบ...';
+                    
+                    const { error } = await supabaseClient.from('textbooks').delete().eq('id', deleteTargetId);
+                    if (error) throw error;
+
+                    showToast('ลบรายการเรียบร้อยแล้ว', 'success');
+                    closeModal('modalDeleteConfirm');
+                    await loadTextbooksData();
+                } catch (err) {
+                    showToast('เกิดข้อผิดพลาดในการลบ: ' + err.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = 'ยืนยันลบข้อมูล';
+                }
+            };
+
+            openModal('modalDeleteConfirm');
         }
 
         function filterPublicData(resetPage = true) {
@@ -1639,139 +1955,6 @@
                 btnSaveSubmit.disabled = false;
                 btnSaveSubmit.innerHTML = 'บันทึกข้อมูล';
             }
-        }
-
-        function confirmDelete(id, title) {
-            deleteTargetId = id;
-            document.getElementById('deleteTargetTitle').innerText = `"${title}"`;
-            document.getElementById('btnConfirmDelete').onclick = handleDelete;
-            openModal('modalDeleteConfirm');
-        }
-
-        async function handleDelete() {
-            if (!deleteTargetId) return;
-            const btnConfirmDelete = document.getElementById('btnConfirmDelete');
-            btnConfirmDelete.disabled = true;
-            btnConfirmDelete.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังลบ...';
-
-            try {
-                const { error } = await supabaseClient
-                    .from('textbooks')
-                    .delete()
-                    .eq('id', deleteTargetId);
-
-                if (error) throw error;
-
-                showToast('ลบรายการตำราเรียนเรียบร้อยแล้ว', 'success');
-                closeModal('modalDeleteConfirm');
-                deleteTargetId = null;
-                await loadTextbooksData();
-            } catch (err) {
-                console.error('Delete error:', err);
-                showToast('ไม่สามารถลบข้อมูลได้: ' + err.message, 'error');
-            } finally {
-                btnConfirmDelete.disabled = false;
-                btnConfirmDelete.innerHTML = 'ยืนยันลบข้อมูล';
-            }
-        }
-
-        async function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            const btnSubmit = document.getElementById('btnLoginSubmit');
-
-            if (!ALLOWED_ADMINS.includes(email.toLowerCase())) {
-                showToast('บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานระบบเจ้าหน้าที่', 'error');
-                return;
-            }
-
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังเข้าสู่ระบบ...';
-
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-
-                if (error) throw error;
-
-                currentUser = data.user;
-                updateUserUI(true);
-                showToast('เข้าสู่ระบบสำเร็จ', 'success');
-            } catch (err) {
-                console.error('Login error:', err);
-                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
-            } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = '<span>เข้าสู่ระบบ</span><i class="fa-solid fa-arrow-right text-xs"></i>';
-            }
-        }
-
-        async function handleLogout() {
-            try {
-                await supabaseClient.auth.signOut();
-                currentUser = null;
-                updateUserUI(false);
-                showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
-            } catch (err) {
-                console.error('Logout error:', err);
-            }
-        }
-
-        function openModal(id) {
-            const el = document.getElementById(id);
-            if (el) el.classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            const el = document.getElementById(id);
-            if (el) el.classList.add('hidden');
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-
-            const toast = document.createElement('div');
-            let iconClass = 'fa-circle-info text-blue-500';
-            let bgBorder = 'bg-white border-slate-200 text-slate-800';
-
-            if (type === 'success') {
-                iconClass = 'fa-circle-check text-emerald-500';
-            } else if (type === 'error') {
-                iconClass = 'fa-circle-exclamation text-rose-500';
-            }
-
-            toast.className = `pointer-events-auto flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 text-xs font-medium ${bgBorder}`;
-            toast.innerHTML = `<i class="fa-solid ${iconClass} text-base shrink-0"></i><span>${escapeHtml(message)}</span>`;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function escapeJsAttr(str) {
-            if (!str) return '';
-            return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
     </script>
 </body>

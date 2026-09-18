@@ -1389,119 +1389,13 @@
         }
 
         // ==========================================
-        // ฟังก์ชันดาวน์โหลด PDF (ดึง temple.html จาก GitHub แล้วสร้าง A4)
+        // ฟังก์ชันดาวน์โหลด PDF (เคลียร์โค้ดเดิมออกทั้งหมดตามข้อตกลง คงไว้เฉพาะโครงสร้างฟังก์ชันปุ่มกด)
         // ==========================================
-        async function downloadPDFById(id) {
+        function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
             if (!book) return;
 
-            showToast('กำลังโหลดเทมเพลตและสร้างไฟล์ PDF...', 'info');
-
-            try {
-                // 1. ดึงไฟล์ temple.html จาก GitHub
-                const templateUrl = 'https://raw.githubusercontent.com/textbook-TH/TextCalc-System/main/temple.html';
-                const response = await fetch(templateUrl);
-                if (!response.ok) throw new Error('ไม่สามารถโหลดไฟล์ Template ได้');
-                let htmlTemplate = await response.text();
-
-                // 2. คำนวณค่าตัวเลข
-                const academicPrefix = book.academic_title ? `${book.academic_title} ` : '';
-                const printQty = parseFloat(book.print_quantity) || 0;
-                const unitCost = parseFloat(book.unit_cost) || 0;
-                const prodCost = book.production_cost || (printQty * unitCost);
-                const vatAmt = book.vat_amount || (prodCost * 0.07);
-                const totalCostVat = book.total_cost_with_vat || (prodCost + vatAmt);
-
-                const costPerBook = printQty > 0 ? (totalCostVat / printQty) : 0;
-                const facultyWholesaleCalc = costPerBook * 1.35;
-                const facultyWholesaleRounded = book.wholesale_faculty_rounded || Math.ceil((facultyWholesaleCalc) / 5) * 5;
-                const studentPriceCalc = facultyWholesaleRounded * 1.20;
-
-                const externalWholesaleCalc = facultyWholesaleRounded * 1.50;
-                const externalDiscountCalc = externalWholesaleCalc * 0.40;
-                const externalCoverCalc = book.external_cover_rounded || Math.ceil((externalWholesaleCalc * 1.40) / 5) * 5;
-
-                const actualStudent = book.actual_student_price !== null && book.actual_student_price !== undefined 
-                                      ? book.actual_student_price 
-                                      : book.student_price_rounded;
-                const actualPublic = book.actual_public_price !== null && book.actual_public_price !== undefined 
-                                     ? book.actual_public_price 
-                                     : book.external_cover_rounded;
-
-                // 3. แมปแทนที่ตัวแปรใน HTML Template
-                const replacements = {
-                    '{{title}}': escapeHtml(book.title || '-'),
-                    '{{author}}': escapeHtml(academicPrefix + (book.author || '-')),
-                    '{{department}}': escapeHtml(book.department || '-'),
-                    '{{book_code}}': escapeHtml(book.book_code || '-'),
-                    '{{edition}}': book.edition || 1,
-                    '{{isbn}}': escapeHtml(book.isbn || '-'),
-                    '{{kmitl_code}}': escapeHtml(book.kmitl_code || '-'),
-                    '{{pages}}': book.pages || 0,
-                    '{{print_quantity}}': (book.print_quantity || 0).toLocaleString(),
-                    '{{calc_date}}': escapeHtml(book.calc_date || '-'),
-                    '{{status}}': escapeHtml(book.status || '-'),
-                    '{{unit_cost}}': Number(unitCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{production_cost}}': Number(prodCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{vat_amount}}': Number(vatAmt).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{total_cost_with_vat}}': Number(totalCostVat).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{cost_per_book}}': Number(costPerBook).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{faculty_wholesale_calc}}': Number(facultyWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{faculty_wholesale_rounded}}': Number(facultyWholesaleRounded).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{student_price_calc}}': Number(book.student_price_rounded || studentPriceCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{external_wholesale_calc}}': Number(externalWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{external_discount_calc}}': Number(externalDiscountCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{external_cover_calc}}': Number(externalCoverCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-                    '{{summary_faculty_wholesale}}': facultyWholesaleRounded ? Number(facultyWholesaleRounded).toLocaleString() + ' B' : '-',
-                    '{{summary_student_price}}': book.student_price_rounded ? Number(book.student_price_rounded).toLocaleString() + ' B' : '-',
-                    '{{summary_external_cover}}': externalCoverCalc ? Number(externalCoverCalc).toLocaleString() + ' B' : '-',
-                    '{{summary_actual_student}}': actualStudent ? Number(actualStudent).toLocaleString() + ' B' : '-',
-                    '{{summary_actual_public}}': actualPublic ? Number(actualPublic).toLocaleString() + ' B' : '-',
-                    '{{print_date}}': new Date().toLocaleDateString('th-TH')
-                };
-
-                for (const [key, value] of Object.entries(replacements)) {
-                    htmlTemplate = htmlTemplate.replaceAll(key, value);
-                }
-
-                // 4. สร้าง Container ชั่วคราวออกนอกจอ
-                const pdfContainer = document.createElement('div');
-                pdfContainer.style.position = 'absolute';
-                pdfContainer.style.left = '-9999px';
-                pdfContainer.style.top = '0';
-                pdfContainer.innerHTML = htmlTemplate;
-                document.body.appendChild(pdfContainer);
-
-                // 5. Preload โลโก้และรูปภาพทั้งหมดให้เสร็จ 100%
-                const images = pdfContainer.querySelectorAll('img');
-                const imgPromises = Array.from(images).map(img => {
-                    if (img.complete) return Promise.resolve();
-                    return new Promise((resolve) => {
-                        img.onload = resolve;
-                        img.onerror = resolve;
-                    });
-                });
-                await Promise.all(imgPromises);
-
-                // 6. ตั้งค่าพิมพ์ A4 พอดี 1 หน้า
-                const opt = {
-                    margin:       0,
-                    filename:     `TextCalc_${book.book_code || 'Doc'}_${new Date().toISOString().slice(0,10)}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true, allowTaint: true, logging: false },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                // 7. Render PDF และลบ Container ชั่วคราว
-                await html2pdf().set(opt).from(pdfContainer.firstElementChild || pdfContainer).save();
-                document.body.removeChild(pdfContainer);
-
-                showToast('ดาวน์โหลด PDF เรียบร้อยแล้ว', 'success');
-
-            } catch (err) {
-                console.error('PDF error:', err);
-                showToast('เกิดข้อผิดพลาดในการสร้างไฟล์ PDF', 'error');
-            }
+            // TODO: สามารถเพิ่มการสร้าง PDF ใหม่ได้ที่นี่
         }
 
         function changePublicPage(page) {

@@ -1366,7 +1366,7 @@
             renderPaginationControls(paginationContainer, adminCurrentPage, totalPages, books.length, startIndex, pageBooks.length, 'changeAdminPage');
         }
 
-        // ฟังก์ชันดาวน์โหลด PDF ปรับไฮไลต์แถบ "ราคาปกตั้งขาย" ยาวเต็มแถวเป็นสีฟ้า
+        // ฟังก์ชันดาวน์โหลด PDF ปรับโลโก้ใหญ่ขึ้น (75px) และคุมขนาดเอกสารไม่ให้ล้นออกหน้า 2
         function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
             if (!book) return;
@@ -1395,185 +1395,188 @@
             const externalCoverCalc = book.external_cover_rounded || Math.ceil((externalWholesaleCalc * 1.40) / 5) * 5;
 
             const pdfContainer = document.createElement('div');
-            pdfContainer.style.padding = '18px 22px';
+            pdfContainer.style.padding = '14px 20px';
             pdfContainer.style.fontFamily = "'Sarabun', sans-serif";
             pdfContainer.style.color = '#1e293b';
             pdfContainer.style.backgroundColor = '#ffffff';
+            pdfContainer.style.boxSizing = 'border-box';
+            pdfContainer.style.maxHeight = '275mm';
+            pdfContainer.style.pageBreakInside = 'avoid';
 
             pdfContainer.innerHTML = `
-                <!-- ส่วนหัวโลโก้และชื่อมหาวิทยาลัย -->
-                <div style="text-align: center; margin-bottom: 14px;">
+                <!-- ส่วนหัวโลโก้ใหญ่ขึ้น ปรับสัดส่วนสมดุล -->
+                <div style="text-align: center; margin-bottom: 10px;">
                     <img src="https://raw.githubusercontent.com/textbook-TH/TextCalc-System/main/logoSchool.png" 
                          crossorigin="anonymous" 
                          alt="Logo" 
-                         style="height: 52px; width: auto; margin: 0 auto 6px auto; display: block;" />
+                         style="height: 75px; width: auto; margin: 0 auto 6px auto; display: block;" />
                     <h2 style="font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: bold; margin: 0; color: #1e293b; line-height: 1.2;">ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h2>
                     <h3 style="font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 500; margin: 2px 0 0 0; color: #475569;">คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h3>
                 </div>
 
                 <!-- ตารางที่ 1: ข้อมูลทั่วไปหนังสือ -->
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11px; table-layout: fixed;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10.5px; table-layout: fixed;">
                     <tr>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ชื่อหนังสือ:</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155; width: 80%; font-weight: bold; color: #0f172a;" colspan="3">${escapeHtml(book.title || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ชื่อหนังสือ:</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; width: 80%; font-weight: bold; color: #0f172a;" colspan="3">${escapeHtml(book.title || '-')}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ผู้แต่ง / อาจารย์</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155; width: 30%;">${escapeHtml(academicPrefix + (book.author || '-'))}</td>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ภาควิชา</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155; width: 30%;">${escapeHtml(book.department || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ผู้แต่ง / อาจารย์</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; width: 30%;">${escapeHtml(academicPrefix + (book.author || '-'))}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155; width: 20%;">ภาควิชา</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; width: 30%;">${escapeHtml(book.department || '-')}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัสหนังสือ</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.book_code || '-')}</td>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">พิมพ์ครั้งที่</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">ครั้งที่ ${book.edition || 1}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัสหนังสือ</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.book_code || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">พิมพ์ครั้งที่</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">ครั้งที่ ${book.edition || 1}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">เลข ISBN</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.isbn || '-')}</td>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัส วศ.สจล.</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.kmitl_code || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">เลข ISBN</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.isbn || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">รหัส วศ.สจล.</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.kmitl_code || '-')}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จำนวนหน้า</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">${book.pages || 0} หน้า</td>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จํานวนพิมพ์</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">${(book.print_quantity || 0).toLocaleString()} เล่ม</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จำนวนหน้า</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${book.pages || 0} หน้า</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">จํานวนพิมพ์</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${(book.print_quantity || 0).toLocaleString()} เล่ม</td>
                     </tr>
                     <tr>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">วันที่คำนวณ</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155;">${escapeHtml(book.calc_date || '-')}</td>
-                        <td style="padding: 5px 8px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">สถานะ:</td>
-                        <td style="padding: 5px 8px; border: 1px solid #334155; font-weight: 600; color: #e05a10;">${escapeHtml(book.status || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">วันที่คำนวณ</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155;">${escapeHtml(book.calc_date || '-')}</td>
+                        <td style="padding: 4px 6px; font-weight: bold; background-color: #f8fafc; border: 1px solid #334155;">สถานะ:</td>
+                        <td style="padding: 4px 6px; border: 1px solid #334155; font-weight: 600; color: #e05a10;">${escapeHtml(book.status || '-')}</td>
                     </tr>
                 </table>
 
                 <!-- ตารางที่ 2: รายละเอียดต้นทุนและการคำนวณราคา -->
-                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
                     รายละเอียดต้นทุนและการคำนวณราคา
                 </div>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; table-layout: fixed;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
                     <thead>
                         <tr style="background-color: #f1f5f9; text-align: left;">
-                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
-                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(unitCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ต้นทุนต่อหน่วย (ก่อน VAT)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(unitCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">ต้นทุนรวม (ก่อน VAT)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(prodCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ต้นทุนรวม (ก่อน VAT)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(prodCost).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">ภาษีมูลค่าเพิ่ม VAT 7%</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(vatAmt).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ภาษีมูลค่าเพิ่ม VAT 7%</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(vatAmt).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr style="background-color: #fff7ed; font-weight: bold;">
-                            <td style="padding: 5px 8px; border: 1px solid #334155; color: #c2410c;">ยอดรวมทั้งสิ้น (รวม VAT)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right; color: #c2410c;">${Number(totalCostVat).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; color: #c2410c;">ยอดรวมทั้งสิ้น (รวม VAT)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #c2410c;">${Number(totalCostVat).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <!-- ตารางที่ 3: การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา -->
-                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
                     การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา
                 </div>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; table-layout: fixed;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
                     <thead>
                         <tr style="background-color: #f1f5f9; text-align: left;">
-                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
-                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">ราคาต้นทุน (ต่อเล่ม/${printQty})</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(costPerBook).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาต้นทุน (ต่อเล่ม/${printQty})</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(costPerBook).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">ราคาส่งจากคณะ (+35%)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาส่งจากคณะ (+35%)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">รวมราคาส่งจากคณะ (ปัดเศษ)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleRounded).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">รวมราคาส่งจากคณะ (ปัดเศษ)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(facultyWholesaleRounded).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr style="background-color: #ecfdf5; font-weight: bold;">
-                            <td style="padding: 5px 8px; border: 1px solid #334155; color: #047857;">ราคาขายนักศึกษา (+20%)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right; color: #047857;">${Number(book.student_price_rounded || studentPriceCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; color: #047857;">ราคาขายนักศึกษา (+20%)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #047857;">${Number(book.student_price_rounded || studentPriceCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <!-- ตารางที่ 4: การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก (เน้นสีฟ้าไฮไลต์ยาวเต็มแถว) -->
-                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
                     การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก
                 </div>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; table-layout: fixed;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 10.5px; table-layout: fixed;">
                     <thead>
                         <tr style="background-color: #f1f5f9; text-align: left;">
-                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
-                            <th style="padding: 5px 8px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 65%; font-weight: bold;">รายการ</th>
+                            <th style="padding: 4px 6px; border: 1px solid #334155; width: 35%; text-align: right; font-weight: bold;">จํานวนเงิน (บาท)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">ราคาส่งบุคคลภายนอก (+50%)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(externalWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">ราคาส่งบุคคลภายนอก (+50%)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(externalWholesaleCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 8px; border: 1px solid #334155;">บวกส่วนลดร้านค้า (40%)</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right;">${Number(externalDiscountCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155;">บวกส่วนลดร้านค้า (40%)</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right;">${Number(externalDiscountCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                         <tr style="background-color: #e0f2fe; font-weight: bold;">
-                            <td style="padding: 5px 8px; border: 1px solid #334155; color: #0369a1;">ราคาปกตั้งขาย</td>
-                            <td style="padding: 5px 8px; border: 1px solid #334155; text-align: right; color: #0369a1;">${Number(externalCoverCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; color: #0369a1;">ราคาปกตั้งขาย</td>
+                            <td style="padding: 4px 6px; border: 1px solid #334155; text-align: right; color: #0369a1;">${Number(externalCoverCalc).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <!-- ตารางที่ 5: สรุปราคาจำหน่าย -->
-                <div style="font-family: 'Kanit', sans-serif; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; color: #1e293b;">
+                <div style="font-family: 'Kanit', sans-serif; font-size: 10.5px; font-weight: bold; margin-top: 8px; margin-bottom: 3px; color: #1e293b;">
                     สรุปราคาจําหน่าย
                 </div>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px; text-align: center; table-layout: fixed;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px; text-align: center; table-layout: fixed;">
                     <thead>
                         <tr style="background-color: #f1f5f9; font-weight: bold;">
-                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%;">ราคาคำนวณส่งคณะ</th>
-                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%;">ราคาคำนวณขาย นศ.</th>
-                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%;">ราคาคำนวณปกบุคคลนอก</th>
-                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%; background-color: #d1fae5; color: #065f46;">ราคาขายจริง นศ.</th>
-                            <th style="padding: 6px 4px; border: 1px solid #334155; width: 20%; background-color: #e0f2fe; color: #075985;">ราคาขายจริงบุคคลภายนอก</th>
+                            <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%;">ราคาคำนวณส่งคณะ</th>
+                            <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%;">ราคาคำนวณขาย นศ.</th>
+                            <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%;">ราคาคำนวณปกบุคคลนอก</th>
+                            <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%; background-color: #d1fae5; color: #065f46;">ราคาขายจริง นศ.</th>
+                            <th style="padding: 5px 3px; border: 1px solid #334155; width: 20%; background-color: #e0f2fe; color: #075985;">ราคาขายจริงบุคคลภายนอก</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="font-weight: bold; font-size: 11px;">
-                            <td style="padding: 6px 4px; border: 1px solid #334155;">${facultyWholesaleRounded ? Number(facultyWholesaleRounded).toLocaleString() + ' B' : '-'}</td>
-                            <td style="padding: 6px 4px; border: 1px solid #334155;">${book.student_price_rounded ? Number(book.student_price_rounded).toLocaleString() + ' B' : '-'}</td>
-                            <td style="padding: 6px 4px; border: 1px solid #334155;">${externalCoverCalc ? Number(externalCoverCalc).toLocaleString() + ' B' : '-'}</td>
-                            <td style="padding: 6px 4px; border: 1px solid #334155; color: #047857; background-color: #ecfdf5;">${actualStudent ? Number(actualStudent).toLocaleString() + ' B' : '-'}</td>
-                            <td style="padding: 6px 4px; border: 1px solid #334155; color: #0369a1; background-color: #f0f9ff;">${actualPublic ? Number(actualPublic).toLocaleString() + ' B' : '-'}</td>
+                        <tr style="font-weight: bold; font-size: 10.5px;">
+                            <td style="padding: 5px 3px; border: 1px solid #334155;">${facultyWholesaleRounded ? Number(facultyWholesaleRounded).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 5px 3px; border: 1px solid #334155;">${book.student_price_rounded ? Number(book.student_price_rounded).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 5px 3px; border: 1px solid #334155;">${externalCoverCalc ? Number(externalCoverCalc).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 5px 3px; border: 1px solid #334155; color: #047857; background-color: #ecfdf5;">${actualStudent ? Number(actualStudent).toLocaleString() + ' B' : '-'}</td>
+                            <td style="padding: 5px 3px; border: 1px solid #334155; color: #0369a1; background-color: #f0f9ff;">${actualPublic ? Number(actualPublic).toLocaleString() + ' B' : '-'}</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <div style="font-size: 9px; color: #64748b; margin-top: 4px; margin-bottom: 12px;">
+                <div style="font-size: 8.5px; color: #64748b; margin-top: 3px; margin-bottom: 8px;">
                     * ราคาขายจริง นศ. และ ราคาขายจริงบุคคลภานออก บางกรณีอาจปัดเศษ เพื่อให้ง่ายต่อการจัดจำหน่าย
                 </div>
 
-                <div style="margin-top: 14px; text-align: left; font-size: 9px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 4px;">
+                <div style="margin-top: 8px; text-align: left; font-size: 8.5px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 3px;">
                     พิมพ์จากระบบ TextCalc Engine | วันที่พิมพ์เอกสาร: ${new Date().toLocaleDateString('th-TH')}
                 </div>
             `;
 
             const opt = {
-                margin:       8,
+                margin:       6,
                 filename:     `TextCalc_${book.book_code || 'Doc'}_${new Date().toISOString().slice(0,10)}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, allowTaint: true },

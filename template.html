@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Supabase JS Client Client CDN -->
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -399,103 +399,110 @@
         <!-- Footer ล่างสุด -->
         <div class="footer-bar">
             <span>พิมพ์จากระบบ TextCalc Engine</span>
-            <span>วันที่พิมพ์เอกสาร: {{PRINT_DATE}}</span>
+            <span>วันที่พิมพ์เอกสาร: <span id="print-date">{{PRINT_DATE}}</span></span>
         </div>
     </div>
 
-    <!-- สคริปต์สำหรับดึงข้อมูลจาก Supabase ตาม Parameter ที่ส่งมา -->
+    <!-- Script ดึงข้อมูลแบบทำงานอัตโนมัติ -->
     <script>
         const SUPABASE_URL = 'https://glalypgckngfhyoobagk.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_4aW41o5Q_C3Y91gJz_G0Ww';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        
         function formatNum(val) {
             const num = parseFloat(val);
             return isNaN(num) ? '-' : num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        async function loadBookData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const bookId = urlParams.get('id');
-            const bookCode = urlParams.get('book_code');
+        async function initTemplate() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookId = urlParams.get('id');
+                const bookCode = urlParams.get('book_code');
 
-            if (!bookId && !bookCode) {
-                console.error('ไม่พบ ID หรือ Book Code ใน URL');
-                return;
+                if (!bookId && !bookCode) {
+                    console.warn('ไม่พบ ID หรือ Book Code ใน URL');
+                    return;
+                }
+
+                const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                let query = _supabase.from('textbooks').select('*');
+
+                if (bookId) {
+                    query = query.eq('id', bookId);
+                } else if (bookCode) {
+                    query = query.eq('book_code', bookCode);
+                }
+
+                const { data, error } = await query.single();
+
+                if (error || !data) {
+                    console.error('ไม่สามารถดึงข้อมูลจาก Supabase ได้:', error);
+                    return;
+                }
+
+                // คำนวณค่าต่างๆ
+                const unitCost = parseFloat(data.unit_cost) || 0;
+                const printQty = parseInt(data.print_quantity) || 1;
+                const totalCostBeforeVat = parseFloat(data.production_cost) || (unitCost * printQty);
+                const vatAmount = parseFloat(data.vat_amount) || (totalCostBeforeVat * 0.07);
+                const totalWithVat = parseFloat(data.total_cost_with_vat) || (totalCostBeforeVat + vatAmount);
+                const costPerBook = totalWithVat / printQty;
+
+                const facultySend = parseFloat(data.wholesale_faculty) || (costPerBook * 1.35);
+                const facultyRounded = Math.ceil(facultySend);
+                const studentPrice = parseFloat(data.student_price_rounded) || Math.ceil(costPerBook * 1.20);
+
+                const externalSend = parseFloat(data.external_wholesale) || (costPerBook * 1.50);
+                const storeDiscount = externalSend * 0.40;
+                const coverPrice = parseFloat(data.external_cover_rounded) || Math.ceil(externalSend + storeDiscount);
+
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+                const mapping = {
+                    '{{TITLE}}': data.title || '-',
+                    '{{AUTHOR}}': ((data.academic_title || '') + ' ' + (data.author || '')).trim() || '-',
+                    '{{DEPARTMENT}}': data.department || '-',
+                    '{{BOOK_CODE}}': data.book_code || '-',
+                    '{{EDITION}}': data.edition || '-',
+                    '{{ISBN}}': data.isbn || '-',
+                    '{{KMITL_CODE}}': data.kmitl_code || '-',
+                    '{{PAGES}}': data.pages || '-',
+                    '{{PRINT_QTY}}': printQty.toLocaleString(),
+                    '{{CALC_DATE}}': data.calc_date || '-',
+                    '{{STATUS}}': data.status || 'สมบูรณ์',
+                    '{{UNIT_COST_BEFORE_VAT}}': formatNum(unitCost),
+                    '{{TOTAL_COST_BEFORE_VAT}}': formatNum(totalCostBeforeVat),
+                    '{{VAT_AMOUNT}}': formatNum(vatAmount),
+                    '{{TOTAL_COST_WITH_VAT}}': formatNum(totalWithVat),
+                    '{{COST_PER_BOOK}}': formatNum(costPerBook),
+                    '{{FACULTY_SEND_PRICE}}': formatNum(facultySend),
+                    '{{FACULTY_ROUNDED_PRICE}}': formatNum(facultyRounded),
+                    '{{STUDENT_PRICE}}': formatNum(studentPrice),
+                    '{{EXTERNAL_SEND_PRICE}}': formatNum(externalSend),
+                    '{{STORE_DISCOUNT}}': formatNum(storeDiscount),
+                    '{{COVER_PRICE}}': formatNum(coverPrice),
+                    '{{SUMMARY_FACULTY_SEND}}': formatNum(facultyRounded),
+                    '{{SUMMARY_STUDENT_CALC}}': formatNum(studentPrice),
+                    '{{SUMMARY_EXT_COVER_CALC}}': formatNum(coverPrice),
+                    '{{SUMMARY_STUDENT_ACTUAL}}': formatNum(data.actual_student_price || studentPrice),
+                    '{{SUMMARY_EXT_ACTUAL}}': formatNum(data.actual_public_price || coverPrice),
+                    '{{PRINT_DATE}}': dateStr
+                };
+
+                // วนลูปแทนค่าตัวแปรในหน้าเอกสาร
+                let htmlContent = document.body.innerHTML;
+                for (const [key, value] of Object.entries(mapping)) {
+                    htmlContent = htmlContent.replaceAll(key, value);
+                }
+                document.body.innerHTML = htmlContent;
+
+            } catch (err) {
+                console.error(' เกิดข้อผิดพลาด:', err);
             }
-
-            let query = _supabase.from('textbooks').select('*');
-            if (bookId) {
-                query = query.eq('id', bookId);
-            } else if (bookCode) {
-                query = query.eq('book_code', bookCode);
-            }
-
-            const { data, error } = await query.single();
-
-            if (error || !data) {
-                console.error('ดึงข้อมูลจาก Supabase ล้มเหลว:', error);
-                return;
-            }
-
-            // คำนวณค่าทางคณิตศาสตร์อัตโนมัติหากไม่มีข้อมูลใน Record
-            const unitCost = parseFloat(data.unit_cost) || 0;
-            const printQty = parseInt(data.print_quantity) || 1;
-            const totalCostBeforeVat = parseFloat(data.production_cost) || (unitCost * printQty);
-            const vatAmount = parseFloat(data.vat_amount) || (totalCostBeforeVat * 0.07);
-            const totalWithVat = parseFloat(data.total_cost_with_vat) || (totalCostBeforeVat + vatAmount);
-            const costPerBook = totalWithVat / printQty;
-
-            const facultySend = parseFloat(data.wholesale_faculty) || (costPerBook * 1.35);
-            const facultyRounded = Math.ceil(facultySend);
-            const studentPrice = parseFloat(data.student_price_rounded) || Math.ceil(costPerBook * 1.20);
-
-            const externalSend = parseFloat(data.external_wholesale) || (costPerBook * 1.50);
-            const storeDiscount = externalSend * 0.40;
-            const coverPrice = parseFloat(data.external_cover_rounded) || Math.ceil(externalSend + storeDiscount);
-
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
-
-            const mapping = {
-                '{{TITLE}}': data.title || '-',
-                '{{AUTHOR}}': (data.academic_title || '') + ' ' + (data.author || ''),
-                '{{DEPARTMENT}}': data.department || '-',
-                '{{BOOK_CODE}}': data.book_code || '-',
-                '{{EDITION}}': data.edition || '-',
-                '{{ISBN}}': data.isbn || '-',
-                '{{KMITL_CODE}}': data.kmitl_code || '-',
-                '{{PAGES}}': data.pages || '-',
-                '{{PRINT_QTY}}': printQty.toLocaleString(),
-                '{{CALC_DATE}}': data.calc_date || '-',
-                '{{STATUS}}': data.status || '-',
-                '{{UNIT_COST_BEFORE_VAT}}': formatNum(unitCost),
-                '{{TOTAL_COST_BEFORE_VAT}}': formatNum(totalCostBeforeVat),
-                '{{VAT_AMOUNT}}': formatNum(vatAmount),
-                '{{TOTAL_COST_WITH_VAT}}': formatNum(totalWithVat),
-                '{{COST_PER_BOOK}}': formatNum(costPerBook),
-                '{{FACULTY_SEND_PRICE}}': formatNum(facultySend),
-                '{{FACULTY_ROUNDED_PRICE}}': formatNum(facultyRounded),
-                '{{STUDENT_PRICE}}': formatNum(studentPrice),
-                '{{EXTERNAL_SEND_PRICE}}': formatNum(externalSend),
-                '{{STORE_DISCOUNT}}': formatNum(storeDiscount),
-                '{{COVER_PRICE}}': formatNum(coverPrice),
-                '{{SUMMARY_FACULTY_SEND}}': formatNum(facultyRounded),
-                '{{SUMMARY_STUDENT_CALC}}': formatNum(studentPrice),
-                '{{SUMMARY_EXT_COVER_CALC}}': formatNum(coverPrice),
-                '{{SUMMARY_STUDENT_ACTUAL}}': formatNum(data.actual_student_price || studentPrice),
-                '{{SUMMARY_EXT_ACTUAL}}': formatNum(data.actual_public_price || coverPrice),
-                '{{PRINT_DATE}}': dateStr
-            };
-
-            let bodyHtml = document.body.innerHTML;
-            for (const [key, value] of Object.entries(mapping)) {
-                bodyHtml = bodyHtml.replaceAll(key, value);
-            }
-            document.body.innerHTML = bodyHtml;
         }
 
-        window.addEventListener('DOMContentLoaded', loadBookData);
+        window.addEventListener('DOMContentLoaded', initTemplate);
     </script>
 </body>
 </html>

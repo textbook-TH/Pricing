@@ -418,7 +418,7 @@
             try {
                 let data = null;
 
-                // 1. ตรวจสอบข้อมูลจาก window.printData หรือ SessionStorage (ส่งข้ามจาก index)
+                // 1. ตรวจสอบข้อมูลจาก window.printData หรือ SessionStorage/LocalStorage
                 if (window.printData) {
                     data = window.printData;
                 } else {
@@ -436,13 +436,24 @@
 
                     if (bookId || bookCode) {
                         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                        let query = _supabase.from('textbooks').select('*');
-
+                        
+                        // ปรับชื่อตารางให้ค้นหาจากทั้ง 'books' และ 'textbooks' เพื่อความปลอดภัย
+                        let query = _supabase.from('books').select('*');
                         if (bookId) query = query.eq('id', bookId);
                         else if (bookCode) query = query.eq('book_code', bookCode);
 
-                        const { data: fetchRes, error } = await query.single();
-                        if (!error && fetchRes) {
+                        let { data: fetchRes, error } = await query.single();
+                        
+                        // Fallback ลองหาในตาราง textbooks หากตารางแรกไม่เจอ
+                        if (error || !fetchRes) {
+                            let fallbackQuery = _supabase.from('textbooks').select('*');
+                            if (bookId) fallbackQuery = fallbackQuery.eq('id', bookId);
+                            else if (bookCode) fallbackQuery = fallbackQuery.eq('book_code', bookCode);
+                            const res2 = await fallbackQuery.single();
+                            if (res2.data) fetchRes = res2.data;
+                        }
+
+                        if (fetchRes) {
                             data = fetchRes;
                         }
                     }
@@ -453,7 +464,7 @@
                     return;
                 }
 
-                // การคิดคำนวณและแปลงค่ารองรับ Key ทุกรูปแบบจาก index
+                // 3. คิดคำนวณและแปลงค่ารองรับ Key ทุกรูปแบบ
                 const unitCost = parseFloat(data.unit_cost || data.unitCost) || 0;
                 const printQty = parseInt(data.print_quantity || data.printQty || data.quantity) || 1;
                 const totalCostBeforeVat = parseFloat(data.production_cost || data.totalCostBeforeVat) || (unitCost * printQty);
@@ -472,11 +483,11 @@
                 const now = new Date();
                 const dateStr = now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
 
-                const authorName = (data.academic_title || data.academicTitle || '') + ' ' + (data.author || data.authorName || '');
+                const authorName = ((data.academic_title || data.academicTitle || '') + ' ' + (data.author || data.authorName || '')).trim();
 
                 const mapping = {
                     '{{TITLE}}': data.title || data.bookTitle || '-',
-                    '{{AUTHOR}}': authorName.trim() || '-',
+                    '{{AUTHOR}}': authorName || '-',
                     '{{DEPARTMENT}}': data.department || '-',
                     '{{BOOK_CODE}}': data.book_code || data.bookCode || '-',
                     '{{EDITION}}': data.edition || '1',
@@ -505,12 +516,13 @@
                     '{{PRINT_DATE}}': dateStr
                 };
 
-                // วนลูปแทนค่าเฉพาะภายในพื้นที่ printable-area
+                // 4. วนลูปแทนค่าตัวแปรด้วย Regular Expression เพื่อให้แทนที่ได้ครบถ้วน
                 const targetArea = document.getElementById('printable-area');
                 if (targetArea) {
                     let htmlContent = targetArea.innerHTML;
                     for (const [key, value] of Object.entries(mapping)) {
-                        htmlContent = htmlContent.replaceAll(key, value);
+                        const regex = new RegExp(key.replace(/\[/g, '\\[').replace(/\]/g, '\\]'), 'g');
+                        htmlContent = htmlContent.replace(regex, value);
                     }
                     targetArea.innerHTML = htmlContent;
                 }

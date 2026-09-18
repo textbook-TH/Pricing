@@ -7,143 +7,399 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; }
-        @page { size: A4 portrait; margin: 0; }
-        body { background-color: #ffffff; color: #1f2937; font-size: 11.5px; line-height: 1.2; }
-        .page-container { width: 210mm; min-height: 297mm; padding: 10mm; margin: 0 auto; background: #ffffff; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        th, td { border: 1px solid #d1d5db; padding: 5px 8px; font-size: 11px; text-align: left; }
-        th { background-color: #f3f4f6; font-weight: 600; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #1f2937;
+            font-size: 11.5px;
+            line-height: 1.2;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ล็อคขนาด A4 หน้าเดียวเป๊ะ */
+        .page-container {
+            width: 210mm;
+            height: 297mm;
+            max-height: 297mm;
+            padding: 7mm 10mm;
+            margin: 0 auto;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Header Layout */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        .header-logo {
+            width: 60px;
+            vertical-align: top;
+        }
+
+        .header-logo img {
+            width: 55px;
+            height: auto;
+            display: block;
+        }
+
+        .header-title {
+            vertical-align: middle;
+            text-align: left;
+            padding-left: 8px;
+        }
+
+        .header-title h1 {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 2px;
+        }
+
+        .header-title h2 {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        /* ตารางทั่วไป */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 3.5px 6px;
+            text-align: left;
+            font-size: 10.5px;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #374151;
+        }
+
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .font-bold { font-weight: 700; }
-        .info-label { font-weight: 600; background-color: #f9fafb; width: 20%; }
-        @media print {
-            body { background: none; }
-            .no-print { display: none; }
+        .bg-gray-50 { background-color: #f9fafb; }
+
+        /* คลาสสีไฮไลต์ (ส้ม, เขียว, ฟ้า) */
+        .highlight-orange {
+            background-color: #fff7ed !important;
+            color: #c2410c !important;
+        }
+
+        .highlight-green {
+            background-color: #f0fdf4 !important;
+            color: #15803d !important;
+        }
+
+        .highlight-blue {
+            background-color: #f0f9ff !important;
+            color: #0369a1 !important;
+        }
+
+        /* ตารางข้อมูลหนังสือ */
+        .info-table td {
+            padding: 3px 6px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            background-color: #f9fafb;
+            width: 16%;
+        }
+
+        .info-value {
+            width: 34%;
+        }
+
+        /* หัวข้อส่วน */
+        .section-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            padding-bottom: 1px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        /* ตารางสรุปราคาจำหน่าย */
+        .summary-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            table-layout: fixed;
+        }
+
+        .summary-table td {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 5px 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .summary-card-title {
+            font-size: 10px;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .summary-card-value {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        /* การ์ดไฮไลต์สรุปราคา */
+        .card-green {
+            background-color: #f0fdf4 !important;
+            border-color: #86efac !important;
+        }
+        .card-green .summary-card-title,
+        .card-green .summary-card-value {
+            color: #15803d !important;
+        }
+
+        .card-blue {
+            background-color: #f0f9ff !important;
+            border-color: #7dd3fc !important;
+        }
+        .card-blue .summary-card-title,
+        .card-blue .summary-card-value {
+            color: #0369a1 !important;
+        }
+
+        /* Footer */
+        .note-text {
+            font-size: 9.5px;
+            color: #6b7280;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .footer-bar {
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed #d1d5db;
+            font-size: 9.5px;
+            color: #9ca3af;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
 
-    <div class="page-container" id="pdfContent">
-        <!-- Header -->
-        <div style="text-align: center; margin-bottom: 15px;">
-            <h1 style="font-size: 18px; font-weight: 700;">ใบคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h1>
-            <p style="font-size: 12px; color: #6b7280;">สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</p>
+    <div class="page-container">
+        <div>
+            <!-- หัวเอกสาร + โลโก้ -->
+            <table class="header-table">
+                <tr>
+                    <td class="header-logo" style="border: none;">
+                        <img id="pdf-logo" 
+                             src="https://raw.githubusercontent.com/textbook-TH/TextCalc-System/35b44d009813b83023814773f8148d1a80c337c9/logoSchool.png" 
+                             alt="KMITL Logo"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/55?text=LOGO';">
+                    </td>
+                    <td class="header-title" style="border: none;">
+                        <h1>ตารางคำนวณต้นทุนและราคาจำหน่ายหนังสือ</h1>
+                        <h2>คณะวิศวกรรมศาสตร์ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง</h2>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ข้อมูลหนังสือ -->
+            <table class="info-table">
+                <tr>
+                    <td class="info-label">ชื่อหนังสือ:</td>
+                    <td class="info-value font-bold" colspan="3">{{TITLE}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">ผู้แต่ง / อาจารย์:</td>
+                    <td class="info-value">{{AUTHOR}}</td>
+                    <td class="info-label">ภาควิชา:</td>
+                    <td class="info-value">{{DEPARTMENT}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">รหัสหนังสือ:</td>
+                    <td class="info-value">{{BOOK_CODE}}</td>
+                    <td class="info-label">พิมพ์ครั้งที่:</td>
+                    <td class="info-value">{{EDITION}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">เลข ISBN:</td>
+                    <td class="info-value">{{ISBN}}</td>
+                    <td class="info-label">รหัส วศ.สจล.:</td>
+                    <td class="info-value">{{KMITL_CODE}}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">จำนวนหน้า:</td>
+                    <td class="info-value">{{PAGES}} หน้า</td>
+                    <td class="info-label">จำนวนพิมพ์:</td>
+                    <td class="info-value">{{PRINT_QTY}} เล่ม</td>
+                </tr>
+                <tr>
+                    <td class="info-label">วันที่คำนวณ:</td>
+                    <td class="info-value">{{CALC_DATE}}</td>
+                    <td class="info-label">สถานะ:</td>
+                    <td class="info-value font-bold" style="color: #15803d;">{{STATUS}}</td>
+                </tr>
+            </table>
+
+            <!-- รายละเอียดต้นทุนและการคำนวณราคา -->
+            <div class="section-title">รายละเอียดต้นทุนและการคำนวณราคา</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>รายการ</th>
+                        <th class="text-right" style="width: 30%;">จำนวนเงิน (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ต้นทุนต่อหน่วย (ก่อน VAT)</td>
+                        <td class="text-right">{{UNIT_COST_BEFORE_VAT}}</td>
+                    </tr>
+                    <tr>
+                        <td>ต้นทุนรวม (ก่อน VAT)</td>
+                        <td class="text-right">{{TOTAL_COST_BEFORE_VAT}}</td>
+                    </tr>
+                    <tr>
+                        <td>ภาษีมูลค่าเพิ่ม VAT 7%</td>
+                        <td class="text-right">{{VAT_AMOUNT}}</td>
+                    </tr>
+                    <tr class="highlight-orange font-bold">
+                        <td>ยอดรวมทั้งสิ้น (รวม VAT)</td>
+                        <td class="text-right">{{TOTAL_COST_WITH_VAT}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา -->
+            <div class="section-title">การคิดราคาต้นทุนและราคาจำหน่ายนักศึกษา</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>รายการ</th>
+                        <th class="text-right" style="width: 30%;">จำนวนเงิน (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ราคาต้นทุน (ต่อเล่ม/{{PRINT_QTY}})</td>
+                        <td class="text-right">{{COST_PER_BOOK}}</td>
+                    </tr>
+                    <tr>
+                        <td>ราคาส่งจากคณะ (+35%)</td>
+                        <td class="text-right">{{FACULTY_SEND_PRICE}}</td>
+                    </tr>
+                    <tr>
+                        <td>รวมราคาส่งจากคณะ (ปัดเศษ)</td>
+                        <td class="text-right font-bold">{{FACULTY_ROUNDED_PRICE}}</td>
+                    </tr>
+                    <tr class="highlight-green font-bold">
+                        <td>ราคาขายนักศึกษา (+20%)</td>
+                        <td class="text-right">{{STUDENT_PRICE}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก -->
+            <div class="section-title">การคิดราคาต้นทุนและราคาจำหน่ายบุคคลภายนอก</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>รายการ</th>
+                        <th class="text-right" style="width: 30%;">จำนวนเงิน (บาท)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ราคาส่งบุคคลภายนอก (+50%)</td>
+                        <td class="text-right">{{EXTERNAL_SEND_PRICE}}</td>
+                    </tr>
+                    <tr>
+                        <td>บวกส่วนลดร้านค้า (40%)</td>
+                        <td class="text-right">{{STORE_DISCOUNT}}</td>
+                    </tr>
+                    <tr class="highlight-blue font-bold">
+                        <td>ราคาปกตั้งขาย</td>
+                        <td class="text-right">{{COVER_PRICE}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- สรุปราคาจำหน่าย -->
+            <div class="section-title">สรุปราคาจำหน่าย</div>
+            <table class="summary-table">
+                <tr>
+                    <td style="width: 33.33%;">
+                        <div class="summary-card-title">ราคาคำนวณส่งคณะ</div>
+                        <div class="summary-card-value">{{SUMMARY_FACULTY_SEND}} ฿</div>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <div class="summary-card-title">ราคาคำนวณขาย นศ.</div>
+                        <div class="summary-card-value">{{SUMMARY_STUDENT_CALC}} ฿</div>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <div class="summary-card-title">ราคาคำนวณปกบุคคลนอก</div>
+                        <div class="summary-card-value">{{SUMMARY_EXT_COVER_CALC}} ฿</div>
+                    </td>
+                </tr>
+            </table>
+            <table class="summary-table">
+                <tr>
+                    <td class="card-green" style="width: 50%;">
+                        <div class="summary-card-title">ราคาขายจริง นศ.</div>
+                        <div class="summary-card-value">{{SUMMARY_STUDENT_ACTUAL}} ฿</div>
+                    </td>
+                    <td class="card-blue" style="width: 50%;">
+                        <div class="summary-card-title">ราคาขายจริงบุคคลภายนอก</div>
+                        <div class="summary-card-value">{{SUMMARY_EXT_ACTUAL}} ฿</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="note-text">* ราคาขายจริง นศ. และ ราคาขายจริงบุคคลภายนอก บางกรณีอาจปัดเศษ เพื่อให้ง่ายต่อการจัดจำหน่าย</div>
         </div>
 
-        <!-- รายละเอียดหนังสือ -->
-        <table>
-            <tr>
-                <td class="info-label">รหัสหนังสือ</td>
-                <td id="pdfBookCode">-</td>
-                <td class="info-label">วันที่คำนวณ</td>
-                <td id="pdfCalcDate">-</td>
-            </tr>
-            <tr>
-                <td class="info-label">ชื่อหนังสือ/ตำรา</td>
-                <td colspan="3" id="pdfTitle" class="font-bold">-</td>
-            </tr>
-            <tr>
-                <td class="info-label">ผู้แต่ง / อาจารย์</td>
-                <td id="pdfAuthor">-</td>
-                <td class="info-label">ภาควิชา</td>
-                <td id="pdfDepartment">-</td>
-            </tr>
-            <tr>
-                <td class="info-label">พิมพ์ครั้งที่ / จำนวนหน้า</td>
-                <td id="pdfEditionPages">-</td>
-                <td class="info-label">จำนวนพิมพ์</td>
-                <td id="pdfPrintQuantity">-</td>
-            </tr>
-        </table>
-
-        <!-- ตารางคำนวณต้นทุน -->
-        <h3 style="font-size: 13px; margin: 10px 0 5px 0;">สรุปต้นทุนและการกำหนดราคา</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>รายการ</th>
-                    <th class="text-right">จำนวนเงิน (บาท)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>ต้นทุนรวม (ก่อน VAT)</td>
-                    <td class="text-right" id="pdfProductionCost">0.00</td>
-                </tr>
-                <tr>
-                    <td>ภาษีมูลค่าเพิ่ม (VAT 7%)</td>
-                    <td class="text-right" id="pdfVatAmount">0.00</td>
-                </tr>
-                <tr class="font-bold">
-                    <td>ยอดรวมต้นทุนทั้งสิ้น (รวม VAT)</td>
-                    <td class="text-right" id="pdfTotalCost">0.00</td>
-                </tr>
-                <tr>
-                    <td>ราคาจำหน่ายจริง (นักศึกษา)</td>
-                    <td class="text-right font-bold" id="pdfActualStudent">0.00</td>
-                </tr>
-                <tr>
-                    <td>ราคาจำหน่ายจริง (บุคคลภายนอก)</td>
-                    <td class="text-right font-bold" id="pdfActualPublic">0.00</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Footer ล่างสุด -->
+        <div class="footer-bar">
+            <span>พิมพ์จากระบบ TextCalc Engine</span>
+            <span>วันที่พิมพ์เอกสาร: {{PRINT_DATE}}</span>
+        </div>
     </div>
 
-    <script>
-        const SUPABASE_URL = 'https://iaqtzbkjpbwrwwgabnzy.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_2qwJoqjcloS9DMv36lN72A_2FQbfFVE';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        window.onload = async function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const bookId = urlParams.get('id');
-
-            if (!bookId) {
-                alert('ไม่พบรหัสเอกสาร');
-                return;
-            }
-
-            try {
-                const { data: book, error } = await supabaseClient
-                    .from('textbooks')
-                    .select('*')
-                    .eq('id', bookId)
-                    .single();
-
-                if (error || !book) throw new Error('ไม่พบข้อมูลหนังสือ');
-
-                // เติมข้อมูลลง HTML Elements
-                document.getElementById('pdfBookCode').innerText = book.book_code || '-';
-                document.getElementById('pdfCalcDate').innerText = book.calc_date || '-';
-                document.getElementById('pdfTitle').innerText = book.title || '-';
-                document.getElementById('pdfAuthor').innerText = (book.academic_title ? book.academic_title + ' ' : '') + (book.author || '');
-                document.getElementById('pdfDepartment').innerText = book.department || '-';
-                document.getElementById('pdfEditionPages').innerText = `พิมพ์ครั้งที่ ${book.edition || 1} (${book.pages || 0} หน้า)`;
-                document.getElementById('pdfPrintQuantity').innerText = (book.print_quantity || 0).toLocaleString() + ' เล่ม';
-                
-                document.getElementById('pdfProductionCost').innerText = Number(book.production_cost || 0).toLocaleString('en-US', {minimumFractionDigits: 2});
-                document.getElementById('pdfVatAmount').innerText = Number(book.vat_amount || 0).toLocaleString('en-US', {minimumFractionDigits: 2});
-                document.getElementById('pdfTotalCost').innerText = Number(book.total_cost_with_vat || 0).toLocaleString('en-US', {minimumFractionDigits: 2});
-
-                const stdPrice = book.actual_student_price ?? book.student_price_rounded ?? 0;
-                const pubPrice = book.actual_public_price ?? book.external_cover_rounded ?? 0;
-
-                document.getElementById('pdfActualStudent').innerText = Number(stdPrice).toLocaleString() + ' ฿';
-                document.getElementById('pdfActualPublic').innerText = Number(pubPrice).toLocaleString() + ' ฿';
-
-                // สั่งพิมพ์อัตโนมัติเมื่อโหลดข้อมูลเสร็จ
-                setTimeout(() => window.print(), 500);
-
-            } catch (err) {
-                alert(err.message);
-            }
-        };
-    </script>
 </body>
 </html>

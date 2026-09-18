@@ -1389,7 +1389,7 @@
         }
 
         // ==========================================
-        // ฟังก์ชันเชื่อมต่อไปยัง temple_4.html เพื่อดาวน์โหลดเป็น PDF
+        // ฟังก์ชันเชื่อมต่อไปยัง template.html เพื่อดาวน์โหลดเป็น PDF
         // ==========================================
         function downloadPDFById(id) {
             const book = allBooks.find(b => String(b.id) === String(id));
@@ -1400,8 +1400,8 @@
 
             showToast('กำลังเตรียมข้อมูลเอกสาร PDF...', 'info');
 
-            // เปิด temple_4.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
-            const printWindow = window.open(`temple_4.html?id=${encodeURIComponent(book.id)}`, '_blank');
+            // เปิด template.html โดยส่ง id ผ่าน Query Parameter และสั่ง print
+            const printWindow = window.open(`template.html?id=${encodeURIComponent(book.id)}`, '_blank');
             if (printWindow) {
                 printWindow.focus();
             } else {
@@ -1719,15 +1719,15 @@
                 document.getElementById('formCalcDate').value = todayStr;
                 document.getElementById('formStatus').value = 'ร่าง';
             }
-
             openModal('modalAdminForm');
         }
 
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-            const btnSaveSubmit = document.getElementById('btnSaveSubmit');
-            btnSaveSubmit.disabled = true;
-            btnSaveSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i>กำลังบันทึก...';
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const btnSave = document.getElementById('btnSaveSubmit');
+            btnSave.disabled = true;
+            btnSave.innerText = 'กำลังบันทึก...';
 
             try {
                 const bookId = document.getElementById('formBookId').value;
@@ -1746,68 +1746,66 @@
                 const unitCost = parseFloat(document.getElementById('formUnitCost').value) || 0;
                 const remarks = document.getElementById('formRemarks').value.trim();
 
-                const actualStudentVal = document.getElementById('formActualStudentPrice').value;
-                const actualPublicVal = document.getElementById('formActualPublicPrice').value;
-
-                const actualStudentPrice = actualStudentVal !== '' ? parseFloat(actualStudentVal) : null;
-                const actualPublicPrice = actualPublicVal !== '' ? parseFloat(actualPublicVal) : null;
-
                 const productionCost = printQuantity * unitCost;
                 const vatAmount = productionCost * 0.07;
                 const totalCostWithVat = productionCost + vatAmount;
 
                 const unitCostWithVat = printQuantity > 0 ? (totalCostWithVat / printQuantity) : 0;
-                const wholesaleFacultyRounded = unitCostWithVat > 0 ? Math.ceil((unitCostWithVat * 1.35) / 5) * 5 : 0;
-                const studentPriceRounded = wholesaleFacultyRounded > 0 ? Math.ceil((wholesaleFacultyRounded * 1.20) / 5) * 5 : 0;
-                const externalWholesale = wholesaleFacultyRounded * 1.50;
-                const externalCoverRounded = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
+                const wholesaleFaculty = unitCostWithVat > 0 ? Math.ceil((unitCostWithVat * 1.35) / 5) * 5 : 0;
+                const studentPrice = wholesaleFaculty > 0 ? Math.ceil((wholesaleFaculty * 1.20) / 5) * 5 : 0;
+                const externalWholesale = wholesaleFaculty * 1.50;
+                const externalCover = externalWholesale > 0 ? Math.ceil((externalWholesale * 1.40) / 5) * 5 : 0;
+
+                const actualStudentInput = document.getElementById('formActualStudentPrice').value;
+                const actualPublicInput = document.getElementById('formActualPublicPrice').value;
+
+                const actualStudentPrice = actualStudentInput !== '' ? parseFloat(actualStudentInput) : studentPrice;
+                const actualPublicPrice = actualPublicInput !== '' ? parseFloat(actualPublicInput) : externalCover;
 
                 const payload = {
                     calc_date: calcDate,
-                    title,
+                    title: title,
                     academic_title: academicTitle,
-                    author,
-                    department,
+                    author: author,
+                    department: department,
                     book_code: bookCode,
                     kmitl_code: kmitlCode,
-                    isbn,
-                    status,
-                    edition,
-                    pages,
+                    isbn: isbn,
+                    status: status,
+                    edition: edition,
+                    pages: pages,
                     print_quantity: printQuantity,
                     unit_cost: unitCost,
                     production_cost: productionCost,
                     vat_amount: vatAmount,
                     total_cost_with_vat: totalCostWithVat,
-                    wholesale_faculty_rounded: wholesaleFacultyRounded,
-                    student_price_rounded: studentPriceRounded,
-                    external_cover_rounded: externalCoverRounded,
+                    wholesale_faculty: wholesaleFaculty,
+                    student_price_rounded: studentPrice,
+                    external_wholesale: externalWholesale,
+                    external_cover_rounded: externalCover,
                     actual_student_price: actualStudentPrice,
                     actual_public_price: actualPublicPrice,
-                    remarks
+                    remarks: remarks,
+                    updated_at: new Date().toISOString()
                 };
 
-                let error = null;
                 if (bookId) {
-                    const res = await supabaseClient.from('textbooks').update(payload).eq('id', bookId);
-                    error = res.error;
+                    const { error } = await supabaseClient.from('textbooks').update(payload).eq('id', bookId);
+                    if (error) throw error;
+                    showToast('อัปเดตข้อมูลสำเร็จ', 'success');
                 } else {
-                    const res = await supabaseClient.from('textbooks').insert([payload]);
-                    error = res.error;
+                    const { error } = await supabaseClient.from('textbooks').insert([payload]);
+                    if (error) throw error;
+                    showToast('เพิ่มรายการสำเร็จ', 'success');
                 }
 
-                if (error) throw error;
-
-                showToast(bookId ? 'บันทึกการแก้ไขสำเร็จ' : 'เพิ่มรายการใหม่สำเร็จ', 'success');
                 closeModal('modalAdminForm');
                 await loadTextbooksData();
-
             } catch (err) {
-                console.error('Save error:', err);
                 showToast('เกิดข้อผิดพลาดในการบันทึก: ' + err.message, 'error');
             } finally {
-                btnSaveSubmit.disabled = false;
-                btnSaveSubmit.innerHTML = 'บันทึกข้อมูล';
+                btnSave.disabled = false;
+                btnSave.innerText = 'บันทึกข้อมูล';
             }
         }
     </script>
